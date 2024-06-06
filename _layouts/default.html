@@ -6,28 +6,34 @@
     <title>Natalie's CS Portfolio</title>
     <link rel="stylesheet" href="styles.css">
     <script defer src="scripts.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
         <h1><a href="index.html">Natalie's CS Portfolio</a></h1>
-        <nav>
-            <ul>
-                <li class="dropdown">
-                    <a href="javascript:void(0)" class="dropbtn">Projects</a>
-                    <div class="dropdown-content">
-                        <a href="projects/webGL/animation/main.html">WebGL</a>
-                        <a href="projects/opengl.html">OpenGL</a>
-                        <a href="projects/vulkan.html">Vulkan</a>
-                        <a href="projects/glsl.html">GLSL</a>
-                    </div>
-                </li>
-            </ul>
-        </nav>
     </header>
     <main>
-        <p>Welcome to my computer science portfolio. Here you'll find my projects and more!</p>
+        <section class="projects">
+            <div class="project" id="webgl">
+                <img src="projects/webGL/animation/painting_space.jpg" alt="WebGL Project">
+                <h2><a href="projects/webGL/animation/main.html">WebGL</a></h2>
+            </div>
+            <div class="project" id="opengl">
+                <img src="projects/opengl.jpg" alt="OpenGL Project">
+                <h2><a href="projects/opengl.html">OpenGL</a></h2>
+            </div>
+            <div class="project" id="vulkan">
+                <img src="projects/vulkan.jpg" alt="Vulkan Project">
+                <h2><a href="projects/vulkan.html">Vulkan</a></h2>
+            </div>
+            <div class="project" id="glsl">
+                <img src="projects/glsl.jpg" alt="GLSL Project">
+                <h2><a href="projects/glsl.html">GLSL</a></h2>
+            </div>
+        </section>
     </main>
 </body>
 </html>
+
 
 
