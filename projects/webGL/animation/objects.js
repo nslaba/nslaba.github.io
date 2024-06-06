@@ -1,3 +1,7 @@
+function scalev(scalar, vec) {
+    return vec.map(x => x * scalar);
+}
+
 function setAttribPointers(obj) {
     gl.bindBuffer(gl.ARRAY_BUFFER, obj.nBuffer);
     gl.vertexAttribPointer(obj.vNormal, 3, gl.FLOAT, false, 0, 0);
