@@ -452,7 +452,7 @@ function gRotate(theta,x,y,z) {
 // Post multiples the modelview matrix with a scaling matrix
 // and replaces the modeling matrix with the result
 function gScale(sx,sy,sz) {
-    modelMatrix = mult(modelMatrix,scale(sx,sy,sz));
+    modelMatrix = mult(modelMatrix,scaleMat(sx,sy,sz));
 }
 
 // Pops MS and stores the result as the current modelMatrix

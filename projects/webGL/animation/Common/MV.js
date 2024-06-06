@@ -642,7 +642,7 @@ function mix( u, v, s )
 // Vector and Matrix functions
 //
 
-function scale( s, u )
+function scaleVec( s, u )
 {
     if ( !Array.isArray(u) ) {
         throw "scale: second parameter " + u + " is not a vector";
@@ -655,6 +655,20 @@ function scale( s, u )
 
     return result;
 }
+
+
+function scaleMat(sx, sy, sz) {
+    if (typeof sx !== 'number' || typeof sy !== 'number' || typeof sz !== 'number') {
+        throw "scale: parameters must be numbers";
+    }
+
+    var result = mat4();
+    result[0][0] = sx;
+    result[1][1] = sy;
+    result[2][2] = sz;
+    return result;
+}
+
 
 //----------------------------------------------------------------------------
 //
