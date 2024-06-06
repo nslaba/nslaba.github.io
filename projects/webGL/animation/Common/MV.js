@@ -976,4 +976,11 @@ function normalMatrix(m, flag)
     return b;
     }
 
+
+}
+
+
+function inverseTranspose(m){
+    var invM = inverse(m);
+    return transpose(invM);
 }
