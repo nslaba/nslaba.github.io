@@ -1,0 +1,47 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: auto; /* Allow scrolling */
+    width: 100%;
+    height: auto; /* Allow height to be determined by content */
+}
+
+canvas {
+    position: fixed; /* Fix the canvas to the background */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Send the canvas behind other content */
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.webgl-project {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.project-description {
+    flex: 1;
+    margin-left: 20px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+    .project-description h2 {
+        margin-top: 0;
+    }
+
+    .project-description ul {
+        padding-left: 20px;
+    }
