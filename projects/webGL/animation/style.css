@@ -3,15 +3,16 @@ body, html {
     padding: 0;
     width: 100%;
     height: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: #000;
     overflow: hidden; /* Hide scrollbars */
 }
 
 canvas {
-    position: fixed; /* Fix the canvas to the background */
-    top: 0;
-    left: 0;
-    width: 70%;
-    height: 100%;
+    position: relative; /* Fix the canvas to the background */
+    width: auto;
+    height: auto;
     z-index: -1; /* Send the canvas behind other content */
 }
 
