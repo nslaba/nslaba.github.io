@@ -38,16 +38,16 @@
         </section>
     </main>
 
-    <script id="vertex-shader" type="x-shader/x-vertex">
-        attribute vec4 a_position;
+    <script id="vertex-shader" type="x-shader/x-vertex">#version 300 es
+               attribute vec4 a_position;
 
-        out vec3 pos;
-        void main() {
-            pos = a_position.xyz;
-            gl_Position = a_position;
-        }
+               out vec3 pos;
+               void main() {
+                   pos = a_position.xyz;
+                   gl_Position = a_position;
+               }
     </script>
-    <script id="fragment-shader" type="x-shader/x-fragment">
+    <script id="fragment-shader" type="x-shader/x-fragment">#version 300 es
         precision mediump float;
         uniform vec2 u_resolution;
         uniform float u_time;
