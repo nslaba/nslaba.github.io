@@ -138,8 +138,8 @@ function setColor(c)
                                          "specularProduct"),flatten(specularProduct) );
     gl.uniform4fv( gl.getUniformLocation(program,
                                          "lightPosition"),flatten(lightPosition2) );
-    gl.uniform1f( gl.getUniformLocation(program, 
-                                        "shininess"),materialShininess );
+    //gl.uniform1f( gl.getUniformLocation(program, 
+    //                                    "shininess"),materialShininess );
 }
 
 // We are going to asynchronously load actual image files this will check if that call if an async call is complete
@@ -372,8 +372,8 @@ window.onload = function init() {
        "specularProduct"),flatten(specularProduct) );	
     gl.uniform4fv( gl.getUniformLocation(program, 
        "lightPosition"),flatten(lightPosition) );
-    gl.uniform1f( gl.getUniformLocation(program, 
-       "shininess"),materialShininess );
+   // gl.uniform1f( gl.getUniformLocation(program, 
+   //    "shininess"),materialShininess );
 	
     // // The following are uniforms for the special effects mainImage function called within the fragment shader when blendTextures isn't 0 nor 1
     // // uniform vec3 iResolution; // viewport resolution (in pixels)
