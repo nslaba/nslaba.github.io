@@ -25,7 +25,7 @@ function createProgram(gl, vertexShader, fragmentShader) {
 
 function main() {
     const canvas = document.getElementById('glcanvas');
-    const gl = canvas.getContext('webgl');
+    const gl = canvas.getContext('webgl2');
 
     if (!gl) {
         console.error('WebGL not supported');
