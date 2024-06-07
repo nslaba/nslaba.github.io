@@ -28,12 +28,12 @@ function main() {
     const gl = canvas.getContext('webgl2');
 
     if (!gl) {
-        console.error('WebGL not supported');
+        console.error('WebGL 2not supported');
         return;
     }
 
-    const vertexShaderSource = document.getElementById('vertex-shader').text;
-    const fragmentShaderSource = document.getElementById('fragment-shader').text;
+    const vertexShaderSource = document.getElementById('vertex-shader').textContent;
+    const fragmentShaderSource = document.getElementById('fragment-shader').textContent;
 
     const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
     const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
