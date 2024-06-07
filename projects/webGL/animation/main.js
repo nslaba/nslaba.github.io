@@ -1020,14 +1020,6 @@ function render(timestamp) {
     
 	if( animFlag )
     {
-		// dt is the change in time or delta time from the last frame to this one
-		// in animation typically we have some property or degree of freedom we want to evolve over time
-		// For example imagine x is the position of a thing.
-		// To get the new position of a thing we do something called integration
-		// the simpelst form of this looks like:
-		// x_new = x + v*dt
-		// That is the new position equals the current position + the rate of of change of that position (often a velocity or speed), times the change in time
-		// We can do this with angles or positions, the whole x,y,z position or just one dimension. It is up to us!
 		dt = (timestamp - prevTime) / 1000.0;
 		prevTime = timestamp;
 	}
@@ -1038,12 +1030,12 @@ function render(timestamp) {
     /* Display the frame rate every two seconds */
     timeCounter +=dt;
     frameCounter += 1;
-    if (timeCounter >= 1.999 && timeCounter <= 2.019){
-        console.log("it has been: " + timeCounter + " seconds");
-        console.log("FRAME RATE is: " + frameCounter/2);
-        frameCounter =0;
-        timeCounter =0;
-    }
+    //if (timeCounter >= 1.999 && timeCounter <= 2.019){
+    //    console.log("it has been: " + timeCounter + " seconds");
+    //    console.log("FRAME RATE is: " + frameCounter/2);
+    //    frameCounter =0;
+    //    timeCounter =0;
+    //}
 
     //Update iResolution and iTime uniforms
     gl.uniform2f(resolutionLocation, gl.canvas.width, gl.canvas.height);
