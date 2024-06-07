@@ -66,11 +66,11 @@
             st.x *= u_resolution.x / u_resolution.y;
             
 
-            float r = waveNoise(st + vec2(0.0, u_time * 0.1), u_time);
-            float g = waveNoise(st + vec2(u_time * 0.1, 0.0), u_time);
-            float b = waveNoise(st, u_time);
+            float r = mod(waveNoise(st + vec2(0.0, u_time * 0.1), u_time), 0.5);
+            float g = mod(waveNoise(st + vec2(u_time * 0.1, 0.0), u_time), 0.5);
+            float b = mod(waveNoise(st, u_time), 0.5);
 
-            vec3 color = vec3(r,g,b) * 0.5 + 0.5;;
+            vec3 color = vec3(r,g,b) * 0.5 + 0.5;
 
             
 
