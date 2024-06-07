@@ -33,10 +33,33 @@
             </div>
             <div class="project" id="Raytracer">
                 <img src="projects/Raytracer/snapshot.png" alt="Raytracer Project">
-                <h2><a href="projects/glsl.html">Raytracer</a></h2>
+                <h2><a href="projects/Raytracer.html">Raytracer</a></h2>
             </div>
         </section>
     </main>
+    <script src="scripts.js"></script>
+    <script id="vertex-shader" type="x-shader/x-vertex">
+        attribute vec4 a_position;
+        void main() {
+            gl_Position = a_position;
+        }
+    </script>
+    <script id="fragment-shader" type="x-shader/x-fragment">
+        precision mediump float;
+        uniform vec2 u_resolution;
+        uniform float u_time;
+
+        void main() {
+            vec2 st = gl_FragCoord.xy / u_resolution;
+            vec3 color = vec3(0.0);
+
+            // Simple color change over time using sine function
+            color = vec3(sin(u_time * 0.1), cos(u_time * 0.2), sin(u_time * 0.3));
+
+            gl_FragColor = vec4(color, 1.0);
+        }
+    </script>
+
 </body>
 </html>
 
