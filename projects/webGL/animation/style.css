@@ -10,7 +10,7 @@ canvas {
     position: fixed; /* Fix the canvas to the background */
     top: 0;
     left: 0;
-    width: 80%;
+    width: 70%;
     height: 100%;
     z-index: -1; /* Send the canvas behind other content */
 }
@@ -20,9 +20,9 @@ canvas {
     top: 0;
     right: 0;
     width: 20%; /* Adjust width as needed */
-    height: auto; /* Allow height to be determined by content */
+    height: 100%; /* Allow height to be determined by content */
     margin: 20px;
-    background-color: rgba(200, 200, 200, 0.8); /* Semi-transparent background */
+    background-color: rgb(230, 168, 108); /* Semi-transparent background */
     padding: 8px;
     border-radius: 6px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
