@@ -17,9 +17,9 @@ canvas {
 
 .content {
     position: fixed;
-    bottom: 0;
-    right: 0;
-    width: 200px; /* Adjust width as needed */
+    top: 0;
+    left: 0;
+    width: 400px; /* Adjust width as needed */
     height: auto; /* Allow height to be determined by content */
     margin: 20px;
     background-color: rgba(200, 200, 200, 0.8); /* Semi-transparent background */
