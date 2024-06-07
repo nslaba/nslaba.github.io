@@ -10,7 +10,7 @@ canvas {
     position: fixed; /* Fix the canvas to the background */
     top: 0;
     left: 0;
-    width: 100%;
+    width: 80%;
     height: 100%;
     z-index: -1; /* Send the canvas behind other content */
 }
@@ -18,13 +18,13 @@ canvas {
 .content {
     position: fixed;
     top: 0;
-    left: 0;
-    width: 400px; /* Adjust width as needed */
+    right: 0;
+    width: 20%; /* Adjust width as needed */
     height: auto; /* Allow height to be determined by content */
     margin: 20px;
     background-color: rgba(200, 200, 200, 0.8); /* Semi-transparent background */
-    padding: 10px;
-    border-radius: 8px;
+    padding: 8px;
+    border-radius: 6px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     overflow-y: auto; /* Enable vertical scrolling if content overflows */
 }
