@@ -1,9 +1,9 @@
 body, html {
     margin: 0;
     padding: 0;
-    overflow: auto; /* Allow scrolling */
     width: 100%;
-    height: auto; /* Allow height to be determined by content */
+    height: 100%;
+    overflow: hidden; /* Hide scrollbars */
 }
 
 canvas {
@@ -16,26 +16,22 @@ canvas {
 }
 
 .content {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 20px;
-    max-width: 1200px;
-    margin: auto;
-}
-
-.webgl-project {
-    flex: 1;
-    margin-right: 20px;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 300px; /* Adjust width as needed */
+    height: auto; /* Allow height to be determined by content */
+    margin: 20px;
+    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto; /* Enable vertical scrolling if content overflows */
 }
 
 .project-description {
-    flex: 1;
-    margin-left: 20px;
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 0;
+    padding: 0;
 }
 
     .project-description h2 {
