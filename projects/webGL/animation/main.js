@@ -321,7 +321,14 @@ window.onload = function init() {
     canvas = document.getElementById( "gl-canvas" );
     
     gl = canvas.getContext('webgl2');
-    if ( !gl ) { alert( "WebGL isn't available" ); }
+    if ( !gl ) { 
+		console.warn( "WebGL 2 isn't available; falling back to webgl 1" ); 
+		gl = canvas.getContext('webgl');
+	}
+
+	if ( !gl ) { 
+		alert( "WebGL isn't available" ); 
+	}
 
     gl.viewport( 0, 0, canvas.width, canvas.height );
     gl.clearColor( 0.5, 0.5, 0.5, 1.0 );
