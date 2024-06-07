@@ -19,10 +19,10 @@ canvas {
     position: fixed;
     top: 0;
     right: 0;
-    width: 20%; /* Adjust width as needed */
+    width: 30%; /* Adjust width as needed */
     height: 100%; /* Allow height to be determined by content */
     margin: 20px;
-    background-color: rgb(230, 168, 108); /* Semi-transparent background */
+    background-color: rgb(115, 155, 248); /* Semi-transparent background */
     padding: 8px;
     border-radius: 6px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
