@@ -24,6 +24,7 @@ canvas {
     height: 100%; /* Allow height to be determined by content */
     margin: 20px;
     background-color: rgb(0, 0, 0); /* Semi-transparent background */
+    color: rgb(1,1,1);
     padding: 8px;
     border-radius: 6px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
