@@ -13,7 +13,7 @@ canvas {
     position: relative; /* Fix the canvas to the background */
     width: auto;
     height: auto;
-    z-index: -1; /* Send the canvas behind other content */
+    z-index: 1; /* Send the canvas behind other content */
 }
 
 .content {
@@ -23,7 +23,7 @@ canvas {
     width: 30%; /* Adjust width as needed */
     height: 100%; /* Allow height to be determined by content */
     margin: 20px;
-    background-color: rgb(115, 155, 248); /* Semi-transparent background */
+    background-color: rgb(0, 0, 0); /* Semi-transparent background */
     padding: 8px;
     border-radius: 6px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
