@@ -66,17 +66,9 @@
         void main() {
             vec2 st = gl_FragCoord.xy / u_resolution;
             st.x *= u_resolution.x / u_resolution.y;
-            
-
-        
-
             float wave = waveNoise(st, u_time);
-
-            
-
-            
-
-            outColor = vec4(wave, wave, wave, 1.0);
+         
+            outColor = vec4(mod(wave, st.x), mod(wave, st.y), wave, 1.0);
            
         }
     </script>
