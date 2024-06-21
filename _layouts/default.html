@@ -27,10 +27,6 @@
                 <img src="projects/vulkan.jpg" alt="Vulkan Project">
                 <h2><a href="projects/vulkan.html">Vulkan</a></h2>
             </div>
-            <div class="project" id="glsl">
-                <img src="projects/glsl.jpg" alt="GLSL Project">
-                <h2><a href="projects/glsl.html">GLSL</a></h2>
-            </div>
             <div class="project" id="Raytracer">
                 <img src="projects/Raytracer/snapshot.png" alt="Raytracer Project">
                 <h2><a href="projects/Raytracer.html">Raytracer</a></h2>
@@ -43,19 +39,27 @@
                in vec4 a_position;
 
                out vec3 pos;
+               out vec2 v_uv;
                void main() {
                    pos = a_position.xyz;
+                   v_uv = a_position.xy * 0.5 + 0.5;
                    gl_Position = a_position;
                }
     </script>
     <script id="fragment-shader" type="x-shader/x-fragment">#version 300 es
         precision mediump float;
+
         uniform vec2 u_resolution;
         uniform float u_time;
 
         in vec3 pos;
+        in vec2 v_uv;
 
         out vec4 outColor;
+        
+        vec3 mandelbrot(float time) {
+    
+        }
 
         float waveNoise(vec2 position, float time) {
             float distance = length(position - 0.5);
@@ -63,12 +67,45 @@
             //return sin(position.x * 10.0 + time) * cos(position.y * 10.0 + time);
         }
 
+        float random(vec2 st) {
+            return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
+        }
+
+        float star(vec2 position, vec2 starPosition, float size, float brightness) {
+            float d = length(position - starPosition);
+            return smoothstep(size, size - 0.01, d) * brightness;
+        }
+
         void main() {
-            vec2 st = gl_FragCoord.xy / u_resolution;
+            <!-- vec2 st = gl_FragCoord.xy / u_resolution;
             st.x *= u_resolution.x / u_resolution.y;
             float wave = waveNoise(st, u_time);
          
-            outColor = vec4(mod(wave, st.x), mod(wave, st.y), wave, 1.0);
+            // normalize pixel coordinates
+            vec2 uv = (gl_FragCoord / (u_resolution - 0.5)) * 2.0;
+            outColor = vec4(mod(wave, st.x), mod(wave, st.y), wave, 1.0); -->
+
+            vec2 st = v_uv * u_resolution / min(u_resolution.x, u_resolution.y);
+
+            vec3 color = vec3(0.0);
+
+            // number of stars 
+            int numStars = 100;
+
+            for (int i = 0; i < numStars; i++) {
+                // create random star position
+                vec2 starPos = vec2(random(vec2(i, 0.0)), random(vec2(i, 1.0)));
+                float size = random(vec2(i, 2.0)) * 0.01 + 0.002;
+                float brightness = random(vec2(i, 3.0)) * 0.8 + 0.2;
+
+                // Make stars twinkle
+                brightness *= sin(u_time + float(i)) * 0.5 + 0.5;
+
+                // Add star to color
+                color += star(st, starPos, size, brightness);
+            }
+
+            outColor = vec4(color, 1.0);
            
         }
     </script>
