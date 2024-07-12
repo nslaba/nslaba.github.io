@@ -35,9 +35,10 @@ header {
 
 .description {
 	text-align: center;
-	font-size: 12px;
+	font-size: 16px;
 	font-family: 'Calibri';
-	color: #fff;
+	color: #d19dc0;
+	margin-bottom: 10px;
 }
 .projects {
 	display: flex;
