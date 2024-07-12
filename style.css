@@ -67,11 +67,11 @@ header {
 
 		.project h2 a {
 			text-decoration: none;
-			color: #333;
+			color: #fff;
 		}
 
 			.project h2 a:hover {
-				color: #007BFF;
+				color: #fff;
 			}
 
 	.project iframe {

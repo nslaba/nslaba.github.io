@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Natalie Slaba Computer Science</title>
+    <title>Natalie Slaba</title>
     <link rel="stylesheet" href="style.css">
     <script defer src="scripts.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
@@ -11,9 +11,13 @@
 <body>
     <canvas id="glcanvas"></canvas>
     <header>
-        <h1><a href="index.html">Natalie's CS Portfolio</a></h1>
+        <h1><a href="index.html">Natalie Slaba</a></h1>
     </header>
     <main>
+        <section class="description">
+            <p>This is my personal website for creative computer science projects. I am not a web developper, so bare with me.</p>
+
+        </section>
         <section class="projects">
             <div class="project" id="webgl">
                 <img src="projects/webGL/animation/snapshot.png" alt="WebGL Project">
@@ -57,14 +61,6 @@
 
         out vec4 outColor;
         
-        
-
-        float waveNoise(vec2 position, float time) {
-            float distance = length(position - 0.5);
-            return sin(distance * 20.0 - time) * 0.5 +0.5;
-            //return sin(position.x * 10.0 + time) * cos(position.y * 10.0 + time);
-        }
-
         float random(vec2 st) {
             return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
         }
