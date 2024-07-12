@@ -32,6 +32,9 @@ function main() {
         return;
     }
 
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
     const vertexShaderSource = document.getElementById('vertex-shader').textContent;
     const fragmentShaderSource = document.getElementById('fragment-shader').textContent;
 
