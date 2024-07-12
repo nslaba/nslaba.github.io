@@ -62,84 +62,78 @@
     </script>
     <script id="fragment-shader" type="x-shader/x-fragment">#version 300 es
         precision mediump float;
-
+        
         uniform vec2 u_resolution;
         uniform float u_time;
-
         
         in vec2 v_uv;
-
         out vec4 outColor;
         
         float random(vec2 st) {
-            return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
+            return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
         }
-
+        
         float star(vec2 position, vec2 starPosition, float size, float brightness) {
             float d = length(position - starPosition);
             return smoothstep(size, size - 0.01, d) * brightness;
         }
-
+        
         vec3 nebula(vec2 st, vec2 clusterPos, float clusterSize) {
             float d = length(st - clusterPos);
-            float intensity = exp(-pow(d / clusterSize, 2.0)); //gaussian falloff
-            vec3 color = vec3(0.5 * clusterSize, 0.3 * clusterPos.x, 0.8); // base color for nebula
+            float intensity = exp(-pow(d / clusterSize, 2.0)); // Gaussian falloff
+            vec3 color = vec3(0.5 * clusterSize, 0.3 * clusterPos.x, 0.8); // Base color for nebula
             return color * intensity;
         }
-
         
         void main() {
             // Correct aspect ratio
             vec2 aspectRatio = vec2(u_resolution.x / u_resolution.y, 1.0);
             vec2 st = (v_uv - 0.5) * aspectRatio + 0.5;
-
-            
-
+        
             vec3 color = vec3(0.0);
-
+        
             // Nebula effect
             int nebulaClusters = 4;
-            for (int i = 0; i <nebulaClusters; i++) {
+            for (int i = 0; i < nebulaClusters; i++) {
                 vec2 clusterPos = vec2(random(vec2(i, 0.0)), random(vec2(i, 1.0)));
-                float clusterSize = random(vec2(i, 2.0))* 0.1 * float(i) + 0.05;
+                float clusterSize = random(vec2(i, 2.0)) * 0.1 * float(i) + 0.05;
                 color += nebula(st, clusterPos, clusterSize);
             }
-
-            // number of stars 
+        
+            // Number of stars 
             int numStars = 100;
             float shootProbability = 0.05; // 1 in 20 chance
+        
             for (int i = 0; i < numStars; i++) {
-                // create random star position
+                // Create random star position
                 vec2 starPos = vec2(random(vec2(i, 0.0)), random(vec2(i, 1.0)));
-                //vec2 velocity = vec2(random(vec2(i, 4.0)), random(vec2(i, 5.0))) * 0.2 - 0.1;
-
-                // shooting stars
-                //starPos += velocity * u_time;
-
-                // wrap around screen edges
-                //starPos = mod(starPos, 1.0);
+                
                 float size = random(vec2(i, 2.0)) * 0.01 + 0.002;
                 float brightness = random(vec2(i, 3.0)) * 0.8 + 0.2;
-                brightness *= sin(u_time * 0.2 + float(i)) * 0.5 + 0.5; // twinkle
+        
+                // Slower twinkling effect
+                brightness *= sin(u_time * 0.1 + float(i)) * 0.5 + 0.5; // Adjust frequency by scaling u_time
                 brightness += 0.5;
-
-                //determine if star shoots
+        
+                // Determine if star shoots
                 if (random(vec2(i, u_time)) < shootProbability) {
                     vec2 shootDirection = vec2(random(vec2(i, 4.0)), random(vec2(i, 5.0))) * 2.0 - 1.0;
-                    starPos += shootDirection * mod(u_time * 0.1, 1.0) * 2.0;
-                    brightness *= 1.0 - mod(u_time, 1.0);
-
+        
+                    // Slower shooting effect
+                    starPos += shootDirection * mod(u_time * 0.05, 1.0) * 2.0; // Scale u_time to slow down movement
+                    brightness *= 1.0 - mod(u_time * 0.05, 1.0); // Adjust brightness reduction speed
+        
+                    // Respawn a new star in the original position
                     vec2 newStarPos = vec2(random(vec2(i + numStars, 0.0)), random(vec2(i + numStars, 1.0)));
                     color += vec3(star(st, newStarPos, size, brightness));
                 } else {
                     color += vec3(star(st, starPos, size, brightness));
                 }
-                
             }
-
+        
             outColor = vec4(color, 1.0);
-           
         }
+        
     </script>
     <script src="scripts.js"></script>
 </body>
