@@ -83,7 +83,7 @@
         vec3 nebula(vec2 st, vec2 clusterPos, float clusterSize) {
             float d = length(st - clusterPos);
             float intensity = exp(-pow(d / clusterSize, 2.0)); //gaussian falloff
-            vec3 color = vec3(0.5 * clusterSize, 0.3, 0.8); // base color for nebula
+            vec3 color = vec3(0.5 * clusterSize, 0.3 * clusterPos.x, 0.8); // base color for nebula
             return color * intensity;
         }
 
@@ -111,6 +111,14 @@
             for (int i = 0; i < numStars; i++) {
                 // create random star position
                 vec2 starPos = vec2(random(vec2(i, 0.0)), random(vec2(i, 1.0)));
+                vec2 velocity = vec2(random(vec2(i, 4.0)), random(vec2(i, 5.0))) * 0.2 - 0.1;
+
+                // shooting stars
+                starPos += velocity * u_time;
+
+                // wrap around screen edges
+                starPos = mod(starPos, 1.0);
+                
                 float size = random(vec2(i, 2.0)) * 0.01 + 0.002;
                 float brightness = random(vec2(i, 3.0)) * 0.8 + 0.2;
                 brightness *= sin(u_time + float(i)) * 0.5 + 0.5; // twinkle
