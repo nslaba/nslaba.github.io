@@ -97,29 +97,20 @@
 
             vec3 color = vec3(0.0);
 
-            //movement vector
-            vec2 movement = vec2(-u_time*0.1, -u_time*0.1);
-
             // Nebula effect
             int nebulaClusters = 4;
             for (int i = 0; i <nebulaClusters; i++) {
-                vec2 clusterPos = vec2(random(vec2(i, 0.0)), random(vec2(i, 1.0))) + movement;
-                clusterPos = mod(clusterPos, 1.0);
+                vec2 clusterPos = vec2(random(vec2(i, 0.0)), random(vec2(i, 1.0)));
                 float clusterSize = random(vec2(i, 2.0))* 0.1 * float(i) + 0.05;
-
-                float depthFactor = 1.0 - abs(clusterPos.y - 0.5) * 2.0;
-                clusterSize *= depthFactor;
-                vec3 nebulaColor = nebula(st, clusterPos, clusterSize) * depthFactor;
-                color += nebulaColor;
+                color += nebula(st, clusterPos, clusterSize);
             }
 
             // number of stars 
             int numStars = 100;
-
+            float shootProbability = 0.05 // 1 in 20 chance
             for (int i = 0; i < numStars; i++) {
                 // create random star position
-                vec2 starPos = vec2(random(vec2(i, 0.0)), random(vec2(i, 1.0))) + movement;
-                starPos = mod(starPos, 1.0);
+                vec2 starPos = vec2(random(vec2(i, 0.0)), random(vec2(i, 1.0)));
                 //vec2 velocity = vec2(random(vec2(i, 4.0)), random(vec2(i, 5.0))) * 0.2 - 0.1;
 
                 // shooting stars
@@ -127,21 +118,23 @@
 
                 // wrap around screen edges
                 //starPos = mod(starPos, 1.0);
-
                 float size = random(vec2(i, 2.0)) * 0.01 + 0.002;
-                //float brightness = random(vec2(i, 3.0)) * 0.8 + 0.2;
-                //brightness *= sin(u_time + float(i)) * 0.5 + 0.5; // twinkle
-                //brightness += 0.5;
-
-                float depthFactor = 1.0 - abs(starPos.y - 0.5) * 2.0;
-                size *= depthFactor;
-                float brightness = (random(vec2(1, 3.0)) * 0.8 + 0.2) * depthFactor;
-                //brightness *= sin(u_time + float(i)) * 0.5 + 0.5;
+                float brightness = random(vec2(i, 3.0)) * 0.8 + 0.2;
+                brightness *= sin(u_time + float(i)) * 0.5 + 0.5; // twinkle
                 brightness += 0.5;
 
+                //determine if star shoots
+                if (random(vec2(i, u_time)) < shootProbability) {
+                    vec2 shootDirection = vec2(random(vec2(i, 4.0)), random(vec2(i, 5.0))) * 2.0 - 1.0;
+                    starPos += shootDirection * mod(u_time, 1.0) * 2.0;
+                    brightness *= 1.0 - mod(u_time, 1.0);
 
-                // Add star to color
-                color += vec3(star(st, starPos, size, brightness));
+                    vec2 newStarPos = vec2(random(vec2(i + numStars, 0.0)), random(vec2(i + numStars, 1.0)));
+                    color += vec3(star(st, newStarPos, size, brightness));
+                } else {
+                    color += vec3(star(st, starPos, size, brightness));
+                }
+                
             }
 
             outColor = vec4(color, 1.0);
