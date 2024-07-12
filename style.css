@@ -29,12 +29,14 @@ header {
 
 	header h1 {
 		font-size: 3em;
-		font-family: 'Century Gothic';
+		font-family: 'Ramaraja';
 		color: #fff;
 	}
 
 .description {
 	text-align: center;
+	font-size: 12px;
+	font-family: 'Calibri';
 	color: #fff;
 }
 .projects {
