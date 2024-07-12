@@ -83,7 +83,7 @@
         vec3 nebula(vec2 st, vec2 clusterPos, float clusterSize) {
             float d = length(st - clusterPos);
             float intensity = exp(-pow(d / clusterSize, 2.0)); //gaussian falloff
-            vec3 color = vec3(0.5, 0.3, 0.8); // base color for nebula
+            vec3 color = vec3(0.5 * clusterSize, 0.3, 0.8); // base color for nebula
             return color * intensity;
         }
 
