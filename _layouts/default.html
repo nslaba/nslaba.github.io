@@ -120,13 +120,13 @@
                 //starPos = mod(starPos, 1.0);
                 float size = random(vec2(i, 2.0)) * 0.01 + 0.002;
                 float brightness = random(vec2(i, 3.0)) * 0.8 + 0.2;
-                brightness *= sin(u_time + float(i)) * 0.5 + 0.5; // twinkle
+                brightness *= sin(u_time * 0.2 + float(i)) * 0.5 + 0.5; // twinkle
                 brightness += 0.5;
 
                 //determine if star shoots
                 if (random(vec2(i, u_time)) < shootProbability) {
                     vec2 shootDirection = vec2(random(vec2(i, 4.0)), random(vec2(i, 5.0))) * 2.0 - 1.0;
-                    starPos += shootDirection * mod(u_time, 1.0) * 2.0;
+                    starPos += shootDirection * mod(u_time * 0.1, 1.0) * 2.0;
                     brightness *= 1.0 - mod(u_time, 1.0);
 
                     vec2 newStarPos = vec2(random(vec2(i + numStars, 0.0)), random(vec2(i + numStars, 1.0)));
