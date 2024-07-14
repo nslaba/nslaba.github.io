@@ -55,6 +55,7 @@ function main() {
     const resolutionUniformLocation = gl.getUniformLocation(program, 'u_resolution');
     const timeUniformLocation = gl.getUniformLocation(program, 'u_time');
 
+    console.log("Resolution Uniform Location:", resolutionUniformLocation);
     console.log("Time Uniform Location:", timeUniformLocation);
 
     const positionBuffer = gl.createBuffer();
@@ -84,6 +85,8 @@ function main() {
 
         gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
         gl.uniform1f(timeUniformLocation, time);
+        console.log("Time passed to shader:", time); 
+        console.log("Canvas width and height passed to shader", gl.canvas.width, gl.canvas.height); 
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
 
