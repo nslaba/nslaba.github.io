@@ -50,15 +50,14 @@
 
     <script id="vertex-shader" type="x-shader/x-vertex">#version 300 es
              
-               in vec4 a_position;
-
-              
-               out vec2 v_uv;
-               void main() {
-                   
-                   v_uv = a_position.xy * 0.5 + 0.5; // normalize to [0,1]
-                   gl_Position = a_position;
-               }
+        in vec4 a_position
+        
+        out vec2 v_uv;
+        void main() {
+            
+            v_uv = a_position.xy * 0.5 + 0.5; // normalize to [0,1]
+            gl_Position = a_position;
+        }
     </script>
     <script id="fragment-shader" type="x-shader/x-fragment">#version 300 es
         precision mediump float;
@@ -66,7 +65,7 @@
         uniform vec2 u_resolution;
         uniform float u_time;
         
-        in vec2 v_uv;
+        in vec2 v_uv; // input texture coordinate [0,1]
         out vec4 outColor;
         
         float random(vec2 st) {
@@ -88,7 +87,7 @@
         void main() {
             // Correct aspect ratio
             vec2 aspectRatio = vec2(u_resolution.x / u_resolution.y, 1.0);
-            vec2 st = (v_uv - 0.5) * aspectRatio + 0.5;
+            vec2 st = (v_uv - 0.5) * aspectRatio + 0.5; //st texture coord
         
             vec3 color = vec3(0.0);
         
@@ -112,7 +111,7 @@
                 float brightness = random(vec2(i, 3.0)) * 0.8 + 0.2;
         
                 // Slower twinkling effect
-                brightness *= sin(u_time * 0.001 + float(i)) * 0.05 + 0.5; 
+                brightness *= sin(u_time * 0.000001 + float(i)) * 0.05 + 0.5; 
                 brightness += 0.5;
         
                 // Determine if star shoots
@@ -120,8 +119,8 @@
                     vec2 shootDirection = vec2(random(vec2(i, 4.0)), random(vec2(i, 5.0))) * 2.0 - 1.0;
         
                     // Slower shooting effect
-                    starPos += shootDirection * mod(u_time * 0.005, 1.0) * 2.0; // Scale u_time to slow down movement
-                    brightness *= 1.0 - mod(u_time * 0.05, 1.0); // Adjust brightness reduction speed
+                    starPos += shootDirection * mod(u_time * 0.000001, 1.0) * 2.0; // Scale u_time to slow down movement
+                    brightness *= 1.0 - mod(u_time * 0.000001, 1.0); // Adjust brightness reduction speed
         
                     // Respawn a new star in the original position
                     vec2 newStarPos = vec2(random(vec2(i + numStars, 0.0)), random(vec2(i + numStars, 1.0)));
