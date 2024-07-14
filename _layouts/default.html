@@ -111,7 +111,7 @@
                 float brightness = random(vec2(i, 3.0)) * 0.8 + 0.2;
         
                 // Slower twinkling effect
-                brightness *= sin(u_time * 0.000001 + float(i)) * 0.05 + 0.5; 
+                brightness *= sin(u_time * 0.0000000000000000000000001 + float(i)) * 0.5 + 0.5; 
                 brightness += 0.5;
         
                 // Determine if star shoots
@@ -119,8 +119,8 @@
                     vec2 shootDirection = vec2(random(vec2(i, 4.0)), random(vec2(i, 5.0))) * 2.0 - 1.0;
         
                     // Slower shooting effect
-                    starPos += shootDirection * mod(u_time * 0.000001, 1.0) * 2.0; // Scale u_time to slow down movement
-                    brightness *= 1.0 - mod(u_time * 0.000001, 1.0); // Adjust brightness reduction speed
+                    starPos += shootDirection * mod(u_time * 0.0000000000000000000000001, 1.0) * 2.0; // Scale u_time to slow down movement
+                    brightness *= 1.0 - mod(u_time * 0.0000000000000000000000001, 1.0); // Adjust brightness reduction speed
         
                     // Respawn a new star in the original position
                     vec2 newStarPos = vec2(random(vec2(i + numStars, 0.0)), random(vec2(i + numStars, 1.0)));
