@@ -55,6 +55,8 @@ function main() {
     const resolutionUniformLocation = gl.getUniformLocation(program, 'u_resolution');
     const timeUniformLocation = gl.getUniformLocation(program, 'u_time');
 
+    console.log("Time Uniform Location:", timeUniformLocation);
+
     const positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 

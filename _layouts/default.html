@@ -85,9 +85,9 @@
         }
         
         void main() {
-            float brightness = sin(u_time * 0.001); // Test time scaling
-            vec3 color = vec3(brightness); // Simple color based on time
-            
+            float brightness = sin(u_time); // Test time scaling
+            vec3 color = vec3(brightness, 0.0, 0.0); // Simple color based on time
+
             outColor = vec4(color, 1.0);
             //// Correct aspect ratio
             //vec2 aspectRatio = vec2(u_resolution.x / u_resolution.y, 1.0);
