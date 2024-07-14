@@ -69,7 +69,7 @@ function main() {
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
     function render(time) {
-        time *= 0.001; // convert time to seconds
+        //time *= 0.001; // convert time to seconds
 
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
         gl.clear(gl.COLOR_BUFFER_BIT);
