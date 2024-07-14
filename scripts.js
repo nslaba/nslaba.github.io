@@ -70,7 +70,7 @@ function main() {
     gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
     function render(time) {
         time *= 0.001; // convert time to seconds
-
+        console.log("Time:", time);
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
         gl.clear(gl.COLOR_BUFFER_BIT);
 
