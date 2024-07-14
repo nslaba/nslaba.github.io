@@ -85,10 +85,52 @@
         }
         
         void main() {
-            float brightness = sin(u_time); // Test time scaling
-            vec3 color = vec3(brightness, 0.0, 0.0); // Simple color based on time
+            // Correct aspect ratio
+        vec2 aspectRatio = vec2(u_resolution.x / u_resolution.y, 1.0);
+        vec2 st = (v_uv - 0.5) * aspectRatio + 0.5; // st texture coord
 
-            outColor = vec4(color, 1.0);
+        vec3 color = vec3(0.0);
+
+        // Nebula effect
+        int nebulaClusters = 4;
+        for (int i = 0; i < nebulaClusters; i++) {
+            vec2 clusterPos = vec2(random(vec2(i, 0.0)), random(vec2(i, 1.0)));
+            float clusterSize = random(vec2(i, 2.0)) * 0.1 * float(i) + 0.05;
+            color += nebula(st, clusterPos, clusterSize);
+        }
+
+        // Number of stars 
+        int numStars = 100;
+        float shootProbability = 0.05; // 1 in 20 chance
+
+        for (int i = 0; i < numStars; i++) {
+            // Create random star position
+            vec2 starPos = vec2(random(vec2(i, 0.0)), random(vec2(i, 1.0)));
+            
+            float size = random(vec2(i, 2.0)) * 0.01 + 0.002;
+            float brightness = random(vec2(i, 3.0)) * 0.8 + 0.2;
+
+            // Slower twinkling effect
+            brightness *= sin(u_time * 0.01 + float(i)) * 0.5 + 0.5; // Adjust frequency by scaling u_time
+            brightness += 0.5;
+
+            // Determine if star shoots
+            if (random(vec2(i, u_time)) < shootProbability) {
+                vec2 shootDirection = vec2(random(vec2(i, 4.0)), random(vec2(i, 5.0))) * 2.0 - 1.0;
+
+                // Slower shooting effect
+                starPos += shootDirection * mod(u_time * 0.01, 1.0) * 2.0; // Scale u_time to slow down movement
+                brightness *= 1.0 - mod(u_time * 0.01, 1.0); // Adjust brightness reduction speed
+
+                // Respawn a new star in the original position
+                vec2 newStarPos = vec2(random(vec2(i + numStars, 0.0)), random(vec2(i + numStars, 1.0)));
+                color += vec3(star(st, newStarPos, size, brightness));
+            } else {
+                color += vec3(star(st, starPos, size, brightness));
+            }
+        }
+
+        outColor = vec4(color, 1.0);
             //// Correct aspect ratio
             //vec2 aspectRatio = vec2(u_resolution.x / u_resolution.y, 1.0);
             //vec2 st = (v_uv - 0.5) * aspectRatio + 0.5; //st texture coord
