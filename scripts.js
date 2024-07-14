@@ -154,8 +154,8 @@ function main() {
     const timeUniformLocation = gl.getUniformLocation(program, 'u_time');
 
     // Log uniform locations to ensure they are valid
-    console.log("Resolution Uniform Location:", resolutionUniformLocation);
-    console.log("Time Uniform Location:", timeUniformLocation);
+    //console.log("Resolution Uniform Location:", resolutionUniformLocation);
+    //console.log("Time Uniform Location:", timeUniformLocation);
 
     if (resolutionUniformLocation === -1 || timeUniformLocation === -1) {
         console.error('Failed to get uniform location');
@@ -177,7 +177,7 @@ function main() {
 
     function render(time) {
         time *= 0.001; // Convert time to seconds
-        console.log("Time:", time); // Log time for debugging
+        //console.log("Time:", time); // Log time for debugging
 
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
         gl.clear(gl.COLOR_BUFFER_BIT);
@@ -188,7 +188,7 @@ function main() {
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
 
-        console.log("Setting resolution:", gl.canvas.width, gl.canvas.height);
+        //console.log("Setting resolution:", gl.canvas.width, gl.canvas.height);
         gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
         console.log("Setting time:", time);
         gl.uniform1f(timeUniformLocation, time);
