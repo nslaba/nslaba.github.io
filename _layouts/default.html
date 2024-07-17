@@ -112,7 +112,7 @@
 
             vec2 shootDirection = vec2(random(vec2(i, 4.0)), random(vec2(i, 5.0))) * 2.0 - 1.0;
             shootDirection = normalize(shootDirection);
-            starPos += shootDirection * (u_time*0.1);
+            starPos += shootDirection * (u_time);
             color += vec3(star(st, starPos, size, brightness));
         }
 
