@@ -120,7 +120,7 @@
                 shootDirection = normalize(shootDirection);
 
         
-                starPos += shootDirection; // falling with gravity
+                starPos += shootDirection*0.1; // falling with gravity
         //        brightness *= 1.0 - mod(u_time * 0.0, 1.0); // Adjust brightness reduction speed
 
         //        // Respawn a new star in the original position
