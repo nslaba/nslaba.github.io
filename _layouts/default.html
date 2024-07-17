@@ -114,7 +114,7 @@
         
         void main() {
             vec2 aspectRatio = vec2(u_resolution.x / u_resolution.y, 1.0);
-            vec2 st = (v_uv - 0.5) * aspectRatio + 0.5;
+            vec2 st = (v_uv * u_resolution - 0.5 * u_resolution) / u_resolution.y;
         
             vec3 color = vec3(0.0);
         
