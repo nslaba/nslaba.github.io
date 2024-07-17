@@ -117,9 +117,10 @@
             // Determine if star shoots
             if (random(vec2(i, u_time)) < shootProbability) {
                 vec2 shootDirection = vec2(random(vec2(i, 4.0)), random(vec2(i, 5.0))) * 2.0 - 1.0;
+                shootDirection = normalize(shootDirection);
 
         
-                starPos += shootDirection * mod(u_time, 1.0) * 2.0; // Scale u_time to slow down movement
+                starPos += shootDirection * u_time; // Scale u_time to slow down movement
         //        brightness *= 1.0 - mod(u_time * 0.0, 1.0); // Adjust brightness reduction speed
 
         //        // Respawn a new star in the original position
