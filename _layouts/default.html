@@ -89,7 +89,7 @@
         vec2 aspectRatio = vec2(u_resolution.x / u_resolution.y, 1.0);
         vec2 st = (v_uv - 0.5) * aspectRatio + 0.5; // st texture coord
 
-        vec3 color = vec3(st.x);
+        vec3 color = vec3(st.y);
 
         // Nebula effect
         //int nebulaClusters = 4;
