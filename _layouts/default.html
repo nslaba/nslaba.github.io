@@ -116,7 +116,7 @@
             float size = random(vec2(i, 2.0)) * 0.01 + 0.002;
             float brightness = random(vec2(i, 3.0)) * 0.8 + 0.2;
 
-            if (shoot ==st.x) {
+            if (shoot ==50) {
                 vec2 shootDirection = vec2(random(vec2(i, 4.0)), random(vec2(i, 5.0))) * 2.0 - 1.0;
                 shootDirection = normalize(shootDirection);
                 starPos += shootDirection * mod(u_time, 3.0);
