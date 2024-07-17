@@ -190,7 +190,7 @@ function main() {
 
         //console.log("Setting resolution:", gl.canvas.width, gl.canvas.height);
         gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
-        console.log("Setting time:", time);
+        //console.log("Setting time:", time);
         gl.uniform1f(timeUniformLocation, time);
 
         gl.drawArrays(gl.TRIANGLES, 0, 6);
