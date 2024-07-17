@@ -124,10 +124,12 @@
         //        brightness *= 1.0 - mod(u_time * 0.0, 1.0); // Adjust brightness reduction speed
 
         //        // Respawn a new star in the original position
-                //vec2 newStarPos = vec2(random(vec2(i + numStars, 0.0)), random(vec2(i + numStars, 1.0)));
-                //color += vec3(star(st, newStarPos, size, brightness));
-            } 
-            color += vec3(star(st, starPos, size, brightness));
+                vec2 newStarPos = vec2(random(vec2(i + numStars, 0.0)), random(vec2(i + numStars, 1.0)));
+                color += vec3(star(st, newStarPos, size, brightness));
+            } else {
+                color += vec3(star(st, starPos, size, brightness));
+            }
+            
             
         }
 
