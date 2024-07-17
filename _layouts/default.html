@@ -111,7 +111,7 @@
             float brightness = random(vec2(i, 3.0)) * 0.8 + 0.2;
 
             // Slower twinkling effect
-            brightness *= sin(u_time * 0.01) * 0.5 + 0.5; // Adjust frequency by scaling u_time
+            brightness *= sin(u_time) * 0.5 + 0.5; // Adjust frequency by scaling u_time
             brightness += 0.5 * float(i);
 
         //    // Determine if star shoots
