@@ -105,10 +105,10 @@
 
         for (int i=0; i <numShootingStars; i++) {
             // Create random star position
-            vec2 starPos = vec2(random(vec2(i*mod(u_time, 100), 0.0)), random(vec2(i, 1.0)));
+            vec2 starPos = vec2(random(vec2(i*mod(u_time, 100.0), 0.0)), random(vec2(i, 1.0)));
             
-            float size = random(vec2(i*mod(u_time, 100), 2.0)) * 0.01 + 0.002;
-            float brightness = random(vec2(i*mod(u_time, 100), 3.0)) * 0.8 + 0.2;
+            float size = random(vec2(i*mod(u_time, 100.0), 2.0)) * 0.01 + 0.002;
+            float brightness = random(vec2(i*mod(u_time, 100.0), 3.0)) * 0.8 + 0.2;
 
             vec2 shootDirection = vec2(random(vec2(i, 4.0)), random(vec2(i, 5.0))) * 2.0 - 1.0;
             shootDirection = normalize(shootDirection);
@@ -118,7 +118,7 @@
 
         // Number of normal stars 
         int numNormalStars = 100;
-        float shootProbability = 0.01; // 1 in 100 chance
+        
 
         // normal stars
         for (int i = 0; i < numNormalStars; i++) {
@@ -131,21 +131,8 @@
             // Slower twinkling effect WORKS
             brightness *= sin(u_time + float(i)) * 0.5 + 0.5; // Adjust frequency by scaling u_time
             brightness += 0.5 ;
-
-            // Determine if star shoots
-            //if (random(vec2(i, u_time)) < shootProbability) {
-               //vec2 shootDirection = vec2(random(vec2(i, 4.0)), random(vec2(i, 5.0))) * 2.0 - 1.0;
-               //shootDirection = normalize(shootDirection);
-
-        
-               //starPos += shootDirection*u_time; 
-        //        brightness *= 1.0 - mod(u_time * 0.0, 1.0); // Adjust brightness reduction speed
-
-        //        // Respawn a new star in the original position
-                //vec2 newStarPos = vec2(random(vec2(i + numNormalStars, 0.0)), random(vec2(i + numNormalStars, 1.0)));
-                //color += vec3(star(st, newStarPos, size, brightness));
             
-                color += vec3(star(st, starPos, size, brightness));
+            color += vec3(star(st, starPos, size, brightness));
         }
 
        
