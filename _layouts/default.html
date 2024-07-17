@@ -115,7 +115,7 @@
             //brightness += 0.5 ;
 
             // Determine if star shoots
-            if (random(vec2(i, u_time)) < shootProbability) {
+            //if (random(vec2(i, u_time)) < shootProbability) {
                 vec2 shootDirection = vec2(random(vec2(i, 4.0)), random(vec2(i, 5.0))) * 2.0 - 1.0;
                 shootDirection = normalize(shootDirection);
 
@@ -124,11 +124,11 @@
         //        brightness *= 1.0 - mod(u_time * 0.0, 1.0); // Adjust brightness reduction speed
 
         //        // Respawn a new star in the original position
-                vec2 newStarPos = vec2(random(vec2(i + numStars, 0.0)), random(vec2(i + numStars, 1.0)));
-                color += vec3(star(st, newStarPos, size, brightness));
-            } else {
+                //vec2 newStarPos = vec2(random(vec2(i + numStars, 0.0)), random(vec2(i + numStars, 1.0)));
+                //color += vec3(star(st, newStarPos, size, brightness));
+            //} else {
                 color += vec3(star(st, starPos, size, brightness));
-            }
+            //}
             
             
         }
