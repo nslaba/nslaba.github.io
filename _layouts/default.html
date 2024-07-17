@@ -104,19 +104,6 @@
         // Number of normal stars 
         int numNormalStars = 100;
 
-        //for (int i=0; i <numNormalStars; i+35) {
-        //    // Create random star position
-        //    vec2 starPos = vec2(random(vec2(float(i), 0.0)), random(vec2(i, 1.0)));
-        //    
-        //    float size = random(vec2(float(i), 2.0)) * 0.01 + 0.002;
-        //    float brightness = random(vec2(float(i), 3.0)) * 0.8 + 0.2;
-//
-        //    vec2 shootDirection = vec2(random(vec2(i, 4.0)), random(vec2(i, 5.0))) * 2.0 - 1.0;
-        //    shootDirection = normalize(shootDirection);
-        //    starPos += shootDirection * (u_time);
-        //    color += vec3(star(st, starPos, size, brightness));
-        //}
-
         int shoot = 0;
         
         // normal stars
@@ -130,7 +117,7 @@
             if (shoot ==20) {
                 vec2 shootDirection = vec2(random(vec2(i, 4.0)), random(vec2(i, 5.0))) * 2.0 - 1.0;
                 shootDirection = normalize(shootDirection);
-                starPos += shootDirection * (u_time);
+                starPos += shootDirection * mod(u_time, 10.0);
                 shoot = 0;
             }
 
