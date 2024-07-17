@@ -126,9 +126,9 @@
         //        // Respawn a new star in the original position
                 //vec2 newStarPos = vec2(random(vec2(i + numStars, 0.0)), random(vec2(i + numStars, 1.0)));
                 //color += vec3(star(st, newStarPos, size, brightness));
-            } else {
-                color += vec3(star(st, starPos, size, brightness));
-            }
+            } 
+            color += vec3(star(st, starPos, size, brightness));
+            
         }
 
         outColor = vec4(color, 1.0);
