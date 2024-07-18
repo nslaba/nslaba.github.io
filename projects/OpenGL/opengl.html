@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenGL Hermite Spline Project</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #0779e4 3px solid;
+        }
+        header a {
+            color: #fff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+        header ul {
+            padding: 0;
+            list-style: none;
+        }
+        header li {
+            float: left;
+            display: inline;
+            padding: 0 20px 0 20px;
+        }
+        header #branding {
+            float: left;
+        }
+        header #branding h1 {
+            margin: 0;
+        }
+        header nav {
+            float: right;
+            margin-top: 10px;
+        }
+        .content {
+            padding: 20px;
+            background: #fff;
+            margin-top: 20px;
+        }
+        .content h2, .content h3 {
+            color: #333;
+        }
+        .content img {
+            width: 100%;
+            margin-top: 10px;
+        }
+        footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div id="branding">
+                <h1>OpenGL Hermite Spline Project</h1>
+            </div>
+            <!-- <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="Arduino.html">Arduino</a></li>
+                    <li><a href="RayTracer.html">RayTracer</a></li>
+                    <li><a href="opengl.html">OpenGL</a></li>
+                </ul>
+            </nav> -->
+        </div>
+    </header>
+
+    <div class="container content">
+        <section id="opengl">
+            <h2>Introduction to OpenGL and Hermite Splines</h2>
+            <p>I have experience with older versions of OpenGL. A fun project was building a Hermite Spline system and a simulator.</p>
+            <p>Hermite splines are an essential tool in computer graphics for creating smooth curves and animations. They allow for precise control over the curve's shape by manipulating the control points and tangents. This capability makes Hermite splines invaluable for tasks such as keyframe animation, path interpolation, and even in the design of complex shapes and surfaces.</p>
+            
+            <h3>Hermite Spline Project</h3>
+            <p>The task was to build a Hermite Spline system and a simulator that meets the following criteria:</p>
+            <ul>
+                <li>Hermite spline class with a maximum of 40 control points.</li>
+                <li>Catmull-Rom initialization with second-order accurate boundary conditions using the command: <code>system cr</code></li>
+                <li>Manipulation of control points and tangents using the console commands.</li>
+                <li>Arc Length parameterization using a piecewise linear approximation and lookup table: <code>system getArcLength</code></li>
+                <li>Input/output from/to a file: <code>system load ""</code> and <code>system export ""</code></li>
+                <li>Loading the path for the object: <code>system objectpath load ""</code></li>
+                <li>Aligning the major axis of the object with the tangent of the path as it moves.</li>
+                <li>Ensuring the moving object starts and stops in an easy-in, easy-out way, maintaining a constant speed during the rest of the motion.</li>
+            </ul>
+            <p>Below are the images depicting various aspects of the project:</p>
+            <h4>Task</h4>
+            <img src="file-gKaW8x4mf3d3HDBekSMiCxd3" alt="Task Description">
+            <h4>Criteria</h4>
+            <img src="file-bQU6Xh39t1Ch9LZ69kzyydk2" alt="Criteria Description">
+            <h4>Summary</h4>
+            <img src="file-5sP43YPqwNuz5gPNneJjLa8g" alt="Summary">
+            <h4>Functionality</h4>
+            <img src="file-5sP43YPqwNuz5gPNneJjLa8g" alt="Functionality">
+        </section>
+    </div>
+
+    <footer>
+        <p>OpenGL Hermite Spline Project &copy; 2024</p>
+    </footer>
+</body>
+</html>
