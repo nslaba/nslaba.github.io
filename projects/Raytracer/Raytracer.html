@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RayTracer Project</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #0779e4 3px solid;
+        }
+        header a {
+            color: #fff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+        header ul {
+            padding: 0;
+            list-style: none;
+        }
+        header li {
+            float: left;
+            display: inline;
+            padding: 0 20px 0 20px;
+        }
+        header #branding {
+            float: left;
+        }
+        header #branding h1 {
+            margin: 0;
+        }
+        header nav {
+            float: right;
+            margin-top: 10px;
+        }
+        .content {
+            padding: 20px;
+            background: #fff;
+            margin-top: 20px;
+        }
+        .content h2, .content h3 {
+            color: #333;
+        }
+        .content img {
+            width: 100%;
+            margin-top: 10px;
+        }
+        footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div id="branding">
+                <h1>RayTracer Project</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#task">Task</a></li>
+                    <li><a href="#criteria">Criteria</a></li>
+                    <li><a href="#summary">Summary</a></li>
+                    <li><a href="#functionality">Functionality</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container content">
+        <section id="task">
+            <h2>Task</h2>
+            <p>Build a simple ray tracer program that creates ppm images of spheres by reading the present text files' specifications.</p>
+        </section>
+
+        <section id="criteria">
+            <h2>Criteria</h2>
+            <ul>
+                <li>Build a raytracer using either C++, Python, or Java</li>
+                <li>The system only needs to handle the rendering of ellipsoids</li>
+                <li>It will have a fixed camera situated at the origin in a right-handed coordinate system</li>
+                <li>It will be looking down the negative z-axis</li>
+                <li>Local illumination, reflections, and shadows will also need to be implemented</li>
+                <li>The program should take a single argument, which is the name of the file to be parsed</li>
+                <li>Output should be a ppm image</li>
+            </ul>
+        </section>
+
+        <section id="summary">
+            <h2>Summary</h2>
+            <p>I have chosen to work in C++ as it is the fastest option. With C++, my images take a maximum of several seconds to be produced, whereas with Python they could have taken up to several minutes. The Raytracer is set up to support local illumination (Ambient, Diffuse, and Specular), reflections, and shadows using recursion of depth 3.</p>
+            <h3>Illumination:</h3>
+            <img src="illumination.png" alt="Illumination">
+            <h3>Specular light:</h3>
+            <img src="specularLight.png" alt="Specular light">
+            <h3>Reflections:</h3>
+            <img src="reflections.png" alt="Reflections">
+            <h3>Shadows:</h3>
+            <img src="shadows.png" alt="Shadows">
+        </section>
+
+        <section id="functionality">
+            <h2>Functionality</h2>
+            <p>My project first deals with the input text file by reading it, parsing it, and populating the proper struct variables. All of my parsing is done in a separate file called Parsing.cpp.</p>
+            <p>Once all of my variables are updated, the main in RayTracer.cpp constructs the correct view plane. Using the Width and the Height it creates an array of pixel structs which hold RGB components. Once the array of pixels and the view plane are generated, the main is ready to create the Ray struct (defined in structs.hpp) particular to the particular pixel. To compute the color of this ray Ray, raytrace(ray) is called returning its color in RGB. The color is then stored in the array of pixels.</p>
+            <p>Raytrace(ray): raytrace is a recursive function that repeatedly finds the closest intersection for the particular ray. It checks if there has been an intersection or not and if there hasn't been any, then it returns black for a reflected ray and returns the background color for an original ray. If there has been an intersection, then it calculates the given shadows casted by each light (shadow_ray function). Lastly, the depth of ray is reduced and raytracer is called again with the now reflected ray.</p>
+        </section>
+
+        <section id="grade">
+            <h2>Grade received</h2>
+            <p>100%</p>
+        </section>
+    </div>
+
+    <footer>
+        <p>RayTracer Project &copy; 2024</p>
+    </footer>
+</body>
+</html>
