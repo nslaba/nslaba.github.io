@@ -40,8 +40,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    setInterval(autoSlide, 20); // Adjust the interval as needed
+    setInterval(autoSlide, 0); // Adjust the interval as needed
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const slider = document.querySelector('.project-slider');
+    const leftArrow = document.querySelector('.arrow-left');
+    const rightArrow = document.querySelector('.arrow-right');
+
+    leftArrow.addEventListener('click', () => {
+        slider.scrollBy({ left: -300, behavior: 'smooth' });
+    });
+
+    rightArrow.addEventListener('click', () => {
+        slider.scrollBy({ left: 300, behavior: 'smooth' });
+    });
+});
+
 
 // WebGL setup
 function createShader(gl, type, source) {

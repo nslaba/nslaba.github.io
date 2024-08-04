@@ -127,7 +127,7 @@ header {
 	
 	header h1 {
 		font-size: 3em;
-		font-family: 'Ramaraja';
+		font-family: 'Calibri';
 		color: #fff;
 	}
 	
@@ -151,13 +151,33 @@ header {
 		margin-bottom: 20px;
 	}
 	
-	/* .project-slider {
+	.project-slider {
 		display: flex;
-		overflow-x: auto;
-		scroll-snap-type: x mandatory;
+		overflow: hidden;
+		position: relative;
 		padding-bottom: 10px;
 	}
-	 */
+	
+	.arrow {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		background-color: rgba(255, 255, 255, 0.8);
+		border: none;
+		font-size: 2em;
+		padding: 0 10px;
+		cursor: pointer;
+		z-index: 2;
+	}
+	
+	.arrow-left {
+		left: 10px;
+	}
+	
+	.arrow-right {
+		right: 10px;
+	}
+	
 	.project {
 		background-color: #fff;
 		border: 1px solid #ddd;
