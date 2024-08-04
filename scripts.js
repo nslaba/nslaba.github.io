@@ -1,35 +1,64 @@
 // For interactve scrolling
+
 document.addEventListener('DOMContentLoaded', function() {
     const slider = document.querySelector('.project-slider');
-    let isHovering = false;
+    const projects = document.querySelectorAll('.project');
+    const projectWidth = projects[0].offsetWidth;
 
-    // Stop animation on hover
+    // Clone the original projects to the end of the slider
+    projects.forEach(project => {
+        const clone = project.cloneNode(true);
+        slider.appendChild(clone);
+    });
+
+    let isHovering = false;
+    let scrollInterval;
+    let scrollDirection = 1; // 1 for right, -1 for left
+
+    function startScrolling() {
+        scrollInterval = setInterval(() => {
+            if (!isHovering) {
+                slider.scrollLeft += scrollDirection;
+                if (slider.scrollLeft >= slider.scrollWidth - slider.clientWidth) {
+                    slider.scrollLeft = 0;
+                } else if (slider.scrollLeft <= 0) {
+                    slider.scrollLeft = slider.scrollWidth - slider.clientWidth;
+                }
+            }
+        }, 20); // Adjust the interval as needed
+    }
+
     slider.addEventListener('mouseenter', () => {
         isHovering = true;
-        slider.style.animationPlayState = 'paused';
+        clearInterval(scrollInterval);
     });
 
-    // Resume animation when not hovering
     slider.addEventListener('mouseleave', () => {
         isHovering = false;
-        slider.style.animationPlayState = 'running';
+        startScrolling();
     });
 
-    // Scroll based on mouse position
     slider.addEventListener('mousemove', (e) => {
-        if (!isHovering) return;
-        const sliderRect = slider.getBoundingClientRect();
-        const mouseX = e.clientX - sliderRect.left;
-        const sliderWidth = sliderRect.width;
-        const scrollSpeed = 2; // Adjust scroll speed as needed
+        if (isHovering) {
+            const sliderRect = slider.getBoundingClientRect();
+            const mouseX = e.clientX - sliderRect.left;
+            const sliderWidth = sliderRect.width;
+            const halfSliderWidth = sliderWidth / 2;
+            const scrollSpeed = 2; // Adjust scroll speed as needed
 
-        if (mouseX < sliderWidth / 2) {
-            slider.scrollLeft -= scrollSpeed;
-        } else {
-            slider.scrollLeft += scrollSpeed;
+            if (mouseX < halfSliderWidth) {
+                slider.scrollLeft -= scrollSpeed;
+                scrollDirection = -1;
+            } else {
+                slider.scrollLeft += scrollSpeed;
+                scrollDirection = 1;
+            }
         }
     });
+
+    startScrolling();
 });
+
 
 
 // WebGL setup

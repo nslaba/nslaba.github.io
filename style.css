@@ -141,7 +141,7 @@ header {
 	
 	
 	
-	.arrow {
+	/* .arrow {
 		position: absolute;
 		top: 50%;
 		transform: translateY(-50%);
@@ -221,8 +221,68 @@ header {
 	.project iframe {
 		height: 200px;
 		border: none;
+	} */
+	
+
+	.projects {
+	    text-align: center;
+	    margin: 20px 0;
 	}
 	
+	.projects h2 {
+	    font-size: 2em;
+	    font-family: 'Ramaraja';
+	    color: #fff;
+	    margin-bottom: 20px;
+	}
+	
+	.project-slider {
+	    display: flex;
+	    overflow: hidden;
+	    position: relative;
+	    padding-bottom: 10px;
+	}
+	
+	.project {
+	    background-color: #fff;
+	    border: 1px solid #ddd;
+	    border-radius: 8px;
+	    overflow: hidden;
+	    text-align: center;
+	    transition: transform 0.2s;
+	    width: 300px;
+	    flex: 0 0 auto;
+	    margin: 10px;
+	}
+	
+	.project:hover {
+	    transform: scale(1.05);
+	}
+	
+	.project img, .project iframe {
+	    width: 100%;
+	    height: auto;
+	}
+	
+	.project h3 {
+	    margin: 10px 0;
+	    font-size: 1.5em;
+	}
+	
+	.project h3 a {
+	    text-decoration: none;
+	    color: #332222;
+	}
+	
+	.project h3 a:hover {
+	    color: #1b68c0;
+	}
+	
+	.project iframe {
+	    height: 200px;
+	    border: none;
+	}
+
 
 	hr {
 		border: none;
