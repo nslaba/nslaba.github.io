@@ -109,7 +109,7 @@ header {
 		margin-top:10px;
 		z-index: 1;
 		font-family: 'Calibri';
-		color: #d19dc0;
+		
 	}
 	
 	
@@ -122,10 +122,11 @@ header {
 		header h1 {
 			font-size: 3em;
 			font-family: 'Ramaraja';
-			color: #fff;
+			
 		}
 
 		header h1 a {
+			color: #fff;
 			text-decoration: none;
 		}
 	
