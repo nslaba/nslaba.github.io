@@ -140,15 +140,6 @@ header {
 	}
 	
 	
-	/* .project-slider-container {
-		position: relative;
-	}
-	
-	.project-slider {
-		display: flex;
-		overflow: hidden;
-		padding-bottom: 10px;
-	}
 	
 	.arrow {
 		position: absolute;
@@ -170,46 +161,7 @@ header {
 		right: 10px;
 	}
 	
-	.project {
-		background-color: #fff;
-		border: 1px solid #ddd;
-		border-radius: 8px;
-		overflow: hidden;
-		text-align: center;
-		transition: transform 0.2s;
-		width: 300px;
-		flex: 0 0 auto;
-		margin: 10px;
-		scroll-snap-align: start;
-	}
 	
-	.project:hover {
-		transform: scale(1.05);
-	}
-	
-	.project img, .project iframe {
-		width: 100%;
-		height: auto;
-	}
-	
-	.project h3 {
-		margin: 10px 0;
-		font-size: 1.5em;
-	}
-	
-	.project h3 a {
-		text-decoration: none;
-		color: #332222;
-	}
-	
-	.project h3 a:hover {
-		color: #1b68c0;
-	}
-	
-	.project iframe {
-		height: 200px;
-		border: none;
-	} */
 	.project-slider {
 		display: flex;
 		overflow: hidden;
@@ -227,7 +179,7 @@ header {
 			transform: translateX(0);
 		}
 		100% {
-			transform: translateX(calc(-20px * 5)); /* Adjust the number 5 to the number of projects */
+			transform: translateX(calc(-100px * 5)); 
 		}
 	}
 	
