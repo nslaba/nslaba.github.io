@@ -1,5 +1,3 @@
-// For interactve scrolling
-
 document.addEventListener('DOMContentLoaded', function() {
     const slider = document.querySelector('.project-slider');
     const projects = document.querySelectorAll('.project');
@@ -39,25 +37,32 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     slider.addEventListener('mousemove', (e) => {
-        if (isHovering) {
-            const sliderRect = slider.getBoundingClientRect();
-            const mouseX = e.clientX - sliderRect.left;
-            const sliderWidth = sliderRect.width;
-            const halfSliderWidth = sliderWidth / 2;
-            const scrollSpeed = 2; // Adjust scroll speed as needed
+        const sliderRect = slider.getBoundingClientRect();
+        const mouseX = e.clientX - sliderRect.left;
+        const sliderWidth = sliderRect.width;
+        const leftZoneWidth = sliderWidth / 4; // Define the width of the left and right zones
+        const rightZoneStart = sliderWidth - leftZoneWidth;
+        const scrollSpeed = 2; // Adjust scroll speed as needed
 
-            if (mouseX < halfSliderWidth) {
-                slider.scrollLeft -= scrollSpeed;
-                scrollDirection = -1;
-            } else {
-                slider.scrollLeft += scrollSpeed;
-                scrollDirection = 1;
-            }
+        if (mouseX < leftZoneWidth) {
+            // Hovering over the left zone
+            isHovering = true;
+            slider.scrollLeft -= scrollSpeed;
+            scrollDirection = -1;
+        } else if (mouseX > rightZoneStart) {
+            // Hovering over the right zone
+            isHovering = true;
+            slider.scrollLeft += scrollSpeed;
+            scrollDirection = 1;
+        } else {
+            // Hovering over the center zone
+            isHovering = false;
         }
     });
 
     startScrolling();
 });
+
 
 
 
