@@ -108,14 +108,8 @@ header {
 		position: center;
 		margin-top:10px;
 		z-index: 1;
-	}
-	
-	.description {
-		text-align: center;
-		font-size: 15px;
 		font-family: 'Calibri';
 		color: #d19dc0;
-		margin-bottom: 10px;
 	}
 	
 	
@@ -128,7 +122,8 @@ header {
 	header h1 {
 		font-size: 3em;
 		font-family: 'Calibri';
-		color: #fff;
+		color: #d19dc0;
+		text-decoration: none;
 	}
 	
 	.description {
@@ -228,21 +223,21 @@ header {
 	    text-align: center;
 	    margin: 20px 0;
 	}
-	
+
 	.projects h2 {
 	    font-size: 2em;
 	    font-family: 'Ramaraja';
 	    color: #fff;
 	    margin-bottom: 20px;
 	}
-	
+
 	.project-slider {
 	    display: flex;
 	    overflow: hidden;
 	    position: relative;
 	    padding-bottom: 10px;
 	}
-	
+
 	.project {
 	    background-color: #fff;
 	    border: 1px solid #ddd;
@@ -254,30 +249,30 @@ header {
 	    flex: 0 0 auto;
 	    margin: 10px;
 	}
-	
+
 	.project:hover {
 	    transform: scale(1.05);
 	}
-	
+
 	.project img, .project iframe {
 	    width: 100%;
 	    height: auto;
 	}
-	
+
 	.project h3 {
 	    margin: 10px 0;
 	    font-size: 1.5em;
 	}
-	
+
 	.project h3 a {
 	    text-decoration: none;
 	    color: #332222;
 	}
-	
+
 	.project h3 a:hover {
 	    color: #1b68c0;
 	}
-	
+
 	.project iframe {
 	    height: 200px;
 	    border: none;
