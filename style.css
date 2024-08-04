@@ -139,22 +139,14 @@ header {
 		margin-bottom: 10px;
 	}
 	
-	.projects {
-		text-align: center;
-		margin: 20px 0;
-	}
 	
-	.projects h2 {
-		font-size: 2em;
-		font-family: 'Ramaraja';
-		color: #fff;
-		margin-bottom: 20px;
+	/* .project-slider-container {
+		position: relative;
 	}
 	
 	.project-slider {
 		display: flex;
 		overflow: hidden;
-		position: relative;
 		padding-bottom: 10px;
 	}
 	
@@ -217,8 +209,69 @@ header {
 	.project iframe {
 		height: 200px;
 		border: none;
+	} */
+	.project-slider {
+		display: flex;
+		overflow: hidden;
+		position: relative;
+		padding-bottom: 10px;
+		animation: scroll 20s linear infinite;
 	}
 	
+	.project-slider:hover {
+		animation-play-state: paused;
+	}
+	
+	@keyframes scroll {
+		0% {
+			transform: translateX(0);
+		}
+		100% {
+			transform: translateX(calc(-20px * 5)); /* Adjust the number 5 to the number of projects */
+		}
+	}
+	
+	.project {
+		background-color: #fff;
+		border: 1px solid #ddd;
+		border-radius: 8px;
+		overflow: hidden;
+		text-align: center;
+		transition: transform 0.2s;
+		width: 300px;
+		flex: 0 0 auto;
+		margin: 10px;
+	}
+	
+	.project:hover {
+		transform: scale(1.05);
+	}
+	
+	.project img, .project iframe {
+		width: 100%;
+		height: auto;
+	}
+	
+	.project h3 {
+		margin: 10px 0;
+		font-size: 1.5em;
+	}
+	
+	.project h3 a {
+		text-decoration: none;
+		color: #332222;
+	}
+	
+	.project h3 a:hover {
+		color: #1b68c0;
+	}
+	
+	.project iframe {
+		height: 200px;
+		border: none;
+	}
+	
+
 	hr {
 		border: none;
 		border-top: 2px solid #ccc;

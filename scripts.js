@@ -1,59 +1,33 @@
 // For interactve scrolling
 document.addEventListener('DOMContentLoaded', function() {
     const slider = document.querySelector('.project-slider');
-    let isDown = false;
-    let startX;
-    let scrollLeft;
+    let isHovering = false;
 
-    slider.addEventListener('mousedown', (e) => {
-        isDown = true;
-        slider.classList.add('active');
-        startX = e.pageX - slider.offsetLeft;
-        scrollLeft = slider.scrollLeft;
+    // Stop animation on hover
+    slider.addEventListener('mouseenter', () => {
+        isHovering = true;
+        slider.style.animationPlayState = 'paused';
     });
 
+    // Resume animation when not hovering
     slider.addEventListener('mouseleave', () => {
-        isDown = false;
-        slider.classList.remove('active');
+        isHovering = false;
+        slider.style.animationPlayState = 'running';
     });
 
-    slider.addEventListener('mouseup', () => {
-        isDown = false;
-        slider.classList.remove('active');
-    });
-
+    // Scroll based on mouse position
     slider.addEventListener('mousemove', (e) => {
-        if (!isDown) return;
-        e.preventDefault();
-        const x = e.pageX - slider.offsetLeft;
-        const walk = (x - startX) * 2; //scroll-fast
-        slider.scrollLeft = scrollLeft - walk;
-    });
+        if (!isHovering) return;
+        const sliderRect = slider.getBoundingClientRect();
+        const mouseX = e.clientX - sliderRect.left;
+        const sliderWidth = sliderRect.width;
+        const scrollSpeed = 2; // Adjust scroll speed as needed
 
-    // Optional: automatic sliding effect
-    function autoSlide() {
-        const maxScrollLeft = slider.scrollWidth - slider.clientWidth;
-        if (slider.scrollLeft >= maxScrollLeft) {
-            slider.scrollLeft = 0;
+        if (mouseX < sliderWidth / 2) {
+            slider.scrollLeft -= scrollSpeed;
         } else {
-            slider.scrollLeft += 1;
+            slider.scrollLeft += scrollSpeed;
         }
-    }
-
-    setInterval(autoSlide, 0); // Adjust the interval as needed
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const slider = document.querySelector('.project-slider');
-    const leftArrow = document.querySelector('.arrow-left');
-    const rightArrow = document.querySelector('.arrow-right');
-
-    leftArrow.addEventListener('click', () => {
-        slider.scrollBy({ left: -300, behavior: 'smooth' });
-    });
-
-    rightArrow.addEventListener('click', () => {
-        slider.scrollBy({ left: 10, behavior: 'smooth' });
     });
 });
 
