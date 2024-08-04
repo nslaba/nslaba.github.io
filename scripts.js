@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     rightArrow.addEventListener('click', () => {
-        slider.scrollBy({ left: 300, behavior: 'smooth' });
+        slider.scrollBy({ left: 10, behavior: 'smooth' });
     });
 });
 
