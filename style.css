@@ -90,9 +90,9 @@ header {
 	body, html {
 		margin: 0;
 		padding: 0;
-		overflow: auto; /*hidden;*/
+		overflow: auto; 
 		width: 100%;
-		height: auto; /*100%;*/
+		height: auto;
 	}
 	
 	canvas {
@@ -106,9 +106,19 @@ header {
 	
 	header, main {
 		position: center;
-		margin-top: 10px;
+		margin-top:10px;
 		z-index: 1;
 	}
+	
+	.description {
+		text-align: center;
+		font-size: 15px;
+		font-family: 'Calibri';
+		color: #d19dc0;
+		margin-bottom: 10px;
+	}
+	
+	
 	
 	header {
 		text-align: center;
@@ -141,13 +151,13 @@ header {
 		margin-bottom: 20px;
 	}
 	
-	.project-slider {
+	/* .project-slider {
 		display: flex;
 		overflow-x: auto;
 		scroll-snap-type: x mandatory;
 		padding-bottom: 10px;
 	}
-	
+	 */
 	.project {
 		background-color: #fff;
 		border: 1px solid #ddd;
