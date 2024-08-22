@@ -220,27 +220,27 @@
             }
         
             // Shooting stars
-            float t = u_time * SHOOTING_STAR_VELOCITY;
-            vec2 uv = (v_uv * u_resolution - 0.5 * u_resolution) / u_resolution.y;
-            vec2 transformedUv1 = vec2(uv.x - t, uv.y + t);
-            transformedUv1.x *= 1.1;
-            float angle = 3. * ROTATION_ANGLE;
-            float sine = sin(angle);
-            float cosine = cos(angle);
-            mat2 rotationMatrix = mat2(cosine, -sine, sine, cosine);
-            transformedUv1 *= rotationMatrix;
-            transformedUv1 *= SCALE * .9;
-            vec2 transformedUv2 = uv + t * 1.2;
-            transformedUv2.x *= 1.1;
-            angle = ROTATION_ANGLE;
-            sine = sin(angle);
-            cosine = cos(angle);
-            rotationMatrix = mat2(cosine, -sine, sine, cosine);
-            transformedUv2 *= rotationMatrix;
-            transformedUv2 *= SCALE * 1.1;
-            float shootingStar1 = createShootingStar(transformedUv1);
-            float shootingStar2 = createShootingStar(transformedUv2);
-            color += vec3(clamp(shootingStar1 + shootingStar2, 0., 1.));
+            //float t = u_time * SHOOTING_STAR_VELOCITY;
+            //vec2 uv = (v_uv * u_resolution - 0.5 * u_resolution) / u_resolution.y;
+            //vec2 transformedUv1 = vec2(uv.x - t, uv.y + t);
+            //transformedUv1.x *= 1.1;
+            //float angle = 3. * ROTATION_ANGLE;
+            //float sine = sin(angle);
+            //float cosine = cos(angle);
+            //mat2 rotationMatrix = mat2(cosine, -sine, sine, cosine);
+            //transformedUv1 *= rotationMatrix;
+            //transformedUv1 *= SCALE * .9;
+            //vec2 transformedUv2 = uv + t * 1.2;
+            //transformedUv2.x *= 1.1;
+            //angle = ROTATION_ANGLE;
+            //sine = sin(angle);
+            //cosine = cos(angle);
+            //rotationMatrix = mat2(cosine, -sine, sine, cosine);
+            //transformedUv2 *= rotationMatrix;
+            //transformedUv2 *= SCALE * 1.1;
+            //float shootingStar1 = createShootingStar(transformedUv1);
+            //float shootingStar2 = createShootingStar(transformedUv2);
+            //color += vec3(clamp(shootingStar1 + shootingStar2, 0., 1.));
         
             outColor = vec4(color, 1.0);
         }
