@@ -1,0 +1,85 @@
+/* Base styles */
+body.dark {
+  background-color: #000;
+  color: #eee;
+  font-family: 'Helvetica Neue', sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: #ffa500;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+header {
+  padding: 2rem;
+  text-align: center;
+}
+
+header .home-link {
+  display: block;
+  text-align: left;
+  color: #888;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+h1, h2 {
+  color: #fff;
+}
+
+/* Intro section */
+.intro {
+  padding: 2rem;
+  max-width: 800px;
+  margin: auto;
+  text-align: center;
+}
+
+.portrait {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1.5rem;
+  border: 2px solid #444;
+}
+
+/* About sections */
+.about-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  padding: 2rem;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.about-section {
+  text-align: left;
+}
+
+.about-section img {
+  max-width: 100%;
+  border-radius: 1rem;
+  margin-top: 1rem;
+  border: 1px solid #444;
+}
+
+/* Responsive layout */
+@media (max-width: 600px) {
+  .about-sections {
+    padding: 1rem;
+  }
+
+  .portrait {
+    width: 120px;
+    height: 120px;
+  }
+}

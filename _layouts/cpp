@@ -1,0 +1,11 @@
+
+bool isPrime(int num){
+    int diviser = 2;
+    while (diviser < num/2) {
+        if (num % diviser == 0) {
+            return false;
+        }
+        diviser ++;
+    }    
+    return true;
+}

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenGL Hermite Spline Project</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #0779e4 3px solid;
+        }
+        header a {
+            color: #fff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+        header ul {
+            padding: 0;
+            list-style: none;
+        }
+        header li {
+            float: left;
+            display: inline;
+            padding: 0 20px 0 20px;
+        }
+        header #branding {
+            float: left;
+        }
+        header #branding h1 {
+            margin: 0;
+        }
+        header nav {
+            float: right;
+            margin-top: 10px;
+        }
+        .content {
+            padding: 20px;
+            background: #fff;
+            margin-top: 20px;
+        }
+        .content h2, .content h3 {
+            color: #333;
+        }
+        .content img {
+            width: 100%;
+            margin-top: 10px;
+        }
+        footer {
+            background: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div id="branding">
+                <h1>OpenGL Projects</h1>
+            </div>
+        </div>
+    </header>
+
+    <div class="container content">
+        <section id="opengl">
+            <h2>Building a Hermite Spline in OpenGL</h2>
+            <p>Why are Hermite Splines so cool you may ask?!</p>
+            <p>Hermite splines are an essential tool in computer graphics for creating smooth curves and animations. They allow for precise control over the curve's shape by manipulating the control points and tangents. This capability makes Hermite splines invaluable for tasks such as keyframe animation, path interpolation, and even in the design of complex shapes and surfaces.</p>
+            
+            <h3>Hermite Spline Project</h3>
+            <p>Created in C++ and an older version of OpenGL, this project fullfilled the following criteria:</p>
+            <ul>
+                <li>I've created a Hermite spline class with 40 control points.</li>
+                <li>I've used Catmull-Rom with second-order accurate boundary conditions to generate tangent vectors. This is executed using the command: <code>system cr</code></li>
+                <li>I've allowed for manipulation of control points and tangents using the console commands.</li>
+                <li>I used Arc Length parameterization using a piecewise linear approximation and lookup table for more uniform sampling of points along a curve. This allowed me to access an arbitrary position on the spline with  P(u(s(t))). This is executed with the command: <code>system getArcLength</code></li>
+                <li>I've allowed for Input/output from/to a file with the following commands: <code>system load ""</code> and <code>system export ""</code></li>
+                <li>Once all the spline is calculated, the path is loaded for the 3D car object with the following command: <code>system objectpath load ""</code></li>
+                <li>As the car moves along the spline, I've made sure to align its major axis with the tangent of the path by leveraging quaternions.</li>
+                <li>I've Ensured the moving object starts and stops in an easy-in, easy-out way by interpolating accross the spline non-linearly at the beginning and end. However, the 3D car maintains constant speed during the rest of the motion.</li>
+            </ul>
+            <p>The result of all the beautiful math is a car moving along an arbitrary path:</p>
+            <h4>Result</h4>
+            <img src="HermiteSpline/hermiteSpline.gif" alt="Task Description">
+            
+        </section>
+    </div>
+
+    <footer>
+        <p>OpenGL Hermite Spline Project &copy; 2024</p>
+    </footer>
+</body>
+</html>

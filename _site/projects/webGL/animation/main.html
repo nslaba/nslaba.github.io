@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+
+
+
+<script id="vertex-shader" type="x-shader/x-vertex">#version 300 es
+
+in vec4 vPosition;
+in vec3 vNormal;
+//in vec4 vColor;
+in vec2 vTexCoord;
+
+out vec3 pos; //vertex position in eye coordinates
+out vec3 Lpos; //light position in eye coordinates
+out vec3 N; //vertex normal in eye coordinates
+//out vec4 fColor;
+out vec2 fTexCoord;
+
+//uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+uniform mat4 modelViewMatrix;
+uniform mat4 normalMatrix;
+uniform mat4 projectionMatrix;
+uniform vec4 lightPosition;
+//uniform float shininess;
+
+
+void
+main()
+{
+    // Transform vertex normal into eye coordinates
+    pos = (modelViewMatrix * vPosition).xyz;
+    
+    N = normalize( (normalMatrix*vec4(vNormal,0.0)).xyz);
+    
+    // Pass through light position in eye coordinates
+    Lpos = lightPosition.xyz;
+
+    
+    gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+    
+    //Transform texture into eye coordinates
+	fTexCoord = vTexCoord;
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">#version 300 es
+
+precision mediump float;
+
+uniform sampler2D texture1; //space painting
+uniform sampler2D texture2; //black and white painting
+
+uniform int blendTextures;
+uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+//uniform float shininess;
+
+//The following uniforms are for funkyColorShaded and funkyColor functions
+uniform vec2 iResolution; // viewport resolution (in pixels)
+uniform float iTime;      // shader playback time (in seconds)
+
+
+//in vec4 fColor;
+in vec2 fTexCoord;
+in vec3 pos;
+in vec3 Lpos;
+in vec3 N;
+
+layout(location=0) out vec4 fragColor ;
+
+//ADS function
+vec4 ads(vec3 pos, vec3 Lpos, vec3 fN) {
+    vec3 N = normalize(fN);
+    vec3 L = normalize(Lpos - pos);
+    vec3 V = normalize(-pos);
+    vec3 H = normalize(V+L); // Blinn phong half vector
+
+    //terms in illumination equation
+    vec4 ambient = ambientProduct;
+    float lightDotNormal = max( dot(L,N), 0.0);
+
+    vec4 diffuse = vec4(0.0, 0.0, 0.0, 1.0);
+    vec4 specular = vec4(0.0, 0.0, 0.0, 1.0);
+    diffuse = lightDotNormal*diffuseProduct;
+    float reflectedDotViewShiny = pow(max(dot(N,H), 0.0), 30.0);
+    specular = reflectedDotViewShiny*specularProduct;
+
+    if (dot(L,N)<0.0){
+        specular = vec4(0.0, 0.0, 0.0, 1.0);
+    }
+    vec4 color = ambient + diffuse + specular;
+    color.a = 1.0;
+    return color;
+}
+
+
+/* funkyColorShaded: FUNCTION in order to map color to Time          *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   *
+ * Argument: 1. fragColor
+             2. fTexCoord
+             3. vec3 pos
+ * Function: This function maps color to time and dims farther pos.z and makes
+ *           closer pos.z values brighter. It also dims and brightens everything
+ *           with the amplitude made into a sin function. This is done to give a 
+ *           a sense of night before the sun comes up, then day and then night again.
+*/
+void funkyColorShaded(out vec4 fragColor, in vec2 fTexCoord, in vec3 pos )
+{
+    // Normalized pixel coordinates (from 0 to 1)
+    vec2 uv = fTexCoord/iResolution.xy;
+
+    //Make a float variable that is incrementally added over time such that the 
+    //background gets lighter as the sun comes up
+    float brightnessVarience = sin((3.14/32.0)*(iTime-13.0));
+
+    // Time varying pixel color
+    vec3 col =  brightnessVarience+0.5*sin(iTime+uv.xyx+vec3(0,2,4));
+
+    // Output to screen
+    fragColor = vec4(col,1.0);
+
+    //shade the z component of fragColor based on how far away it is To give a sense of depth
+    pos.z /= 28.0;
+    fragColor.x += pos.z;
+    fragColor.y += pos.z;
+    fragColor.z += pos.z;
+
+}
+
+/* funkyColor: FUNCTION in order to map color to Time          *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   *
+ * Argument: 1. fragColor
+ *           2. fTexCoord
+ * Function: This function maps color to time.
+*/
+void funkyColor( out vec4 fragColor, in vec2 fTexCoord )
+{  
+    // Normalized pixel coordinates (from 0 to 1)
+    vec2 uv = fTexCoord/iResolution.xy;
+
+    // Time varying pixel color
+    vec3 col = 0.5 + 0.5*cos(iTime+uv.xyx+vec3(0,2,4));
+
+    // Output to screen
+    fragColor = vec4(col,1.0);
+}
+
+void
+main()
+{
+	if( blendTextures == 0) 
+    {   
+		funkyColorShaded(fragColor, fTexCoord.xy, pos);
+	}
+	else if (blendTextures == 1)
+	{   //utilize the option of coloring the outside and inside (I use this for the cone)
+        if (gl_FrontFacing) {
+		    fragColor = ads(pos, Lpos.xyz, N);
+        } else {
+            funkyColorShaded(fragColor, fTexCoord.xy, pos);
+        }
+	} else  if (blendTextures == 2) { // if blendTextures =2, then call funkyColorShaded for a special effect
+        if (gl_FrontFacing) {
+		    fragColor = texture(texture1, fTexCoord);
+        } else {
+            funkyColorShaded(fragColor, fTexCoord.xy, pos);
+        }
+    } else if (blendTextures ==3){
+        fragColor= texture(texture2, fTexCoord);
+    } else if (blendTextures ==4){
+        funkyColor(fragColor, fTexCoord.xy);
+    } else {
+        fragColor = mix(texture( texture1, fTexCoord ), texture( texture2, fTexCoord ), 0.5);
+    }
+
+}
+</script>
+
+<script type="text/javascript" src="Common/webgl-utils.js"></script>
+<script type="text/javascript" src="Common/initShaders.js"></script>
+
+<script type="text/javascript" src="Common/MV.js"></script>
+<script type="text/javascript" src="objects.js"></script>
+<script type="text/javascript" src="main.js"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGL Hiearchal Animation Project</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <canvas id="gl-canvas" width="512" height="512">
+        Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
+
+    <br />
+    <br />
+    
+     <main class="content">
+         <div class="webgl-project">
+             <!--<iframe src="main.html" frameborder="0"></iframe>-->
+         </div>
+         <div class="project-description">
+             <h2>Task</h2>
+             <p>Create an animation with full creative freedom fulfilling technical criteria</p>
+             <h2>Technical Criteria</h2>
+             <ul>
+                 <li>At least two hierarchical objects</li>
+                 <li>Containing at least two textures either procedural or mapped</li>
+                 <li>At least one shader designed from scratch</li>
+                 <li>360 Degree camera fly around</li>
+                 <li>Connection to real-time</li>
+                 <li>Display the frame rate in the console every 2 seconds</li>
+                 <li>At least one shader utilizing Ambient, Diffuse, Specular light</li>
+             </ul>
+             
+           
+         </div>
+     </main>
+       
+
+</body>
+</html>
