@@ -154,7 +154,7 @@ function main() {
     //console.log("Time Uniform Location:", timeUniformLocation);
 
     if (resolutionUniformLocation === -1 || timeUniformLocation === -1) {
-        console.error('Failed to get uniform location');
+        // console.error('Failed to get uniform location');
         return;
     }
 
@@ -191,6 +191,7 @@ function main() {
         gl.uniform1f(timeUniformLocation, time);
         // In your render/draw function
         gl.uniform2f(uMouseLocation, mouse[0], mouse[1]);
+        //console.log("mouse coords: ",mouse[0], mouse[1]);
         //gl.uniform1i(uClickLocation, clicked ? 1 : 0);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
     
