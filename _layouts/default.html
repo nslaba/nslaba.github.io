@@ -202,61 +202,61 @@
 
         void main() {
             // programmer side
-           //if (v_uv.x < 0.4) {
-           //    
-           //     vec2 p = v_uv;
-           //     vec3 col = vec3(0.0);
-//
-           //     vec2 origin = vec2(0.395, 0.48); // Start in center by Mandelbulb
-//
-           //     float angleSpread = 0.5; // radians between branches
-           //     float initialLength = 0.11;
-           //     int maxDepth = int(mix(0.0, 130.0, 1.0 - u_mouse.x * 3.0)); // deeper when mouse is left
-//
-           //     // Manual stack (iterative)
-           //     const int MAX = 128;
-           //     vec2 starts[MAX];
-           //     vec2 dirs[MAX];
-           //     float lens[MAX];
-//
-           //     int count = 0;
-           //     starts[count] = origin;
-           //     dirs[count] = vec2(-1.0, 0.0); // grow left
-           //     lens[count] = initialLength;
-           //     count++;
-//
-           //     for (int i = 0; i < MAX; i++) {
-           //         if (i >= count || i >= maxDepth) break;
-           //     
-           //         vec2 a = starts[i];
-           //         vec2 dir = dirs[i];
-           //         float len = lens[i];
-           //         vec2 b = a + dir * len;
-           //     
-           //         float d = sdSegment(p, a, b);
-           //         if (d < 0.0015) {
-           //             col = vec3(1.0-u_mouse.x*3.0); // white line
-           //         }
-           //     
-           //         if (count + 2 < MAX) {
-           //             vec2 leftDir  = rotate(dir,  angleSpread);
-           //             vec2 rightDir = rotate(dir, -angleSpread);
-           //         
-           //             starts[count] = b;
-           //             dirs[count]   = leftDir;
-           //             lens[count]   = len * 0.95;
-           //             count++;
-           //         
-           //             starts[count] = b;
-           //             dirs[count]   = rightDir;
-           //             lens[count]   = len * 0.95;
-           //             count++;
-           //         }
-           //     }
-           // 
-           //     outColor = vec4(col, 1.0);
-//
-           // }
+           if (v_uv.x < 0.4) {
+               
+                vec2 p = v_uv;
+                vec3 col = vec3(0.0);
+
+                vec2 origin = vec2(0.395, 0.48); // Start in center by Mandelbulb
+
+                float angleSpread = 0.5; // radians between branches
+                float initialLength = 0.11;
+                int maxDepth = int(mix(0.0, 130.0, 1.0 - u_mouse.x * 3.0)); // deeper when mouse is left
+
+                // Manual stack (iterative)
+                const int MAX = 128;
+                vec2 starts[MAX];
+                vec2 dirs[MAX];
+                float lens[MAX];
+
+                int count = 0;
+                starts[count] = origin;
+                dirs[count] = vec2(-1.0, 0.0); // grow left
+                lens[count] = initialLength;
+                count++;
+
+                for (int i = 0; i < MAX; i++) {
+                    if (i >= count || i >= maxDepth) break;
+                
+                    vec2 a = starts[i];
+                    vec2 dir = dirs[i];
+                    float len = lens[i];
+                    vec2 b = a + dir * len;
+                
+                    float d = sdSegment(p, a, b);
+                    if (d < 0.0015) {
+                        col = vec3(1.0-u_mouse.x*3.0); // white line
+                    }
+                
+                    if (count + 2 < MAX) {
+                        vec2 leftDir  = rotate(dir,  angleSpread);
+                        vec2 rightDir = rotate(dir, -angleSpread);
+                    
+                        starts[count] = b;
+                        dirs[count]   = leftDir;
+                        lens[count]   = len * 0.95;
+                        count++;
+                    
+                        starts[count] = b;
+                        dirs[count]   = rightDir;
+                        lens[count]   = len * 0.95;
+                        count++;
+                    }
+                }
+            
+                outColor = vec4(col, 1.0);
+
+            }
 
             
 
