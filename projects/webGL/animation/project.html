@@ -1,37 +1,171 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebGL Animation Project</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>WebGL Character Animation</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .webgl-project {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        video {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            border: 2px solid white;
+        }
+
+        .project-description {
+            line-height: 1.6;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
+        <h1>WebGL Character Animation</h1>
         <div class="webgl-project">
-            <iframe src="main.html" frameborder="0"></iframe>
+            <video controls autoplay muted loop>
+                <source src="anim.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
         </div>
         <div class="project-description">
-            <h2>Task</h2>
-            <p>Create an animation with full creative freedom fulfilling the particular requirements defined under "criteria".</p>
-            <h2>Technical Criteria</h2>
-            <ul>
-                <li>At least one: two hierarchical object</li>
-                <li>Containing at least two textures either procedural or mapped</li>
-                <li>At least one shader edited or designed from scratch</li>
-                <li>360 Degree camera fly around</li>
-                <li>Connection to real-time</li>
-                <li>Display the frame rate in the console every 2 seconds</li>
-            </ul>
-            <h2>Summary</h2>
-            <p>I have decided to play around with color and scale to create a fantastical animation with a humorous twist.</p>
-            <ul>
-                <li>I have created a psychedelic background within the cone by mapping my own paintings as a texture to the mountains.</li>
-                <li>I have used the shader to simulate a sun rising and setting. I have done this by synchronizing the darkness/lightness of the switching colors on the inside of the cone with the rising and setting of a multicolored sphere representing the sun.</li>
-                <li>I have scaled gravity over time.</li>
-            </ul>
-            <p>**** All image textures used are my own paintings</p>
+            <p>This animation was created using WebGL and GLSL. The characters are constructed as hierarchical objects built from WebGL's primitive shapes.</p>
+            <p>The scene makes use of two fragment shaders to create dynamic visual effects, along with a combination of procedural and image-based textures. The animation includes a full 360-degree camera flyaround and is synchronized with real-time parameters, such as changing light and color based on elapsed time.</p>
+            <p>The background and character elements are inspired by psychedelic motifs, incorporating artwork textures derived from my own paintings. The final result aims to combine technical constraints with playful visual experimentation.</p>
+        </div>
+    </div>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>WebGL animation</title>
+    <style>
+        body {
+            background-color: black;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        video {
+            max-width: 90%;
+            height: auto;
+            border: 2px solid white;
+        }
+    </style>
+</head>
+<body>
+    <!-- <header>
+    <a href="index.html" class="home-link">← Home</a>
+    
+  </header> -->
+    <video controls autoplay muted loop>
+        <source src="anim.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</body>
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGL Animated Scene</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        .back-button a {
+            text-decoration: none;
+            color: #f4b400;
+            background-color: transparent;
+            border: 1px solid #f4b400;
+            padding: 8px 14px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .back-button a:hover {
+            background-color: #f4b400;
+            color: black;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 60px 20px 20px;
+        }
+        .webgl-project {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        video {
+            max-width: 90%;
+            height: auto;
+            border: 2px solid white;
+        }
+        .project-description h2 {
+            margin-top: 1.5em;
+            color: #f4b400;
+        }
+        .project-description p {
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="back-button">
+        <a href="index.html">&larr; Back to Home</a>
+    </div>
+    <div class="container">
+        <div class="webgl-project">
+            <video controls autoplay muted loop>
+                <source src="anim.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        <div class="project-description">
+            <h1>WebGL Animated Scene</h1>
+            <p>This animation was built using WebGL and GLSL. The characters are modeled as hierarchical objects using primitive shapes available through WebGL. The piece uses two custom fragment shaders, multiple textures (including hand-painted ones), and plays with color, gravity, and surreal motion to create a humorous and psychedelic experience.</p>
+            <p>The animation includes a dynamic background and a color-shifting sun simulation, tied to real-time behavior and camera fly-arounds.</p>
+            <p>All textures used in the scene are original paintings.</p>
         </div>
     </div>
 </body>
 </html>
+ -->

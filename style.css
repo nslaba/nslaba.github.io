@@ -61,91 +61,97 @@
 	p {
   		word-spacing: 35rem; /* huge space between "Programmer" and "Artist" */
 	}
-	
-	
-	
-	/* .arrow {
-		position: absolute;
-		top: 50%;
-		transform: translateY(-50%);
-		background-color: rgba(255, 255, 255, 0.8);
-		border: none;
-		font-size: 2em;
-		padding: 0 10px;
-		cursor: pointer;
-		z-index: 2;
+
+	.scroll-down {
+	    text-align: center;
+	    margin-top: -40px;
+	    animation: bounce 2s infinite;
+		pointer-events: auto;
 	}
+
+	.scroll-down a {
+	    text-decoration: none;
+	    font-size: 2.5rem;
+	    color: white;
+	    cursor: pointer;
+		pointer-events: auto;
+	}
+
+	html {
+	    scroll-behavior: smooth;
+	}
+
+	@keyframes bounce {
+	    0%, 20%, 50%, 80%, 100% {
+	        transform: translateY(0); 
+	    }
+	    40% {
+	        transform: translateY(10px); 
+	    }
+	    60% {
+	        transform: translateY(5px); 
+	    }
+	}
+
+
 	
+	@media (max-width: 768px) {
+	    .arrow {
+	        font-size: 1.5em;
+	        padding: 5px;
+			pointer-events: auto;
+	    }
+
+	    .project {
+	        width: 80%;
+	        margin: 0 auto 20px;
+	    }
+
+	    .project-slider {
+	        overflow-x: auto;
+	        scroll-snap-type: x mandatory;
+	    }
+
+	    .project {
+	        scroll-snap-align: center;
+	    }
+	}
+
+
+	.arrow {
+	    background-color: rgba(255, 255, 255, 0.8);
+	    border: none;
+	    font-size: 2em;
+	    padding: 0 10px;
+	    cursor: pointer;
+	    color: #333;
+	    border-radius: 50%;
+	    position: absolute;
+	    top: 50%;
+	    transform: translateY(-50%);
+	    z-index: 10;
+	    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+	    transition: background-color 0.3s;
+		pointer-events: auto;
+	}
+
+	.arrow:hover {
+	    background-color: rgba(255, 255, 255, 1);
+	}
+
 	.arrow-left {
-		left: 10px;
+	    left: 10px;
 	}
-	
+
 	.arrow-right {
-		right: 10px;
+	    right: 10px;
 	}
-	
-	
-	.project-slider {
-		display: flex;
-		overflow: hidden;
-		position: relative;
-		padding-bottom: 10px;
-		animation: scroll 20s linear infinite;
+
+	.project-slider-container {
+	    position: relative;
+	    overflow: hidden;
 	}
-	
-	.project-slider:hover {
-		animation-play-state: paused;
-	}
-	
-	@keyframes scroll {
-		0% {
-			transform: translateX(0);
-		}
-		100% {
-			transform: translateX(calc(-100px * 5)); 
-		}
-	}
-	
-	.project {
-		background-color: #fff;
-		border: 1px solid #ddd;
-		border-radius: 8px;
-		overflow: hidden;
-		text-align: center;
-		transition: transform 0.2s;
-		width: 300px;
-		flex: 0 0 auto;
-		margin: 10px;
-	}
-	
-	.project:hover {
-		transform: scale(1.05);
-	}
-	
-	.project img, .project iframe {
-		width: 100%;
-		height: auto;
-	}
-	
-	.project h3 {
-		margin: 10px 0;
-		font-size: 1.5em;
-	}
-	
-	.project h3 a {
-		text-decoration: none;
-		color: #332222;
-	}
-	
-	.project h3 a:hover {
-		color: #1b68c0;
-	}
-	
-	.project iframe {
-		height: 200px;
-		border: none;
-	} */
-	
+
 
 	.projects {
 	    text-align: center;
@@ -177,6 +183,7 @@
 	    width: 300px;
 	    flex: 0 0 auto;
 	    margin: 10px;
+		pointer-events: auto;
 	}
 
 	.project:hover {
@@ -212,50 +219,8 @@
 		border: none;
 		border-top: 2px solid #ccc;
 		margin: 40px 0;
+		pointer-events: auto;
 	}
 	
-	.about {
-		padding: 20px;
-		text-align: center;
-	}
 	
-	.about h2 {
-		font-size: 2em;
-		font-family: 'Ramaraja';
-		color: #fff;
-		margin-bottom: 20px;
-	}
-	
-	.about-sections {
-		display: flex;
-		justify-content: space-around;
-		flex-wrap: wrap;
-	}
-	
-	.about-section {
-		width: 30%;
-		padding: 10px;
-		text-align: center;
-	}
-	
-	.about-section h3 {
-		font-size: 1.5em;
-		font-family: 'Ramaraja';
-		color: #fff;
-		margin-bottom: 10px;
-	}
-	
-	.about-section p {
-		font-size: 15px;
-		font-family: 'Ramaraja';
-		color: #95a8d5;
-		margin-bottom: 10px;
-		
-	}
-	
-	.about-section img {
-		width: 100%;
-		height: auto;
-		border-radius: 8px;
-	}
 	

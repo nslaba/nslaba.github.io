@@ -19,24 +19,20 @@
                 <br><br><br><br><br><br><br><br><br>
                 <p>Programmer Artist</p>
                 <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-                <!-- <p>Welcome to my personal website for creative computer science projects. <br><br><br><br><br><br>
-                    I hold a Bachelor of Science in Computer Science and Visual Arts from the University of Victoria (spring 2024).<br><br>
-                    I have a strong interest in discrete mathematics, computer graphics, natural languages, visual arts, and other creative pursuits. 
-                    Lately, I have also been exploring soldering and electronics.<br> In essence, I love to make things and solve problems. <br>I get excited about elegant solutions,
-                    whether they are visual, abstract, logical or hands-on. <br><br><br><br><br><br>
-                    This website serves as a repository for my innovative computer science projects. <br><br> <br><br>
-                </p> -->
+                <div class="scroll-down">
+                  <a href="#projects"><span>&#x25BC;</span></a>
+                </div>
             </section>
     
           
-            <section class="projects">
+            <section class="projects" id="projects">
                 <h2>Projects</h2>
                 <div class="project-slider-container">
                     <button class="arrow arrow-left">&lt;</button>
                     <div class="project-slider">
                         <div class="project" id="webgl">
                             <img src="projects/webGL/animation/snapshot.png" alt="WebGL Project">
-                            <h3><a href="projects/webGL/animation/main.html">WebGL</a></h3>
+                            <h3><a href="projects/webGL/animation/project.html">WebGL</a></h3>
                         </div>
                         <div class="project" id="opengl">
                             <img src="projects/OpenGL/HermiteSpline/hermiteSpline.gif" alt="OpenGL Project">
@@ -63,50 +59,7 @@
     
             <hr>
     
-            <!-- <section id="about" class="about">
-                <h2>About Nat</h2>
-                <div class="about-sections">
-                     <div class="about-section">
-                        <h3>Natural Languages</h3>
-                        <p>Due to my diverse upbringing and curiosity, I've integrated into various cultures throughout 
-                            my life, 
-                            learning six languages to fluency. I use four of these languages daily. 
-                            Learning languages has been a fascinating and character-building experience.<br><br>
-
-                            On average, it has taken me 1 to 4 months to fully communicate in a new language. 
-                            I learned Spanish within a month and have spoken it for the last nine years. 
-                            The same year I learned Spanish in Colombia, I traveled to Austria and learned German in four months 
-                            from scratch, passing a B2 level exam. Interestingly, I studied German grammar using a course in Spanish, 
-                            which I had only just learned a few months prior. I also learned Levantine Arabic during my integration in 
-                            the West Bank, where I stayed during the COVID-19 pandemic.<br><br>
-                            
-                            Languages are beautiful for many reasons. They shift your perspective on sounds and foster deep 
-                            appreciation for people, as all native speakers become your teachers. However, as language learning is 
-                            primarily human-based, it forces you to open your eyes to societal issues such as classism, discrimination, 
-                            and injustices. While I can navigate the complexities of grammar and pronunciation, the human aspect remains 
-                            challenging. This is why I prefer to keep my intellectual pursuits in the simpler realm of computers for now.</p>
-                        
-                    </div> 
-                    <div class="about-section">
-                        <h3>Visual Arts</h3>
-                        <p>Similar to mathematics, what I greatly enjoy about visual arts is the abstraction. It's a beautiful way to connect 
-                            ideas, shift perspectives, and deepen your understanding of reflections. <br><br>I was fortunate to gain exposure 
-                            for my art early on, holding independent exhibits at the ages of 16 and 17 and being featured in two newspaper articles 
-                            in Calgary, AB. However, I took several years to step back, foster a deeper connection to my art, and reevaluate my 
-                            relationship with it. Now, with a clearer vision of what I want, I am working towards showcasing my work once again. 
-                            You can explore more of my work on my art website: http://www.natalieslaba.com.
-                        </p>
-                        <img src="art.jpg" alt="Visual Arts">
-                    </div>
-                    <div class="about-section">
-                        <h3>Outdoors</h3>
-                        <p>I love being outside, especially when engaging in sports that challenge and humble me. In recent years, I've become very passionate about climbing. I still feel like a beginner, which I love because there's always room to climb harder, improve, and learn more; there seems to be no mastery. It's a beautiful and humbling experience, knowing there is so much potential for growth. Additionally, I enjoy backcountry skiing and finding other ways to immerse myself in the mountains."
-                        </p>
-                        <img src="skiing.jpg" alt="Outdoors"> 
-                        <img src="climbing.jpg" alt="Outdoors">
-                    </div>
-                </div>
-            </section> -->
+            
         </main>
     
      
@@ -265,51 +218,7 @@
             // art side
             if (v_uv.x > 0.5){
                 
-                //// Raymarch iterator, step distance, depth and reflection
-                //float i, d, z, r = 0.0;
-//
-                //// Clear color
-                //outColor *= i;
-//
-                //// Raymarch 90 steps
-                //for (i = 0.0; i < 90.0; i++) {
-                //
-                //    // Ray direction
-                //    vec3 dir = normalize(vec3((v_uv.x-u_mouse.x+0.3) * 2.0 - 1.0,(v_uv.y) * 2.0 - 1.0, -1.0));
-                //    // Camera position slightly offset back
-                //    vec3 p = vec3(0.0, 0.0, 2.5) + z * dir;
-                //    
-                //    // Signed distance to a sphere, slightly organic
-                //    float sphere = length(p - vec3(0.0, 0.0, 0.0)) - 0.5;
-                //    sphere -= 0.6 * sin(6.0 * p.x*u_mouse.x + u_time);
-                //    sphere -= 0.4 * sin(6.0 * p.z + u_time * 1.1);
-                //    sphere -= 0.3 * sin(6.0 * p.z + u_time * 0.9);
-                //
-                //    d = sphere;
-                //
-                //    if (d < 0.01) {
-                //        // Color when close to the surface
-                //        float y = 0.1 + (u_mouse.x - 0.5) * 1.8; //remap
-                //        vec3 col = vec3(y + 0.5*sin(u_time + z*2.0), y + 0.3*cos(z*3.0), y + 0.5*sin(u_time + z*2.0));
-                //        
-                //        outColor += vec4(col, 1.0) * (y);
-                //        break;
-                //    }
-                //
-                //    // Step forward
-                //    z += d;
-                //
-                //    // Attenuate if too far
-                //    if (z > 8.0) break;
-                //}
-//
-                //
-                //if (u_mouse.x <0.5){
-                //    outColor =vec4(0.0);
-                //} else {
-                //    // Tone mapping
-                //    outColor = tanh(outColor);
-                //}
+                
                 float i, d, z = 0.0;
                 
 
@@ -377,7 +286,7 @@
             
             // Ray marching parameters
             float totalDist = 0.0;
-            const int maxSteps = 256; // TODO was 600
+            const int maxSteps = 100; // TODO was 600
             const float maxDist = 80.0;
             float surfaceEpsilon = 0.001;
             

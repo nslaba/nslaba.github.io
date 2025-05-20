@@ -1,67 +1,24 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const slider = document.querySelector('.project-slider');
-    const projects = document.querySelectorAll('.project');
-    const projectWidth = projects[0].offsetWidth;
+    const btnLeft = document.querySelector('.arrow-left');
+    const btnRight = document.querySelector('.arrow-right');
+    const scrollAmount = 320; // Slightly more than one card's width to show progress
 
-    // Clone the original projects to the end of the slider
-    projects.forEach(project => {
-        const clone = project.cloneNode(true);
-        slider.appendChild(clone);
+    btnLeft.addEventListener('click', () => {
+        slider.scrollBy({
+            left: -scrollAmount,
+            behavior: 'smooth'
+        });
     });
 
-    let isHovering = false;
-    let scrollInterval;
-    let scrollDirection = 1; // 1 for right, -1 for left
-
-    function startScrolling() {
-        scrollInterval = setInterval(() => {
-            if (!isHovering) {
-                slider.scrollLeft += scrollDirection;
-                if (slider.scrollLeft >= slider.scrollWidth - slider.clientWidth) {
-                    slider.scrollLeft = 0;
-                } else if (slider.scrollLeft <= 0) {
-                    slider.scrollLeft = slider.scrollWidth - slider.clientWidth;
-                }
-            }
-        }, 20); // Adjust the interval as needed
-    }
-
-    slider.addEventListener('mouseenter', () => {
-        isHovering = true;
-        clearInterval(scrollInterval);
+    btnRight.addEventListener('click', () => {
+        slider.scrollBy({
+            left: scrollAmount,
+            behavior: 'smooth'
+        });
     });
-
-    slider.addEventListener('mouseleave', () => {
-        isHovering = false;
-        startScrolling();
-    });
-
-    slider.addEventListener('mousemove', (e) => {
-        const sliderRect = slider.getBoundingClientRect();
-        const mouseX = e.clientX - sliderRect.left;
-        const sliderWidth = sliderRect.width;
-        const leftZoneWidth = sliderWidth / 4; // Define the width of the left and right zones
-        const rightZoneStart = sliderWidth - leftZoneWidth;
-        const scrollSpeed = 2; // Adjust scroll speed as needed
-
-        if (mouseX < leftZoneWidth) {
-            // Hovering over the left zone
-            isHovering = true;
-            slider.scrollLeft -= scrollSpeed;
-            scrollDirection = -1;
-        } else if (mouseX > rightZoneStart) {
-            // Hovering over the right zone
-            isHovering = true;
-            slider.scrollLeft += scrollSpeed;
-            scrollDirection = 1;
-        } else {
-            // Hovering over the center zone
-            isHovering = false;
-        }
-    });
-
-    startScrolling();
 });
+
 
 
 
@@ -98,101 +55,86 @@ function main() {
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
 
+    let mouse = [0, 0];  // normalized mouse coords
+
+    canvas.addEventListener('mousemove', (e) => {
+      //console.log("mousemove event");  // ← this should fire
+      const rect = canvas.getBoundingClientRect();
+      mouse[0] = (e.clientX - rect.left) / rect.width;
+      mouse[1] = 1.0 - (e.clientY - rect.top) / rect.height;
+    });
+
+    //let clicked = false;
+
+    //canvas.addEventListener('click', () => {
+    //  clicked = !clicked;
+    //});
+
+
+
+
     if (!gl) {
         console.error('WebGL 2 not supported');
         return;
     }
 
-    let mouse = [0, 0];  // normalized mouse coords
-    canvas.addEventListener('mousemove', (e) => {
-        const rect = canvas.getBoundingClientRect();
-        mouse[0] = (e.clientX - rect.left) / rect.width;
-        mouse[1] = 1.0 - (e.clientY - rect.top) / rect.height;
-    });
 
-    // Globals for program and buffers
-    let program = null;
-    let positionBuffer = null;
-
-    // Uniform and attribute locations
-    let positionAttributeLocation = null;
-    let resolutionUniformLocation = null;
-    let timeUniformLocation = null;
-    let uMouseLocation = null;
-
-    let animationFrameId = null;
-
-    // Your shader sources
     const vertexShaderSource = document.getElementById('vertex-shader').textContent;
     const fragmentShaderSource = document.getElementById('fragment-shader').textContent;
 
-    // Initialize shaders and buffers
-    function initShaderProgram() {
-        const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-        const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
-        if (!vertexShader || !fragmentShader) return false;
+    const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+    const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
 
-        const newProgram = createProgram(gl, vertexShader, fragmentShader);
-        if (!newProgram) return false;
-
-        program = newProgram;
-
-        gl.useProgram(program);
-
-        positionAttributeLocation = gl.getAttribLocation(program, 'a_position');
-        resolutionUniformLocation = gl.getUniformLocation(program, 'u_resolution');
-        timeUniformLocation = gl.getUniformLocation(program, 'u_time');
-        uMouseLocation = gl.getUniformLocation(program, 'u_mouse');
-
-        if (resolutionUniformLocation === -1 || timeUniformLocation === -1 || uMouseLocation === -1) {
-            console.error('Failed to get uniform location');
-            return false;
-        }
-        return true;
+    if (!vertexShader || !fragmentShader) {
+        return;
     }
 
-    function initBuffers() {
-        positionBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    const program = createProgram(gl, vertexShader, fragmentShader);
 
-        const positions = [
-            -1.0, -1.0,
-            1.0, -1.0,
-            -1.0, 1.0,
-            -1.0, 1.0,
-            1.0, -1.0,
-            1.0, 1.0,
-        ];
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+    if (!program) {
+        return;
     }
 
-    function cleanupWebGL() {
-        // Delete buffers, program, and clear canvas
-        if (positionBuffer) {
-            gl.deleteBuffer(positionBuffer);
-            positionBuffer = null;
-        }
-        if (program) {
-            gl.deleteProgram(program);
-            program = null;
-        }
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    // Ensure the program is used before retrieving uniform locations
+    gl.useProgram(program);
+
+    const positionAttributeLocation = gl.getAttribLocation(program, 'a_position');
+    const resolutionUniformLocation = gl.getUniformLocation(program, 'u_resolution');
+    const timeUniformLocation = gl.getUniformLocation(program, 'u_time');
+    const uMouseLocation = gl.getUniformLocation(program, "u_mouse");
+    //const uClickLocation = gl.getUniformLocation(program, "u_clicked");
+
+
+
+    // Log uniform locations to ensure they are valid
+    //console.log("Resolution Uniform Location:", resolutionUniformLocation);
+    //console.log("Time Uniform Location:", timeUniformLocation);
+
+    if (resolutionUniformLocation === -1 || timeUniformLocation === -1) {
+        // console.error('Failed to get uniform location');
+        return;
     }
 
-    function resetWebGL() {
-        cleanupWebGL();
-        if (!initShaderProgram()) {
-            console.error("Failed to reset shaders");
-            return;
-        }
-        initBuffers();
-    }
+    const positionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+
+    const positions = [
+        -1.0, -1.0,
+        1.0, -1.0,
+        -1.0, 1.0,
+        -1.0, 1.0,
+        1.0, -1.0,
+        1.0, 1.0,
+    ];
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
     function render(time) {
-        time *= 0.001; // Convert to seconds
+        time *= 0.001; // Convert time to seconds
+        //console.log("Time:", time); // Log time for debugging
 
         gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
         gl.clear(gl.COLOR_BUFFER_BIT);
+
 
         gl.useProgram(program);
 
@@ -200,48 +142,20 @@ function main() {
         gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
         gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
 
+        //console.log("Setting resolution:", gl.canvas.width, gl.canvas.height);
         gl.uniform2f(resolutionUniformLocation, gl.canvas.width, gl.canvas.height);
+        //console.log("Setting time:", time);
         gl.uniform1f(timeUniformLocation, time);
+        // In your render/draw function
         gl.uniform2f(uMouseLocation, mouse[0], mouse[1]);
-
+        //console.log("mouse coords: ",mouse[0], mouse[1]);
+        //gl.uniform1i(uClickLocation, clicked ? 1 : 0);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-        animationFrameId = requestAnimationFrame(render);
+    
+        requestAnimationFrame(render);
+        
     }
-
-    function startRendering() {
-        if (!animationFrameId) {
-            animationFrameId = requestAnimationFrame(render);
-        }
-    }
-
-    function stopRendering() {
-        if (animationFrameId) {
-            cancelAnimationFrame(animationFrameId);
-            animationFrameId = null;
-        }
-    }
-
-    // Initialize everything at start
-    if (!initShaderProgram()) {
-        console.error("Failed to initialize shaders");
-        return;
-    }
-    initBuffers();
-
-    // Handle tab visibility change to pause/resume rendering
-    document.addEventListener("visibilitychange", () => {
-        if (document.hidden) {
-            stopRendering();
-            cleanupWebGL();
-        } else {
-            resetWebGL();
-            startRendering();
-        }
-    });
-
-    startRendering();
+    requestAnimationFrame(render);
 }
 
 main();
-
