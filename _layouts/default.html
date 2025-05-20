@@ -124,6 +124,7 @@
     </script>
     <script id="fragment-shader" type="x-shader/x-fragment">#version 300 es
         precision mediump float;
+        precision mediump int;
 
         uniform vec2 u_resolution;
         uniform float u_time;
@@ -376,7 +377,7 @@
             
             // Ray marching parameters
             float totalDist = 0.0;
-            const int maxSteps = 600;
+            const int maxSteps = 256; // TODO was 600
             const float maxDist = 80.0;
             float surfaceEpsilon = 0.001;
             
