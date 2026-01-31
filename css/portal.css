@@ -1,0 +1,477 @@
+/* ==========================================================================
+   Portal Homepage Styles
+   ========================================================================== */
+
+/* Portal Container */
+.portal {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  overflow: hidden;
+}
+
+/* Header */
+.portal-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: var(--space-lg) var(--space-xl);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+.portal-header h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-white);
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: fadeInDown 1s ease forwards;
+  animation-delay: 0.5s;
+}
+
+/* Portal Sides */
+.portal-side {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-3xl);
+  cursor: pointer;
+  transition: flex var(--transition-slower);
+  overflow: hidden;
+}
+
+/* Tech Side (Left) */
+.portal-tech {
+  background: linear-gradient(135deg, var(--color-tech-bg) 0%, #0d0d1a 100%);
+}
+
+.portal-tech::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 30% 70%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 70% 30%, rgba(129, 140, 248, 0.1) 0%, transparent 40%);
+  opacity: 0.8;
+  transition: opacity var(--transition-slow);
+}
+
+/* Grid pattern for tech side */
+.portal-tech::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  opacity: 0.5;
+}
+
+/* Art Side (Right) */
+.portal-art {
+  background: linear-gradient(135deg, var(--color-art-bg) 0%, #1a1208 100%);
+}
+
+.portal-art::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 70% 60%, rgba(217, 119, 6, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 30% 40%, rgba(245, 158, 11, 0.1) 0%, transparent 40%);
+  opacity: 0.8;
+  transition: opacity var(--transition-slow);
+}
+
+/* Organic texture for art side */
+.portal-art::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+}
+
+/* Center Divider */
+.portal-divider {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 255, 255, 0.1) 20%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.1) 80%,
+    transparent
+  );
+  transform: translateX(-50%);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.portal-divider::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  background: var(--color-white);
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+/* Portal Content */
+.portal-content {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  max-width: 400px;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 1s ease forwards;
+}
+
+.portal-tech .portal-content {
+  animation-delay: 0.8s;
+}
+
+.portal-art .portal-content {
+  animation-delay: 1s;
+}
+
+/* Portal Labels */
+.portal-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-md);
+  opacity: 0.6;
+}
+
+.portal-tech .portal-label {
+  font-family: var(--font-mono);
+  color: var(--color-tech-accent);
+}
+
+.portal-art .portal-label {
+  font-family: var(--font-serif);
+  color: var(--color-art-accent);
+  letter-spacing: 0.2em;
+}
+
+/* Portal Titles */
+.portal-title {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 600;
+  margin-bottom: var(--space-lg);
+  line-height: 1.1;
+}
+
+.portal-tech .portal-title {
+  font-family: var(--font-sans);
+  background: linear-gradient(135deg, var(--color-white) 0%, var(--color-tech-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.portal-art .portal-title {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-style: italic;
+  background: linear-gradient(135deg, var(--color-white) 0%, var(--color-art-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Portal Descriptions */
+.portal-description {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-gray-400);
+  margin-bottom: var(--space-xl);
+}
+
+.portal-tech .portal-description {
+  font-family: var(--font-sans);
+}
+
+.portal-art .portal-description {
+  font-family: var(--font-serif);
+  font-style: italic;
+}
+
+/* Enter Buttons */
+.portal-enter {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-xl);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid;
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.portal-tech .portal-enter {
+  font-family: var(--font-mono);
+  border-color: var(--color-tech-primary);
+  color: var(--color-tech-primary);
+}
+
+.portal-tech .portal-enter:hover {
+  background: var(--color-tech-primary);
+  color: var(--color-white);
+  box-shadow: var(--shadow-glow-tech);
+  transform: translateY(-2px);
+}
+
+.portal-art .portal-enter {
+  font-family: var(--font-serif);
+  border-color: var(--color-art-primary);
+  color: var(--color-art-primary);
+  border-radius: 0;
+}
+
+.portal-art .portal-enter:hover {
+  background: var(--color-art-primary);
+  color: var(--color-white);
+  box-shadow: var(--shadow-glow-art);
+  transform: translateY(-2px);
+}
+
+/* Arrow icon */
+.portal-enter svg {
+  width: 16px;
+  height: 16px;
+  transition: transform var(--transition-base);
+}
+
+.portal-enter:hover svg {
+  transform: translateX(4px);
+}
+
+/* Hover States */
+.portal-side:hover {
+  flex: 1.15;
+}
+
+.portal-side:hover::before {
+  opacity: 1;
+}
+
+.portal:has(.portal-tech:hover) .portal-art {
+  flex: 0.85;
+}
+
+.portal:has(.portal-art:hover) .portal-tech {
+  flex: 0.85;
+}
+
+/* Decorative Elements */
+.portal-decoration {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.1;
+}
+
+/* Tech decorations - geometric */
+.portal-tech .portal-decoration.top-left {
+  top: 15%;
+  left: 10%;
+  width: 100px;
+  height: 100px;
+  border: 1px solid var(--color-tech-primary);
+  transform: rotate(45deg);
+}
+
+.portal-tech .portal-decoration.bottom-right {
+  bottom: 15%;
+  right: 10%;
+  width: 60px;
+  height: 60px;
+  border: 1px solid var(--color-tech-secondary);
+}
+
+/* Art decorations - organic */
+.portal-art .portal-decoration.top-right {
+  top: 20%;
+  right: 15%;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 1px solid var(--color-art-primary);
+}
+
+.portal-art .portal-decoration.bottom-left {
+  bottom: 20%;
+  left: 15%;
+  width: 120px;
+  height: 60px;
+  border-radius: 50%;
+  border: 1px solid var(--color-art-secondary);
+  transform: rotate(-15deg);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scroll indicator */
+.scroll-hint {
+  position: fixed;
+  bottom: var(--space-xl);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  opacity: 0;
+  animation: fadeInUp 1s ease forwards;
+  animation-delay: 1.5s;
+}
+
+.scroll-hint span {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-gray-500);
+}
+
+.scroll-hint .mouse {
+  width: 20px;
+  height: 32px;
+  border: 2px solid var(--color-gray-500);
+  border-radius: 10px;
+  position: relative;
+}
+
+.scroll-hint .mouse::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  height: 6px;
+  background: var(--color-gray-500);
+  border-radius: 2px;
+  animation: scrollWheel 1.5s ease-in-out infinite;
+}
+
+@keyframes scrollWheel {
+  0% { opacity: 1; top: 6px; }
+  100% { opacity: 0; top: 16px; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .portal {
+    flex-direction: column;
+  }
+
+  .portal-side {
+    padding: var(--space-2xl) var(--space-lg);
+  }
+
+  .portal-side:hover {
+    flex: 1.1;
+  }
+
+  .portal:has(.portal-tech:hover) .portal-art,
+  .portal:has(.portal-art:hover) .portal-tech {
+    flex: 0.9;
+  }
+
+  .portal-divider {
+    left: 0;
+    right: 0;
+    top: 50%;
+    bottom: auto;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgba(255, 255, 255, 0.1) 20%,
+      rgba(255, 255, 255, 0.3) 50%,
+      rgba(255, 255, 255, 0.1) 80%,
+      transparent
+    );
+    transform: translateY(-50%);
+  }
+
+  .portal-decoration {
+    display: none;
+  }
+
+  .scroll-hint {
+    display: none;
+  }
+}
+
+/* About link */
+.about-link {
+  position: fixed;
+  bottom: var(--space-xl);
+  right: var(--space-xl);
+  z-index: 100;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: var(--color-gray-500);
+  transition: color var(--transition-base);
+  opacity: 0;
+  animation: fadeInUp 1s ease forwards;
+  animation-delay: 1.5s;
+}
+
+.about-link:hover {
+  color: var(--color-white);
+}

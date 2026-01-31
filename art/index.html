@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Natalie Slaba - Visual art portfolio featuring paintings, drawings, and mixed media works.">
+
+  <title>Visual Art | Natalie Slaba</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/art.css">
+</head>
+<body class="art-page">
+
+  <!-- Navigation -->
+  <nav class="art-nav">
+    <a href="../index.html" class="logo">Natalie Slaba</a>
+    <ul class="art-nav-links">
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#store">Shop</a></li>
+      <li><a href="../tech/index.html">Tech</a></li>
+      <li><a href="../about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero -->
+  <section class="art-hero">
+    <div class="art-hero-content">
+      <span class="label">Visual Art</span>
+      <h1><span>Finding beauty</span> in the act of seeing</h1>
+      <p>
+        My work explores texture, light, and the quiet moments we often overlook.
+        Through paintings and drawings, I try to capture not just what I see,
+        but how it feels to truly look.
+      </p>
+    </div>
+  </section>
+
+  <!-- Gallery Section -->
+  <section class="art-gallery" id="gallery">
+    <h2>Selected Works</h2>
+
+    <!-- Category filters -->
+    <div class="art-categories">
+      <button class="category-btn active">All</button>
+      <button class="category-btn">Paintings</button>
+      <button class="category-btn">Drawings</button>
+      <button class="category-btn">Mixed Media</button>
+    </div>
+
+    <!-- Gallery Grid -->
+    <div class="gallery-grid">
+
+      <div class="gallery-item" data-category="paintings">
+        <img src="../assets/images/art/art.jpg" alt="Artwork by Natalie Slaba">
+        <div class="gallery-item-overlay">
+          <span class="gallery-item-title">Untitled I</span>
+          <span class="gallery-item-medium">Oil on canvas</span>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="paintings">
+        <img src="../assets/images/art/art2.jpg" alt="Artwork by Natalie Slaba">
+        <div class="gallery-item-overlay">
+          <span class="gallery-item-title">Untitled II</span>
+          <span class="gallery-item-medium">Acrylic on canvas</span>
+        </div>
+      </div>
+
+      <!-- Placeholder for more art - these will be populated when you add your Squarespace images -->
+      <div class="gallery-item placeholder" style="background: var(--bg-surface); aspect-ratio: 3/4; display: flex; align-items: center; justify-content: center;">
+        <span style="font-family: var(--font-serif); font-style: italic; color: var(--color-gray-600);">More artwork coming soon</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Store Preview -->
+  <section class="art-store-preview" id="store">
+    <h2>Original Works & Prints</h2>
+    <p>
+      Interested in owning a piece? Original works and limited edition prints
+      will be available for purchase soon.
+    </p>
+    <span class="coming-soon">Shop Coming Soon</span>
+  </section>
+
+  <!-- Contact -->
+  <section class="art-contact">
+    <p>
+      For commissions or inquiries, reach out at
+      <a href="mailto:hello@natalieslaba.com">hello@natalieslaba.com</a>
+    </p>
+  </section>
+
+  <!-- Footer -->
+  <footer class="art-footer">
+    <nav class="art-footer-nav">
+      <a href="../index.html">Home</a>
+      <a href="../tech/index.html">Tech</a>
+      <a href="../about.html">About</a>
+    </nav>
+    <span style="font-family: var(--font-serif); font-size: 0.8rem; color: var(--color-gray-600);">
+      &copy; 2025 Natalie Slaba
+    </span>
+  </footer>
+
+  <!-- Simple category filter script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const buttons = document.querySelectorAll('.category-btn');
+      const items = document.querySelectorAll('.gallery-item');
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          // Update active button
+          buttons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          // Filter items
+          const category = btn.textContent.toLowerCase();
+          items.forEach(item => {
+            if (category === 'all' || item.dataset.category === category) {
+              item.style.display = 'block';
+            } else {
+              item.style.display = 'none';
+            }
+          });
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>

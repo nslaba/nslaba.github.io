@@ -1,4 +1,90 @@
----
-layout: default
-title: About
----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Natalie Slaba - Computer Scientist and Visual Artist. Exploring the intersection of technology and creativity.">
+
+  <title>Natalie Slaba | Computer Science + Visual Art</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/portal.css">
+</head>
+<body>
+  <!-- Page Transition Overlay -->
+  <div class="page-transition" id="pageTransition"></div>
+
+  <!-- Header -->
+  <header class="portal-header">
+    <h1>Natalie Slaba</h1>
+  </header>
+
+  <!-- Main Portal -->
+  <main class="portal" id="portal">
+
+    <!-- Tech Side (Left) -->
+    <section class="portal-side portal-tech" data-section="tech">
+      <div class="portal-decoration top-left"></div>
+      <div class="portal-decoration bottom-right"></div>
+
+      <div class="portal-content">
+        <span class="portal-label">// Computer Science</span>
+        <h2 class="portal-title">Code & Systems</h2>
+        <p class="portal-description">
+          Graphics programming, interactive experiences, and educational technology.
+          Building tools that make complex ideas tangible.
+        </p>
+        <a href="tech/index.html" class="portal-enter">
+          Explore Projects
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- Center Divider -->
+    <div class="portal-divider"></div>
+
+    <!-- Art Side (Right) -->
+    <section class="portal-side portal-art" data-section="art">
+      <div class="portal-decoration top-right"></div>
+      <div class="portal-decoration bottom-left"></div>
+
+      <div class="portal-content">
+        <span class="portal-label">Visual Art</span>
+        <h2 class="portal-title">Form & Expression</h2>
+        <p class="portal-description">
+          Paintings, drawings, and mixed media exploring texture, emotion,
+          and the beauty found in observation.
+        </p>
+        <a href="art/index.html" class="portal-enter">
+          View Gallery
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Scroll Hint -->
+  <div class="scroll-hint">
+    <div class="mouse"></div>
+    <span>Hover to explore</span>
+  </div>
+
+  <!-- About Link -->
+  <a href="about.html" class="about-link">About Me</a>
+
+  <!-- Scripts -->
+  <script src="js/portal.js"></script>
+</body>
+</html>
