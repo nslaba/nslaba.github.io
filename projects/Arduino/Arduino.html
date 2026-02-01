@@ -103,15 +103,41 @@
     .back-link:hover {
       color: var(--color-tech-primary);
     }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .nav-back {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--color-gray-400);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-back:hover {
+      color: var(--color-tech-primary);
+    }
+
+    .nav-sep {
+      color: var(--color-gray-600);
+      font-size: 0.8rem;
+    }
   </style>
 </head>
 <body class="project-page">
 
   <!-- Navigation -->
   <nav class="tech-nav">
-    <a href="../../index.html" class="logo">natalie</a>
+    <div class="nav-left">
+      <a href="../../tech/index.html" class="nav-back">All Projects</a>
+      <span class="nav-sep">/</span>
+      <a href="../../index.html" class="nav-back">Home</a>
+    </div>
     <ul class="tech-nav-links">
-      <li><a href="../../tech/index.html">Projects</a></li>
       <li><a href="../../art/index.html">Art</a></li>
       <li><a href="../../about.html">About</a></li>
     </ul>
