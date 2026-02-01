@@ -3,15 +3,15 @@
    Clean, minimal, gallery-inspired
    ========================================================================== */
 
-/* Art-specific variables - clean white palette */
+/* Art-specific variables - pure white, black text */
 .art-page {
-  --bg-primary: #fafafa;
+  --bg-primary: #ffffff;
   --bg-surface: #ffffff;
-  --text-primary: #1a1a1a;
-  --text-secondary: #666666;
-  --text-muted: #999999;
-  --accent: #1a1a1a;
-  --border: #e5e5e5;
+  --text-primary: #000000;
+  --text-secondary: #333333;
+  --text-muted: #666666;
+  --accent: #000000;
+  --border: #e0e0e0;
 }
 
 /* Page Layout */
@@ -33,7 +33,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(250, 250, 250, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
 }
 
@@ -213,7 +213,8 @@
 /* Placeholder for items without images */
 .gallery-placeholder {
   aspect-ratio: 3/4;
-  background: #f0f0f0;
+  background: #fafafa;
+  border: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   justify-content: center;
