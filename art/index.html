@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Natalie Slaba - Visual art portfolio featuring paintings, drawings, and mixed media works.">
+  <meta name="description" content="Nat's Art - surreal paintings, murals, and visual experiments by Natalie Slaba.">
 
-  <title>Visual Art | Natalie Slaba</title>
+  <title>Nat's Art | s u rr e a l</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,10 +20,11 @@
 
   <!-- Navigation -->
   <nav class="art-nav">
-    <a href="../index.html" class="logo">Natalie Slaba</a>
+    <a href="../index.html" class="logo">Nat's Art</a>
     <ul class="art-nav-links">
       <li><a href="#gallery">Gallery</a></li>
-      <li><a href="#store">Shop</a></li>
+      <li><a href="#exhibitions">Exhibitions</a></li>
+      <li><a href="#thoughts">Thoughts</a></li>
       <li><a href="../tech/index.html">Tech</a></li>
       <li><a href="../about.html">About</a></li>
     </ul>
@@ -32,71 +33,164 @@
   <!-- Hero -->
   <section class="art-hero">
     <div class="art-hero-content">
-      <span class="label">Visual Art</span>
-      <h1><span>Finding beauty</span> in the act of seeing</h1>
-      <p>
-        My work explores texture, light, and the quiet moments we often overlook.
-        Through paintings and drawings, I try to capture not just what I see,
-        but how it feels to truly look.
+      <span class="label">s u rr e a l</span>
+      <h1>hi there,</h1>
+      <p class="poetic-intro">
+        an immigration's offspring,<br>
+        another twig in the willows,<br>
+        pleasure to meet you
+      </p>
+      <p class="statement">
+        painting is a very human practice, which I have not come to terms to understand yet. and maybe I never will :)
       </p>
     </div>
   </section>
 
   <!-- Gallery Section -->
   <section class="art-gallery" id="gallery">
-    <h2>Selected Works</h2>
+    <h2>selected works</h2>
 
-    <!-- Category filters -->
+    <!-- Category filters - matching your Squarespace categories -->
     <div class="art-categories">
-      <button class="category-btn active">All</button>
-      <button class="category-btn">Paintings</button>
-      <button class="category-btn">Drawings</button>
-      <button class="category-btn">Mixed Media</button>
+      <button class="category-btn active" data-filter="all">All</button>
+      <button class="category-btn" data-filter="acrylic-ink">Acrylic Ink</button>
+      <button class="category-btn" data-filter="acrylic">Acrylic</button>
+      <button class="category-btn" data-filter="murals">Murals</button>
+      <button class="category-btn" data-filter="surrealistic">Surrealistic Infusion</button>
+      <button class="category-btn" data-filter="expressionism">Expressionism</button>
+      <button class="category-btn" data-filter="cubism">Cubism & Abstract</button>
+      <button class="category-btn" data-filter="doodles">Doodles</button>
+      <button class="category-btn" data-filter="video">Video Art</button>
+      <button class="category-btn" data-filter="photography">Photography</button>
     </div>
 
     <!-- Gallery Grid -->
     <div class="gallery-grid">
 
-      <div class="gallery-item" data-category="paintings">
-        <img src="../assets/images/art/art.jpg" alt="Artwork by Natalie Slaba">
+      <!-- Placeholder items - replace src with your exported images -->
+      <div class="gallery-item" data-category="acrylic-ink">
+        <img src="../assets/images/art/art.jpg" alt="Biological Mark Making">
         <div class="gallery-item-overlay">
-          <span class="gallery-item-title">Untitled I</span>
-          <span class="gallery-item-medium">Oil on canvas</span>
+          <span class="gallery-item-title">Biological Mark Making</span>
+          <span class="gallery-item-medium">Acrylic & Acrylic Ink on Canvas, 2024</span>
         </div>
       </div>
 
-      <div class="gallery-item" data-category="paintings">
-        <img src="../assets/images/art/art2.jpg" alt="Artwork by Natalie Slaba">
+      <div class="gallery-item" data-category="acrylic">
+        <img src="../assets/images/art/art2.jpg" alt="Artwork">
         <div class="gallery-item-overlay">
-          <span class="gallery-item-title">Untitled II</span>
-          <span class="gallery-item-medium">Acrylic on canvas</span>
+          <span class="gallery-item-title">Bourgeois Living</span>
+          <span class="gallery-item-medium">Acrylic on Canvas</span>
         </div>
       </div>
 
-      <!-- Placeholder for more art - these will be populated when you add your Squarespace images -->
-      <div class="gallery-item placeholder" style="background: var(--bg-surface); aspect-ratio: 3/4; display: flex; align-items: center; justify-content: center;">
-        <span style="font-family: var(--font-serif); font-style: italic; color: var(--color-gray-600);">More artwork coming soon</span>
+      <!-- Murals section -->
+      <div class="gallery-item" data-category="murals">
+        <div class="gallery-placeholder">
+          <span class="gallery-item-title">Corruption of Perspective</span>
+          <span class="gallery-item-medium">8ft × 7.5ft, October 2015</span>
+          <span class="gallery-item-note">no perspective can be ultimate.. maybe :)</span>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="murals">
+        <div class="gallery-placeholder">
+          <span class="gallery-item-title">Fishy Waters</span>
+          <span class="gallery-item-medium">Calgary, June 2013</span>
+          <span class="gallery-item-note">painted during the flood season</span>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="murals">
+        <div class="gallery-placeholder">
+          <span class="gallery-item-title">Tuning</span>
+          <span class="gallery-item-medium">Prague, Czech Republic, Summer 2013</span>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="murals">
+        <div class="gallery-placeholder">
+          <span class="gallery-item-title">Mind's Microcosm</span>
+          <span class="gallery-item-medium">2.5m × 3m, April 2015</span>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="murals">
+        <div class="gallery-placeholder">
+          <span class="gallery-item-title">Elephant</span>
+          <span class="gallery-item-medium">September 2012</span>
+          <span class="gallery-item-note">one of the first murals I painted</span>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="gallery-note">
+      [ images loading from archive.. add your exported Squarespace images to assets/images/art/ ]
+    </p>
+  </section>
+
+  <!-- Exhibitions -->
+  <section class="art-exhibitions" id="exhibitions">
+    <h2>exhibitions</h2>
+    <div class="exhibitions-list">
+
+      <div class="exhibition-item">
+        <span class="exhibition-date">May 2019</span>
+        <div class="exhibition-details">
+          <h3>L'expo à Montreal avec Karim</h3>
+          <p>a very fun collaboration with Karim, combining both of our work to engage the community. all kinds of beautiful souls gathering to view art and socialize.</p>
+        </div>
+      </div>
+
+      <div class="exhibition-item">
+        <span class="exhibition-date">Nov – Dec 2015</span>
+        <div class="exhibition-details">
+          <h3>Uptown 7th Gallery</h3>
+          <p>Downtown Calgary. opening featured live music from local musicians alongside newly created artwork.</p>
+        </div>
+      </div>
+
+      <div class="exhibition-item">
+        <span class="exhibition-date">October 2014</span>
+        <div class="exhibition-details">
+          <h3>First ART Exhibit @ Lux</h3>
+          <p>Lux Laundromat, Downtown Calgary. my debut exhibition — 21 of my pieces.</p>
+        </div>
       </div>
 
     </div>
   </section>
 
+  <!-- Thoughts & Experiments -->
+  <section class="art-thoughts" id="thoughts">
+    <h2>thoughts & experiments</h2>
+    <div class="thoughts-content">
+      <blockquote>
+        "Human creativity and materialist values are incompatible.. we may be misunderstanding the point of creating"
+      </blockquote>
+      <p>
+        art shouldn't be treated merely as a product. it's something from which we should learn.
+      </p>
+    </div>
+  </section>
+
   <!-- Store Preview -->
   <section class="art-store-preview" id="store">
-    <h2>Original Works & Prints</h2>
+    <h2>originals & prints</h2>
     <p>
-      Interested in owning a piece? Original works and limited edition prints
-      will be available for purchase soon.
+      interested in owning a piece? originals and prints coming soon.
     </p>
-    <span class="coming-soon">Shop Coming Soon</span>
+    <span class="coming-soon">shop coming soon</span>
   </section>
 
   <!-- Contact -->
   <section class="art-contact">
     <p>
-      For commissions or inquiries, reach out at
-      <a href="mailto:hello@natalieslaba.com">hello@natalieslaba.com</a>
+      commissions & inquiries:
+      <a href="mailto:slaba.natalie@gmail.com">slaba.natalie@gmail.com</a>
     </p>
+    <p class="location">Squamish, BC</p>
   </section>
 
   <!-- Footer -->
@@ -111,7 +205,7 @@
     </span>
   </footer>
 
-  <!-- Simple category filter script -->
+  <!-- Category filter script -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const buttons = document.querySelectorAll('.category-btn');
@@ -119,14 +213,12 @@
 
       buttons.forEach(btn => {
         btn.addEventListener('click', () => {
-          // Update active button
           buttons.forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
 
-          // Filter items
-          const category = btn.textContent.toLowerCase();
+          const filter = btn.dataset.filter;
           items.forEach(item => {
-            if (category === 'all' || item.dataset.category === category) {
+            if (filter === 'all' || item.dataset.category === filter) {
               item.style.display = 'block';
             } else {
               item.style.display = 'none';
