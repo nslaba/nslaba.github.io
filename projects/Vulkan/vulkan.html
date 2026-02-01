@@ -245,7 +245,7 @@
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
       </svg>
-      Back to Projects
+      All Projects
     </a>
   </footer>
 
@@ -255,16 +255,17 @@
     const ctx = canvas.getContext('2d');
 
     let particles = [];
-    let mouse = { x: null, y: null, radius: 100 };
+    let mouse = { x: null, y: null, radius: 150, clicking: false };
     let mode = 'attract';
     let animationId;
 
     // Configuration
     const PARTICLE_SIZE = 2;
-    const SAMPLE_GAP = 4; // Sample every Nth pixel
-    const RETURN_SPEED = 0.05;
-    const FRICTION = 0.95;
-    const MOUSE_FORCE = 0.5;
+    const SAMPLE_GAP = 3; // Sample every Nth pixel (smaller = more particles)
+    const RETURN_SPEED = 0.03;
+    const FRICTION = 0.92;
+    const MOUSE_FORCE = 1.5;
+    const CLICK_FORCE = 4;
 
     // Resize canvas
     function resizeCanvas() {
@@ -293,23 +294,29 @@
           const dx = mouse.x - this.x;
           const dy = mouse.y - this.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
+          const effectRadius = mouse.clicking ? mouse.radius * 1.5 : mouse.radius;
+          const effectForce = mouse.clicking ? CLICK_FORCE : MOUSE_FORCE;
 
-          if (dist < mouse.radius) {
-            const force = (mouse.radius - dist) / mouse.radius;
+          if (dist < effectRadius) {
+            const force = (effectRadius - dist) / effectRadius;
             const angle = Math.atan2(dy, dx);
 
             switch (mode) {
               case 'attract':
-                this.vx += Math.cos(angle) * force * MOUSE_FORCE;
-                this.vy += Math.sin(angle) * force * MOUSE_FORCE;
+                this.vx += Math.cos(angle) * force * effectForce;
+                this.vy += Math.sin(angle) * force * effectForce;
                 break;
               case 'repel':
-                this.vx -= Math.cos(angle) * force * MOUSE_FORCE * 2;
-                this.vy -= Math.sin(angle) * force * MOUSE_FORCE * 2;
+                this.vx -= Math.cos(angle) * force * effectForce * 1.5;
+                this.vy -= Math.sin(angle) * force * effectForce * 1.5;
                 break;
               case 'swirl':
-                this.vx += Math.cos(angle + Math.PI/2) * force * MOUSE_FORCE;
-                this.vy += Math.sin(angle + Math.PI/2) * force * MOUSE_FORCE;
+                const swirlForce = mouse.clicking ? effectForce * 1.2 : effectForce;
+                this.vx += Math.cos(angle + Math.PI/2) * force * swirlForce;
+                this.vy += Math.sin(angle + Math.PI/2) * force * swirlForce;
+                // Add slight inward pull for tighter swirl
+                this.vx += Math.cos(angle) * force * swirlForce * 0.3;
+                this.vy += Math.sin(angle) * force * swirlForce * 0.3;
                 break;
             }
           }
@@ -348,17 +355,24 @@
         const tempCanvas = document.createElement('canvas');
         const tempCtx = tempCanvas.getContext('2d');
 
-        // Calculate dimensions to fit canvas
+        // Calculate dimensions to COVER canvas (like CSS background-size: cover)
         const canvasRect = canvas.getBoundingClientRect();
-        const scale = Math.min(
-          canvasRect.width / img.width,
-          canvasRect.height / img.height
-        ) * 0.8;
+        const imgAspect = img.width / img.height;
+        const canvasAspect = canvasRect.width / canvasRect.height;
 
-        const drawWidth = img.width * scale;
-        const drawHeight = img.height * scale;
-        const offsetX = (canvasRect.width - drawWidth) / 2;
-        const offsetY = (canvasRect.height - drawHeight) / 2;
+        let scale, offsetX, offsetY;
+
+        if (imgAspect > canvasAspect) {
+          // Image is wider - fit height, crop sides
+          scale = canvasRect.height / img.height;
+          offsetX = (canvasRect.width - img.width * scale) / 2;
+          offsetY = 0;
+        } else {
+          // Image is taller - fit width, crop top/bottom
+          scale = canvasRect.width / img.width;
+          offsetX = 0;
+          offsetY = (canvasRect.height - img.height * scale) / 2;
+        }
 
         tempCanvas.width = img.width;
         tempCanvas.height = img.height;
@@ -370,6 +384,13 @@
         // Sample pixels and create particles
         for (let y = 0; y < img.height; y += SAMPLE_GAP) {
           for (let x = 0; x < img.width; x += SAMPLE_GAP) {
+            const particleX = offsetX + x * scale;
+            const particleY = offsetY + y * scale;
+
+            // Skip particles outside visible canvas
+            if (particleX < -10 || particleX > canvasRect.width + 10) continue;
+            if (particleY < -10 || particleY > canvasRect.height + 10) continue;
+
             const i = (y * img.width + x) * 4;
             const r = data[i];
             const g = data[i + 1];
@@ -379,13 +400,7 @@
             // Skip transparent pixels
             if (a < 128) continue;
 
-            // Skip very dark pixels (optional, for cleaner look)
-            if (r + g + b < 30) continue;
-
-            const particleX = offsetX + x * scale;
-            const particleY = offsetY + y * scale;
             const color = `rgb(${r},${g},${b})`;
-
             particles.push(new Particle(particleX, particleY, color));
           }
         }
@@ -436,7 +451,7 @@
       animationId = requestAnimationFrame(animate);
     }
 
-    // Explode particles
+    // Explode particles from center
     function explode() {
       const rect = canvas.getBoundingClientRect();
       const centerX = rect.width / 2;
@@ -447,8 +462,25 @@
         const dy = particle.y - centerY;
         const dist = Math.sqrt(dx * dx + dy * dy) || 1;
 
-        particle.vx += (dx / dist) * 15;
-        particle.vy += (dy / dist) * 15;
+        // Stronger explosion with random variation
+        const force = 25 + Math.random() * 10;
+        particle.vx += (dx / dist) * force;
+        particle.vy += (dy / dist) * force;
+      }
+    }
+
+    // Explode from a specific point (for click)
+    function explodeFromPoint(px, py) {
+      for (const particle of particles) {
+        const dx = particle.x - px;
+        const dy = particle.y - py;
+        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+
+        if (dist < 200) {
+          const force = ((200 - dist) / 200) * 20;
+          particle.vx += (dx / dist) * force;
+          particle.vy += (dy / dist) * force;
+        }
       }
     }
 
@@ -472,9 +504,34 @@
     canvas.addEventListener('mouseleave', () => {
       mouse.x = null;
       mouse.y = null;
+      mouse.clicking = false;
+    });
+
+    canvas.addEventListener('mousedown', (e) => {
+      mouse.clicking = true;
+      const rect = canvas.getBoundingClientRect();
+      const px = e.clientX - rect.left;
+      const py = e.clientY - rect.top;
+      explodeFromPoint(px, py);
+    });
+
+    canvas.addEventListener('mouseup', () => {
+      mouse.clicking = false;
     });
 
     // Touch support
+    canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      mouse.clicking = true;
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      const px = touch.clientX - rect.left;
+      const py = touch.clientY - rect.top;
+      mouse.x = px;
+      mouse.y = py;
+      explodeFromPoint(px, py);
+    });
+
     canvas.addEventListener('touchmove', (e) => {
       e.preventDefault();
       const rect = canvas.getBoundingClientRect();
@@ -486,6 +543,7 @@
     canvas.addEventListener('touchend', () => {
       mouse.x = null;
       mouse.y = null;
+      mouse.clicking = false;
     });
 
     // Control buttons

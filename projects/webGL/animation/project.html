@@ -1,171 +1,195 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebGL Character Animation</title>
-    <style>
-        body {
-            background-color: black;
-            color: white;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="WebGL character animation with hierarchical modeling and custom shaders.">
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+  <title>WebGL Animation | Natalie Slaba</title>
 
-        .webgl-project {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-        video {
-            width: 100%;
-            max-width: 800px;
-            height: auto;
-            border: 2px solid white;
-        }
+  <!-- Styles -->
+  <link rel="stylesheet" href="../../../css/main.css">
+  <link rel="stylesheet" href="../../../css/tech.css">
+  <style>
+    .project-page {
+      min-height: 100vh;
+      background: var(--color-tech-bg);
+      color: var(--color-white);
+    }
 
-        .project-description {
-            line-height: 1.6;
-        }
+    .project-header {
+      padding: 8rem 2rem 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-    </style>
+    .project-header .label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-tech-primary);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .project-header h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .project-header .intro {
+      font-size: 1rem;
+      color: var(--color-gray-400);
+      line-height: 1.8;
+      max-width: 600px;
+    }
+
+    .project-content {
+      padding: 0 2rem 4rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .video-container {
+      margin: 2rem 0;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+
+    .video-container video {
+      width: 100%;
+      display: block;
+    }
+
+    .project-section {
+      margin-bottom: 2rem;
+    }
+
+    .project-section h2 {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--color-tech-primary);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .project-section p {
+      color: var(--color-gray-300);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    .tech-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    .tech-item {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-tech-primary);
+      background: rgba(99, 102, 241, 0.1);
+      padding: 0.25rem 0.75rem;
+      border-radius: 2px;
+    }
+
+    .project-footer {
+      padding: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .back-link {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--color-gray-500);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: var(--color-tech-primary);
+    }
+  </style>
 </head>
-<body>
-    <div class="container">
-        <h1>WebGL Character Animation</h1>
-        <div class="webgl-project">
-            <video controls autoplay muted loop>
-                <source src="anim.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        </div>
-        <div class="project-description">
-            <p>This animation was created using WebGL and GLSL. The characters are constructed as hierarchical objects built from WebGL's primitive shapes.</p>
-            <p>The scene makes use of two fragment shaders to create dynamic visual effects, along with a combination of procedural and image-based textures. The animation includes a full 360-degree camera flyaround and is synchronized with real-time parameters, such as changing light and color based on elapsed time.</p>
-            <p>The background and character elements are inspired by psychedelic motifs, incorporating artwork textures derived from my own paintings. The final result aims to combine technical constraints with playful visual experimentation.</p>
-        </div>
-    </div>
-</body>
-</html> -->
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>WebGL animation</title>
-    <style>
-        body {
-            background-color: black;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        video {
-            max-width: 90%;
-            height: auto;
-            border: 2px solid white;
-        }
-    </style>
-</head>
-<body>
-    <!-- <header>
-    <a href="index.html" class="home-link">← Home</a>
-    
-  </header> -->
-    <video controls autoplay muted loop>
+<body class="project-page">
+
+  <!-- Navigation -->
+  <nav class="tech-nav">
+    <a href="../../../index.html" class="logo">natalie</a>
+    <ul class="tech-nav-links">
+      <li><a href="../../../tech/index.html">Projects</a></li>
+      <li><a href="../../../art/index.html">Art</a></li>
+      <li><a href="../../../about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- Header -->
+  <header class="project-header">
+    <span class="label">// Graphics Programming</span>
+    <h1>WebGL Animation</h1>
+    <p class="intro">
+      Hierarchical character animation built with WebGL and custom GLSL shaders.
+    </p>
+  </header>
+
+  <!-- Content -->
+  <main class="project-content">
+    <div class="video-container">
+      <video controls autoplay muted loop playsinline>
         <source src="anim.mp4" type="video/mp4">
         Your browser does not support the video tag.
-    </video>
+      </video>
+    </div>
+
+    <section class="project-section">
+      <h2>Overview</h2>
+      <p>
+        Characters constructed as hierarchical objects using WebGL's primitive shapes.
+        The scene uses custom fragment shaders for dynamic visual effects, with textures
+        derived from my own paintings.
+      </p>
+      <div class="tech-list">
+        <span class="tech-item">WebGL</span>
+        <span class="tech-item">GLSL</span>
+        <span class="tech-item">JavaScript</span>
+        <span class="tech-item">Hierarchical Modeling</span>
+      </div>
+    </section>
+
+    <section class="project-section">
+      <h2>Features</h2>
+      <p>
+        The animation includes a 360-degree camera flyaround synchronized with real-time
+        parameters - light and color shift based on elapsed time. The psychedelic aesthetic
+        combines technical constraints with playful visual experimentation.
+      </p>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="project-footer">
+    <a href="../../../tech/index.html" class="back-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      All Projects
+    </a>
+  </footer>
+
 </body>
 </html>
-
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebGL Animated Scene</title>
-    <style>
-        body {
-            background-color: black;
-            color: white;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        .back-button {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-        }
-        .back-button a {
-            text-decoration: none;
-            color: #f4b400;
-            background-color: transparent;
-            border: 1px solid #f4b400;
-            padding: 8px 14px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        .back-button a:hover {
-            background-color: #f4b400;
-            color: black;
-        }
-        .container {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 60px 20px 20px;
-        }
-        .webgl-project {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-        video {
-            max-width: 90%;
-            height: auto;
-            border: 2px solid white;
-        }
-        .project-description h2 {
-            margin-top: 1.5em;
-            color: #f4b400;
-        }
-        .project-description p {
-            line-height: 1.6;
-        }
-    </style>
-</head>
-<body>
-    <div class="back-button">
-        <a href="index.html">&larr; Back to Home</a>
-    </div>
-    <div class="container">
-        <div class="webgl-project">
-            <video controls autoplay muted loop>
-                <source src="anim.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        </div>
-        <div class="project-description">
-            <h1>WebGL Animated Scene</h1>
-            <p>This animation was built using WebGL and GLSL. The characters are modeled as hierarchical objects using primitive shapes available through WebGL. The piece uses two custom fragment shaders, multiple textures (including hand-painted ones), and plays with color, gravity, and surreal motion to create a humorous and psychedelic experience.</p>
-            <p>The animation includes a dynamic background and a color-shifting sun simulation, tied to real-time behavior and camera fly-arounds.</p>
-            <p>All textures used in the scene are original paintings.</p>
-        </div>
-    </div>
-</body>
-</html>
- -->
