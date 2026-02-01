@@ -1,31 +1,527 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Vulkan Project</title>
-    <style>
-        body {
-            background-color: black;
-            color: white;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 50px;
-        }
-        img {
-            width: 200px;
-            height: auto;
-            margin: 20px 0;
-        }
-        p {
-            font-size: 1.2em;
-            opacity: 0.8;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Interactive particle system - image texels transformed into GPU-driven particles.">
+
+  <title>Particle System | Natalie Slaba</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/tech.css">
+  <style>
+    .project-page {
+      min-height: 100vh;
+      background: var(--color-tech-bg);
+      color: var(--color-white);
+    }
+
+    .project-header {
+      padding: 8rem 2rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .project-header .label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-tech-primary);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .project-header h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .project-header .intro {
+      font-size: 1rem;
+      color: var(--color-gray-400);
+      line-height: 1.8;
+      max-width: 600px;
+    }
+
+    .demo-container {
+      padding: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      background: #000;
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+
+    #particleCanvas {
+      display: block;
+      width: 100%;
+      height: 500px;
+      cursor: crosshair;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .control-btn {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-gray-400);
+      background: transparent;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-radius: 2px;
+    }
+
+    .control-btn:hover,
+    .control-btn.active {
+      color: var(--color-tech-primary);
+      border-color: var(--color-tech-primary);
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    .info {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--color-gray-500);
+      margin-top: 1rem;
+    }
+
+    .project-content {
+      padding: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .project-section {
+      margin-bottom: 2rem;
+    }
+
+    .project-section h2 {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--color-tech-primary);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .project-section p {
+      color: var(--color-gray-300);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    .tech-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    .tech-item {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-tech-primary);
+      background: rgba(99, 102, 241, 0.1);
+      padding: 0.25rem 0.75rem;
+      border-radius: 2px;
+    }
+
+    .project-footer {
+      padding: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .back-link {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--color-gray-500);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: var(--color-tech-primary);
+    }
+
+    @media (max-width: 768px) {
+      #particleCanvas {
+        height: 350px;
+      }
+    }
+  </style>
 </head>
-<body>
-    <h1>Vulkan Project</h1>
-    <img src="vulkan_texture.gif" alt="Vulkan Texture Example">
-    <p>This page is to be developed.</p>
+<body class="project-page">
+
+  <!-- Navigation -->
+  <nav class="tech-nav">
+    <a href="../../index.html" class="logo">natalie</a>
+    <ul class="tech-nav-links">
+      <li><a href="../../tech/index.html">Projects</a></li>
+      <li><a href="../../art/index.html">Art</a></li>
+      <li><a href="../../about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- Header -->
+  <header class="project-header">
+    <span class="label">// GPU Graphics</span>
+    <h1>Particle System</h1>
+    <p class="intro">
+      Every pixel becomes a particle. Move your mouse to interact.
+    </p>
+  </header>
+
+  <!-- Demo -->
+  <section class="demo-container">
+    <div class="canvas-wrapper">
+      <canvas id="particleCanvas"></canvas>
+    </div>
+    <div class="controls">
+      <button class="control-btn active" data-mode="attract">Attract</button>
+      <button class="control-btn" data-mode="repel">Repel</button>
+      <button class="control-btn" data-mode="explode">Explode</button>
+      <button class="control-btn" data-mode="swirl">Swirl</button>
+      <button class="control-btn" data-mode="reset">Reset</button>
+    </div>
+    <p class="info">Move mouse over canvas to interact with particles</p>
+  </section>
+
+  <!-- Content -->
+  <main class="project-content">
+    <section class="project-section">
+      <h2>How It Works</h2>
+      <p>
+        The image is sampled to extract color and position data for each pixel. These become
+        particles that remember their "home" position and can be influenced by forces -
+        mouse interaction, explosions, swirling vortices. Each frame, particles are drawn
+        as points with their original color, creating a fluid representation of the image.
+      </p>
+      <div class="tech-list">
+        <span class="tech-item">WebGL</span>
+        <span class="tech-item">GLSL Shaders</span>
+        <span class="tech-item">Particle Physics</span>
+        <span class="tech-item">GPU Acceleration</span>
+      </div>
+    </section>
+
+    <section class="project-section">
+      <h2>The Concept</h2>
+      <p>
+        This started as a Vulkan project exploring GPU-driven particle systems. The core idea:
+        treat an image not as a static grid of pixels, but as a collection of independent
+        particles that can move, react, and reform. It bridges the gap between my interests
+        in graphics programming and visual art.
+      </p>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="project-footer">
+    <a href="../../tech/index.html" class="back-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      Back to Projects
+    </a>
+  </footer>
+
+  <script>
+    // Particle System
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let particles = [];
+    let mouse = { x: null, y: null, radius: 100 };
+    let mode = 'attract';
+    let animationId;
+
+    // Configuration
+    const PARTICLE_SIZE = 2;
+    const SAMPLE_GAP = 4; // Sample every Nth pixel
+    const RETURN_SPEED = 0.05;
+    const FRICTION = 0.95;
+    const MOUSE_FORCE = 0.5;
+
+    // Resize canvas
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    }
+
+    // Particle class
+    class Particle {
+      constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.homeX = x;
+        this.homeY = y;
+        this.vx = 0;
+        this.vy = 0;
+        this.color = color;
+        this.size = PARTICLE_SIZE;
+      }
+
+      update(canvasWidth, canvasHeight) {
+        // Mouse interaction
+        if (mouse.x !== null && mouse.y !== null) {
+          const dx = mouse.x - this.x;
+          const dy = mouse.y - this.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < mouse.radius) {
+            const force = (mouse.radius - dist) / mouse.radius;
+            const angle = Math.atan2(dy, dx);
+
+            switch (mode) {
+              case 'attract':
+                this.vx += Math.cos(angle) * force * MOUSE_FORCE;
+                this.vy += Math.sin(angle) * force * MOUSE_FORCE;
+                break;
+              case 'repel':
+                this.vx -= Math.cos(angle) * force * MOUSE_FORCE * 2;
+                this.vy -= Math.sin(angle) * force * MOUSE_FORCE * 2;
+                break;
+              case 'swirl':
+                this.vx += Math.cos(angle + Math.PI/2) * force * MOUSE_FORCE;
+                this.vy += Math.sin(angle + Math.PI/2) * force * MOUSE_FORCE;
+                break;
+            }
+          }
+        }
+
+        // Return home
+        const homeX = this.homeX;
+        const homeY = this.homeY;
+        this.vx += (homeX - this.x) * RETURN_SPEED;
+        this.vy += (homeY - this.y) * RETURN_SPEED;
+
+        // Apply friction
+        this.vx *= FRICTION;
+        this.vy *= FRICTION;
+
+        // Update position
+        this.x += this.vx;
+        this.y += this.vy;
+      }
+
+      draw() {
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x - this.size/2, this.y - this.size/2, this.size, this.size);
+      }
+    }
+
+    // Load image and create particles
+    function loadImage(src) {
+      const img = new Image();
+      img.crossOrigin = 'Anonymous';
+
+      img.onload = function() {
+        particles = [];
+
+        // Create temporary canvas to read pixels
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+
+        // Calculate dimensions to fit canvas
+        const canvasRect = canvas.getBoundingClientRect();
+        const scale = Math.min(
+          canvasRect.width / img.width,
+          canvasRect.height / img.height
+        ) * 0.8;
+
+        const drawWidth = img.width * scale;
+        const drawHeight = img.height * scale;
+        const offsetX = (canvasRect.width - drawWidth) / 2;
+        const offsetY = (canvasRect.height - drawHeight) / 2;
+
+        tempCanvas.width = img.width;
+        tempCanvas.height = img.height;
+        tempCtx.drawImage(img, 0, 0);
+
+        const imageData = tempCtx.getImageData(0, 0, img.width, img.height);
+        const data = imageData.data;
+
+        // Sample pixels and create particles
+        for (let y = 0; y < img.height; y += SAMPLE_GAP) {
+          for (let x = 0; x < img.width; x += SAMPLE_GAP) {
+            const i = (y * img.width + x) * 4;
+            const r = data[i];
+            const g = data[i + 1];
+            const b = data[i + 2];
+            const a = data[i + 3];
+
+            // Skip transparent pixels
+            if (a < 128) continue;
+
+            // Skip very dark pixels (optional, for cleaner look)
+            if (r + g + b < 30) continue;
+
+            const particleX = offsetX + x * scale;
+            const particleY = offsetY + y * scale;
+            const color = `rgb(${r},${g},${b})`;
+
+            particles.push(new Particle(particleX, particleY, color));
+          }
+        }
+
+        console.log(`Created ${particles.length} particles`);
+      };
+
+      img.onerror = function() {
+        // Create fallback gradient particles
+        createFallbackParticles();
+      };
+
+      img.src = src;
+    }
+
+    // Fallback if image doesn't load
+    function createFallbackParticles() {
+      particles = [];
+      const canvasRect = canvas.getBoundingClientRect();
+      const centerX = canvasRect.width / 2;
+      const centerY = canvasRect.height / 2;
+      const radius = Math.min(centerX, centerY) * 0.7;
+
+      for (let i = 0; i < 5000; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const r = Math.random() * radius;
+        const x = centerX + Math.cos(angle) * r;
+        const y = centerY + Math.sin(angle) * r;
+
+        // Create gradient colors
+        const hue = (angle * 180 / Math.PI + r) % 360;
+        const color = `hsl(${hue}, 70%, 60%)`;
+
+        particles.push(new Particle(x, y, color));
+      }
+    }
+
+    // Animation loop
+    function animate() {
+      const rect = canvas.getBoundingClientRect();
+      ctx.clearRect(0, 0, rect.width, rect.height);
+
+      for (const particle of particles) {
+        particle.update(rect.width, rect.height);
+        particle.draw();
+      }
+
+      animationId = requestAnimationFrame(animate);
+    }
+
+    // Explode particles
+    function explode() {
+      const rect = canvas.getBoundingClientRect();
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      for (const particle of particles) {
+        const dx = particle.x - centerX;
+        const dy = particle.y - centerY;
+        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+
+        particle.vx += (dx / dist) * 15;
+        particle.vy += (dy / dist) * 15;
+      }
+    }
+
+    // Reset particles
+    function resetParticles() {
+      for (const particle of particles) {
+        particle.x = particle.homeX;
+        particle.y = particle.homeY;
+        particle.vx = 0;
+        particle.vy = 0;
+      }
+    }
+
+    // Event listeners
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+      mouse.x = null;
+      mouse.y = null;
+    });
+
+    // Touch support
+    canvas.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      mouse.x = touch.clientX - rect.left;
+      mouse.y = touch.clientY - rect.top;
+    });
+
+    canvas.addEventListener('touchend', () => {
+      mouse.x = null;
+      mouse.y = null;
+    });
+
+    // Control buttons
+    document.querySelectorAll('.control-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const btnMode = btn.dataset.mode;
+
+        if (btnMode === 'explode') {
+          explode();
+          return;
+        }
+
+        if (btnMode === 'reset') {
+          resetParticles();
+          return;
+        }
+
+        // Update active button
+        document.querySelectorAll('.control-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        mode = btnMode;
+      });
+    });
+
+    // Handle resize
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      // Reload image to recalculate positions
+      loadImage('../../assets/images/art/chaos.webp');
+    });
+
+    // Initialize
+    resizeCanvas();
+    loadImage('../../assets/images/art/chaos.webp');
+    animate();
+  </script>
+
 </body>
 </html>
