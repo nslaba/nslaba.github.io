@@ -10,7 +10,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cormorant+Garamond:wght@300;400;500&display=swap" rel="stylesheet">
 
   <style>
     * {
@@ -21,7 +21,6 @@
 
     :root {
       --tech-accent: #6366f1;
-      --art-accent: #d97706;
       --bg-dark: #050508;
     }
 
@@ -136,77 +135,27 @@
       max-width: 500px;
     }
 
-    .panel-label {
-      font-size: 0.7rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeUp 0.8s ease 0.8s forwards;
-    }
-
-    .panel-tech .panel-label {
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--tech-accent);
-    }
-
-    .panel-art .panel-label {
-      font-family: 'Playfair Display', serif;
-      color: var(--art-accent);
-      letter-spacing: 0.2em;
-    }
-
     .panel-title {
-      font-size: clamp(2.5rem, 6vw, 5rem);
-      font-weight: 600;
-      line-height: 0.95;
-      margin-bottom: 1.5rem;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 300;
+      line-height: 1.1;
+      margin-bottom: 2rem;
       opacity: 0;
       transform: translateY(30px);
-      animation: fadeUp 0.8s ease 1s forwards;
+      animation: fadeUp 0.8s ease 0.8s forwards;
     }
 
     .panel-tech .panel-title {
       font-family: 'Inter', sans-serif;
-      letter-spacing: -0.03em;
-    }
-
-    .panel-tech .panel-title span {
-      display: block;
-      background: linear-gradient(135deg, #fff 0%, var(--tech-accent) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      letter-spacing: -0.02em;
+      color: #fff;
     }
 
     .panel-art .panel-title {
-      font-family: 'Playfair Display', serif;
-      font-weight: 400;
-      font-style: italic;
-    }
-
-    .panel-art .panel-title span {
-      display: block;
-      background: linear-gradient(135deg, #fff 0%, var(--art-accent) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .panel-desc {
-      font-size: 1rem;
-      line-height: 1.7;
-      color: rgba(255,255,255,0.5);
-      margin-bottom: 2rem;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeUp 0.8s ease 1.2s forwards;
-    }
-
-    .panel-art .panel-desc {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      color: #fff;
+      letter-spacing: 0.02em;
     }
 
     /* Enter button */
@@ -225,7 +174,7 @@
       transition: all 0.4s ease;
       opacity: 0;
       transform: translateY(20px);
-      animation: fadeUp 0.8s ease 1.4s forwards;
+      animation: fadeUp 0.8s ease 1s forwards;
     }
 
     .panel-tech .panel-enter {
@@ -243,17 +192,18 @@
     }
 
     .panel-art .panel-enter {
-      font-family: 'Playfair Display', serif;
-      color: var(--art-accent);
-      border-color: rgba(217, 119, 6, 0.4);
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 500;
+      color: rgba(255,255,255,0.8);
+      border-color: rgba(255, 255, 255, 0.3);
       letter-spacing: 0.1em;
     }
 
     .panel-art .panel-enter:hover {
-      background: var(--art-accent);
+      background: rgba(255,255,255,0.1);
       color: #fff;
-      border-color: var(--art-accent);
-      box-shadow: 0 0 40px rgba(217, 119, 6, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
       transform: translateY(-2px);
     }
 
@@ -372,7 +322,7 @@
       }
 
       .panel-title {
-        font-size: clamp(2rem, 8vw, 3rem);
+        font-size: clamp(2rem, 10vw, 3.5rem);
       }
 
       .header {
@@ -395,9 +345,7 @@
     <a href="tech/index.html" class="panel panel-tech">
       <canvas class="panel-canvas" id="techCanvas"></canvas>
       <div class="panel-content">
-        <p class="panel-label">// Creative Developer</p>
-        <h2 class="panel-title"><span>Code as</span><span>Canvas</span></h2>
-        <p class="panel-desc">Graphics programming, interactive experiences, and the beauty of algorithms.</p>
+        <h2 class="panel-title">Code</h2>
         <span class="panel-enter">
           Explore Projects
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -424,9 +372,7 @@
         <img src="assets/images/art/fields.webp" alt="">
       </div>
       <div class="panel-content">
-        <p class="panel-label">Visual Artist</p>
-        <h2 class="panel-title"><span>Pixels</span><span>as Paint</span></h2>
-        <p class="panel-desc">Paintings, murals, and the quiet beauty of observation translated to canvas.</p>
+        <h2 class="panel-title">Art</h2>
         <span class="panel-enter">
           View Gallery
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
