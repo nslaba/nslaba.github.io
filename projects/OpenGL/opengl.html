@@ -1,111 +1,225 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenGL Hermite Spline Project</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        .container {
-            width: 80%;
-            margin: auto;
-            overflow: hidden;
-        }
-        header {
-            background: #333;
-            color: #fff;
-            padding-top: 30px;
-            min-height: 70px;
-            border-bottom: #0779e4 3px solid;
-        }
-        header a {
-            color: #fff;
-            text-decoration: none;
-            text-transform: uppercase;
-            font-size: 16px;
-        }
-        header ul {
-            padding: 0;
-            list-style: none;
-        }
-        header li {
-            float: left;
-            display: inline;
-            padding: 0 20px 0 20px;
-        }
-        header #branding {
-            float: left;
-        }
-        header #branding h1 {
-            margin: 0;
-        }
-        header nav {
-            float: right;
-            margin-top: 10px;
-        }
-        .content {
-            padding: 20px;
-            background: #fff;
-            margin-top: 20px;
-        }
-        .content h2, .content h3 {
-            color: #333;
-        }
-        .content img {
-            width: 100%;
-            margin-top: 10px;
-        }
-        footer {
-            background: #333;
-            color: #fff;
-            text-align: center;
-            padding: 10px;
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Hermite spline implementation in OpenGL with arc-length parameterization and smooth object animation.">
+
+  <title>Hermite Splines | Natalie Slaba</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/tech.css">
+  <style>
+    .project-page {
+      min-height: 100vh;
+      background: var(--color-tech-bg);
+      color: var(--color-white);
+    }
+
+    .project-header {
+      padding: 8rem 2rem 4rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .project-header .label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-tech-primary);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .project-header h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .project-header .intro {
+      font-size: 1.1rem;
+      color: var(--color-gray-400);
+      line-height: 1.8;
+      max-width: 700px;
+    }
+
+    .project-content {
+      padding: 0 2rem 4rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .project-image {
+      width: 100%;
+      border-radius: 4px;
+      margin: 2rem 0;
+      border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+
+    .project-section {
+      margin-bottom: 3rem;
+    }
+
+    .project-section h2 {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--color-tech-primary);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .project-section p {
+      color: var(--color-gray-300);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    .tech-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    .tech-item {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-tech-primary);
+      background: rgba(99, 102, 241, 0.1);
+      padding: 0.25rem 0.75rem;
+      border-radius: 2px;
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      margin: 1.5rem 0;
+    }
+
+    .feature-list li {
+      color: var(--color-gray-300);
+      line-height: 1.8;
+      padding-left: 1.5rem;
+      position: relative;
+      margin-bottom: 0.75rem;
+    }
+
+    .feature-list li::before {
+      content: '>';
+      position: absolute;
+      left: 0;
+      color: var(--color-tech-primary);
+      font-family: var(--font-mono);
+    }
+
+    .project-footer {
+      padding: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .back-link {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--color-gray-500);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: var(--color-tech-primary);
+    }
+  </style>
 </head>
-<body>
-    <header>
-        <div class="container">
-            <div id="branding">
-                <h1>OpenGL Projects</h1>
-            </div>
-        </div>
-    </header>
+<body class="project-page">
 
-    <div class="container content">
-        <section id="opengl">
-            <h2>Building a Hermite Spline in OpenGL</h2>
-            <p>Why are Hermite Splines so cool you may ask?!</p>
-            <p>Hermite splines are an essential tool in computer graphics for creating smooth curves and animations. They allow for precise control over the curve's shape by manipulating the control points and tangents. This capability makes Hermite splines invaluable for tasks such as keyframe animation, path interpolation, and even in the design of complex shapes and surfaces.</p>
-            
-            <h3>Hermite Spline Project</h3>
-            <p>Created in C++ and an older version of OpenGL, this project fullfilled the following criteria:</p>
-            <ul>
-                <li>I've created a Hermite spline class with 40 control points.</li>
-                <li>I've used Catmull-Rom with second-order accurate boundary conditions to generate tangent vectors. This is executed using the command: <code>system cr</code></li>
-                <li>I've allowed for manipulation of control points and tangents using the console commands.</li>
-                <li>I used Arc Length parameterization using a piecewise linear approximation and lookup table for more uniform sampling of points along a curve. This allowed me to access an arbitrary position on the spline with  P(u(s(t))). This is executed with the command: <code>system getArcLength</code></li>
-                <li>I've allowed for Input/output from/to a file with the following commands: <code>system load ""</code> and <code>system export ""</code></li>
-                <li>Once all the spline is calculated, the path is loaded for the 3D car object with the following command: <code>system objectpath load ""</code></li>
-                <li>As the car moves along the spline, I've made sure to align its major axis with the tangent of the path by leveraging quaternions.</li>
-                <li>I've Ensured the moving object starts and stops in an easy-in, easy-out way by interpolating accross the spline non-linearly at the beginning and end. However, the 3D car maintains constant speed during the rest of the motion.</li>
-            </ul>
-            <p>The result of all the beautiful math is a car moving along an arbitrary path:</p>
-            <h4>Result</h4>
-            <img src="HermiteSpline/hermiteSpline.gif" alt="Task Description">
-            
-        </section>
-    </div>
+  <!-- Navigation -->
+  <nav class="tech-nav">
+    <a href="../../index.html" class="logo">natalie</a>
+    <ul class="tech-nav-links">
+      <li><a href="../../tech/index.html">Projects</a></li>
+      <li><a href="../../art/index.html">Art</a></li>
+      <li><a href="../../about.html">About</a></li>
+    </ul>
+  </nav>
 
-    <footer>
-        <p>OpenGL Hermite Spline Project &copy; 2024</p>
-    </footer>
+  <!-- Header -->
+  <header class="project-header">
+    <span class="label">// Graphics Programming</span>
+    <h1>Hermite Splines</h1>
+    <p class="intro">
+      Smooth curves are everywhere in computer graphics. This project explores
+      Hermite splines with arc-length parameterization for consistent animation timing.
+    </p>
+  </header>
+
+  <!-- Content -->
+  <main class="project-content">
+    <img src="HermiteSpline/hermiteSpline.gif" alt="Car following a Hermite spline path" class="project-image">
+
+    <section class="project-section">
+      <h2>Overview</h2>
+      <p>
+        Hermite splines give you precise control over curve shape through control points and
+        tangent vectors. They're essential for keyframe animation, path interpolation, and
+        designing complex surfaces.
+      </p>
+      <div class="tech-list">
+        <span class="tech-item">C++</span>
+        <span class="tech-item">OpenGL</span>
+        <span class="tech-item">Catmull-Rom</span>
+        <span class="tech-item">Quaternions</span>
+      </div>
+    </section>
+
+    <section class="project-section">
+      <h2>Features</h2>
+      <ul class="feature-list">
+        <li>40 control points with interactive manipulation via console commands</li>
+        <li>Catmull-Rom tangent generation with second-order accurate boundary conditions</li>
+        <li>Arc-length parameterization using piecewise linear approximation and lookup table</li>
+        <li>File I/O for saving and loading spline configurations</li>
+        <li>Quaternion-based orientation alignment to keep objects tangent to the path</li>
+        <li>Ease-in/ease-out motion at path endpoints with constant speed in between</li>
+      </ul>
+    </section>
+
+    <section class="project-section">
+      <h2>The Math</h2>
+      <p>
+        The trickiest part is arc-length parameterization. Without it, objects speed up and
+        slow down unpredictably as they traverse the curve. By building a lookup table that
+        maps distance along the curve to parameter values, you get uniform sampling: P(u(s(t))).
+      </p>
+      <p>
+        Orientation is handled with quaternions to avoid gimbal lock and ensure smooth
+        rotation as the object follows the path. The car's major axis stays aligned with
+        the tangent vector at each point.
+      </p>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="project-footer">
+    <a href="../../tech/index.html" class="back-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      Back to Projects
+    </a>
+  </footer>
+
 </body>
 </html>

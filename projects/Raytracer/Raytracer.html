@@ -1,136 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RayTracer Project</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        .container {
-            width: 80%;
-            margin: auto;
-            overflow: hidden;
-        }
-        header {
-            background: #333;
-            color: #fff;
-            padding-top: 30px;
-            min-height: 70px;
-            border-bottom: #0779e4 3px solid;
-        }
-        header a {
-            color: #fff;
-            text-decoration: none;
-            text-transform: uppercase;
-            font-size: 16px;
-        }
-        header ul {
-            padding: 0;
-            list-style: none;
-        }
-        header li {
-            float: left;
-            display: inline;
-            padding: 0 20px 0 20px;
-        }
-        header #branding {
-            float: left;
-        }
-        header #branding h1 {
-            margin: 0;
-        }
-        header nav {
-            float: right;
-            margin-top: 10px;
-        }
-        .content {
-            padding: 20px;
-            background: #fff;
-            margin-top: 20px;
-        }
-        .content h2, .content h3 {
-            color: #333;
-        }
-        .content img {
-            width: 100%;
-            margin-top: 10px;
-        }
-        footer {
-            background: #333;
-            color: #fff;
-            text-align: center;
-            padding: 10px;
-            margin-top: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A C++ ray tracer implementing physically-based rendering with reflections, shadows, and Phong illumination.">
+
+  <title>Ray Tracer | Natalie Slaba</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/tech.css">
+  <style>
+    .project-page {
+      min-height: 100vh;
+      background: var(--color-tech-bg);
+      color: var(--color-white);
+    }
+
+    .project-header {
+      padding: 8rem 2rem 4rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .project-header .label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-tech-primary);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .project-header h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .project-header .intro {
+      font-size: 1.1rem;
+      color: var(--color-gray-400);
+      line-height: 1.8;
+      max-width: 700px;
+    }
+
+    .project-content {
+      padding: 0 2rem 4rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .project-image {
+      width: 100%;
+      border-radius: 4px;
+      margin: 2rem 0;
+      border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .image-grid img {
+      width: 100%;
+      border-radius: 4px;
+      border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+
+    .image-caption {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-gray-500);
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+
+    .project-section {
+      margin-bottom: 3rem;
+    }
+
+    .project-section h2 {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--color-tech-primary);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .project-section p {
+      color: var(--color-gray-300);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    .tech-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+
+    .tech-item {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--color-tech-primary);
+      background: rgba(99, 102, 241, 0.1);
+      padding: 0.25rem 0.75rem;
+      border-radius: 2px;
+    }
+
+    .project-footer {
+      padding: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .back-link {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--color-gray-500);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: var(--color-tech-primary);
+    }
+
+    @media (max-width: 600px) {
+      .image-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
-<body>
-    <header>
-        <div class="container">
-            <div id="branding">
-                <h1>RayTracer Project</h1>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="#task">Task</a></li>
-                    <li><a href="#criteria">Criteria</a></li>
-                    <li><a href="#summary">Summary</a></li>
-                    <li><a href="#functionality">Functionality</a></li>
-                </ul>
-            </nav>
+<body class="project-page">
+
+  <!-- Navigation -->
+  <nav class="tech-nav">
+    <a href="../../index.html" class="logo">natalie</a>
+    <ul class="tech-nav-links">
+      <li><a href="../../tech/index.html">Projects</a></li>
+      <li><a href="../../art/index.html">Art</a></li>
+      <li><a href="../../about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- Header -->
+  <header class="project-header">
+    <span class="label">// Graphics Programming</span>
+    <h1>Ray Tracer</h1>
+    <p class="intro">
+      A physically-based renderer built from scratch in C++. No graphics libraries,
+      just math and the satisfaction of watching pixels appear one ray at a time.
+    </p>
+  </header>
+
+  <!-- Content -->
+  <main class="project-content">
+    <img src="snapshot.png" alt="Ray traced scene with reflective spheres" class="project-image">
+
+    <section class="project-section">
+      <h2>Overview</h2>
+      <p>
+        Ray tracing is one of those algorithms that feels like magic when you first understand it:
+        simulate light bouncing around a scene, and an image emerges. This project implements the
+        core concepts from scratch.
+      </p>
+      <div class="tech-list">
+        <span class="tech-item">C++</span>
+        <span class="tech-item">Phong Illumination</span>
+        <span class="tech-item">Recursive Reflections</span>
+        <span class="tech-item">Shadow Rays</span>
+      </div>
+    </section>
+
+    <section class="project-section">
+      <h2>Features</h2>
+      <p>
+        The renderer supports ellipsoid geometry with a fixed camera at the origin looking down
+        the negative z-axis. Each feature was implemented incrementally, building up from basic
+        ray-sphere intersection to a full illumination model.
+      </p>
+
+      <div class="image-grid">
+        <div>
+          <img src="illumination.png" alt="Basic illumination">
+          <p class="image-caption">Ambient + Diffuse + Specular</p>
         </div>
-    </header>
+        <div>
+          <img src="specularLight.png" alt="Specular highlights">
+          <p class="image-caption">Specular Highlights</p>
+        </div>
+        <div>
+          <img src="reflections.png" alt="Reflections">
+          <p class="image-caption">Recursive Reflections</p>
+        </div>
+        <div>
+          <img src="shadows.png" alt="Shadows">
+          <p class="image-caption">Shadow Rays</p>
+        </div>
+      </div>
+    </section>
 
-    <div class="container content">
-        <section id="task">
-            <h2>Task</h2>
-            <p>Build a simple ray tracer program that creates ppm images of spheres by reading the present text files' specifications.</p>
-        </section>
+    <section class="project-section">
+      <h2>Implementation</h2>
+      <p>
+        The ray tracer reads scene specifications from text files and outputs PPM images.
+        I chose C++ for performance; images render in seconds rather than the minutes
+        Python would have required.
+      </p>
+      <p>
+        The core algorithm is recursive: for each pixel, cast a ray into the scene, find
+        the closest intersection, calculate local illumination from each light source
+        (checking for shadows), then recurse with a reflected ray up to a depth of 3.
+      </p>
+    </section>
+  </main>
 
-        <section id="criteria">
-            <h2>Criteria</h2>
-            <ul>
-                <li>Build a raytracer using either C++, Python, or Java</li>
-                <li>The system only needs to handle the rendering of ellipsoids</li>
-                <li>It will have a fixed camera situated at the origin in a right-handed coordinate system</li>
-                <li>It will be looking down the negative z-axis</li>
-                <li>Local illumination, reflections, and shadows will also need to be implemented</li>
-                <li>The program should take a single argument, which is the name of the file to be parsed</li>
-                <li>Output should be a ppm image</li>
-            </ul>
-        </section>
+  <!-- Footer -->
+  <footer class="project-footer">
+    <a href="../../tech/index.html" class="back-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      Back to Projects
+    </a>
+  </footer>
 
-        <section id="summary">
-            <h2>Summary</h2>
-            <p>I have chosen to work in C++ as it is the fastest option. With C++, my images take a maximum of several seconds to be produced, whereas with Python they could have taken up to several minutes. The Raytracer is set up to support local illumination (Ambient, Diffuse, and Specular), reflections, and shadows using recursion of depth 3.</p>
-            <h3>Illumination:</h3>
-            <img src="illumination.png" alt="Illumination">
-            <h3>Specular light:</h3>
-            <img src="specularLight.png" alt="Specular light">
-            <h3>Reflections:</h3>
-            <img src="reflections.png" alt="Reflections">
-            <h3>Shadows:</h3>
-            <img src="shadows.png" alt="Shadows">
-        </section>
-
-        <section id="functionality">
-            <h2>Functionality</h2>
-            <p>My project first deals with the input text file by reading it, parsing it, and populating the proper struct variables. All of my parsing is done in a separate file called Parsing.cpp.</p>
-            <p>Once all of my variables are updated, the main in RayTracer.cpp constructs the correct view plane. Using the Width and the Height it creates an array of pixel structs which hold RGB components. Once the array of pixels and the view plane are generated, the main is ready to create the Ray struct (defined in structs.hpp) particular to the particular pixel. To compute the color of this ray Ray, raytrace(ray) is called returning its color in RGB. The color is then stored in the array of pixels.</p>
-            <p>Raytrace(ray): raytrace is a recursive function that repeatedly finds the closest intersection for the particular ray. It checks if there has been an intersection or not and if there hasn't been any, then it returns black for a reflected ray and returns the background color for an original ray. If there has been an intersection, then it calculates the given shadows casted by each light (shadow_ray function). Lastly, the depth of ray is reduced and raytracer is called again with the now reflected ray.</p>
-        </section>
-
-        
-    </div>
-
-    <footer>
-        <p>RayTracer Project &copy; 2024</p>
-    </footer>
 </body>
 </html>
