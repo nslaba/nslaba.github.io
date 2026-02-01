@@ -401,9 +401,24 @@
     </span>
   </footer>
 
-  <!-- Category filter script -->
+  <!-- Lightbox Modal -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-content">
+      <button class="lightbox-close" aria-label="Close">&times;</button>
+      <button class="lightbox-nav lightbox-prev" aria-label="Previous">&lsaquo;</button>
+      <img src="" alt="">
+      <button class="lightbox-nav lightbox-next" aria-label="Next">&rsaquo;</button>
+      <div class="lightbox-caption">
+        <div class="lightbox-title"></div>
+        <div class="lightbox-medium"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category filter and lightbox script -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // Category filter
       const buttons = document.querySelectorAll('.category-btn');
       const items = document.querySelectorAll('.gallery-item');
 
@@ -421,6 +436,89 @@
             }
           });
         });
+      });
+
+      // Lightbox
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = lightbox.querySelector('img');
+      const lightboxTitle = lightbox.querySelector('.lightbox-title');
+      const lightboxMedium = lightbox.querySelector('.lightbox-medium');
+      const closeBtn = lightbox.querySelector('.lightbox-close');
+      const prevBtn = lightbox.querySelector('.lightbox-prev');
+      const nextBtn = lightbox.querySelector('.lightbox-next');
+
+      let currentIndex = 0;
+      let visibleItems = [];
+
+      function getVisibleItems() {
+        return Array.from(items).filter(item => item.style.display !== 'none');
+      }
+
+      function openLightbox(index) {
+        visibleItems = getVisibleItems();
+        currentIndex = index;
+        updateLightbox();
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      function updateLightbox() {
+        const item = visibleItems[currentIndex];
+        const img = item.querySelector('img');
+        const title = item.querySelector('.gallery-item-title');
+        const medium = item.querySelector('.gallery-item-medium');
+
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt;
+        lightboxTitle.textContent = title ? title.textContent : '';
+        lightboxMedium.textContent = medium ? medium.textContent : '';
+      }
+
+      function showPrev() {
+        currentIndex = (currentIndex - 1 + visibleItems.length) % visibleItems.length;
+        updateLightbox();
+      }
+
+      function showNext() {
+        currentIndex = (currentIndex + 1) % visibleItems.length;
+        updateLightbox();
+      }
+
+      // Click on gallery items
+      items.forEach((item, index) => {
+        item.addEventListener('click', () => {
+          visibleItems = getVisibleItems();
+          const visibleIndex = visibleItems.indexOf(item);
+          openLightbox(visibleIndex);
+        });
+      });
+
+      // Close button
+      closeBtn.addEventListener('click', closeLightbox);
+
+      // Navigation buttons
+      prevBtn.addEventListener('click', showPrev);
+      nextBtn.addEventListener('click', showNext);
+
+      // Close on background click
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+          closeLightbox();
+        }
+      });
+
+      // Keyboard navigation
+      document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') showPrev();
+        if (e.key === 'ArrowRight') showNext();
       });
     });
   </script>
