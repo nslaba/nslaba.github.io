@@ -106,6 +106,24 @@
   margin: 0 auto;
 }
 
+/* Featured Section */
+.art-featured {
+  padding: 0 2rem 4rem;
+  display: flex;
+  justify-content: center;
+}
+
+.featured-image {
+  max-width: 800px;
+  width: 100%;
+}
+
+.featured-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 /* Gallery Section */
 .art-gallery {
   padding: 4rem 2rem;
