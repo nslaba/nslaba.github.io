@@ -584,3 +584,22 @@
     right: 0;
   }
 }
+
+/* Sketches Intro */
+.sketches-intro {
+  display: none;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  text-align: center;
+}
+
+.sketches-intro.visible {
+  display: block;
+}
+
+.sketches-statement {
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
