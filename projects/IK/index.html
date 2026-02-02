@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Interactive inverse kinematics demo with an intuitive explanation of Jacobian matrices.">
+
+  <title>Inverse Kinematics | Natalie Slaba</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #050508;
+      --surface: #0a0a0f;
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.3);
+      --text: #fff;
+      --text-muted: rgba(255,255,255,0.5);
+      --joint-color: #f59e0b;
+      --arm-color: #6366f1;
+      --target-color: #10b981;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, sans-serif;
+      line-height: 1.6;
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, var(--bg), transparent);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .nav-back {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-back:hover {
+      color: var(--accent);
+    }
+
+    .nav-sep {
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 6rem 2rem;
+      text-align: center;
+    }
+
+    .hero-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .hero-subtitle {
+      color: var(--text-muted);
+      max-width: 500px;
+      margin-bottom: 3rem;
+    }
+
+    /* Demo Container */
+    .demo-container {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      aspect-ratio: 1;
+      background: var(--surface);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      overflow: hidden;
+      cursor: crosshair;
+    }
+
+    .demo-canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    .demo-hint {
+      position: absolute;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .control-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--text-muted);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .control-btn:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .control-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* Lesson Sections */
+    .lesson {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 6rem 2rem;
+    }
+
+    .lesson-section {
+      margin-bottom: 6rem;
+    }
+
+    .lesson-section h2 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .lesson-section h2 .step {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+
+    .lesson-section p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.8;
+    }
+
+    .lesson-section strong {
+      color: var(--text);
+    }
+
+    /* Mini demos */
+    .mini-demo {
+      background: var(--surface);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 2rem;
+      margin: 2rem 0;
+    }
+
+    .mini-demo canvas {
+      width: 100%;
+      max-width: 400px;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* Math display */
+    .math-block {
+      background: var(--surface);
+      border-left: 2px solid var(--accent);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      overflow-x: auto;
+    }
+
+    .math-block .label {
+      color: var(--accent);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Jacobian visualization */
+    .jacobian-display {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 2rem;
+      align-items: start;
+      margin: 2rem 0;
+    }
+
+    .jacobian-matrix {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      background: var(--surface);
+      padding: 1rem;
+      border-radius: 4px;
+    }
+
+    .jacobian-matrix .row {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .jacobian-matrix .cell {
+      width: 60px;
+      text-align: right;
+      padding: 0.25rem;
+    }
+
+    .jacobian-explanation {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* Intuition boxes */
+    .intuition {
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .intuition-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+
+    .intuition p {
+      margin: 0;
+      color: var(--text);
+    }
+
+    /* Footer */
+    footer {
+      padding: 3rem 2rem;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    footer a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      margin: 0 1rem;
+    }
+
+    footer a:hover {
+      color: var(--accent);
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .jacobian-display {
+        grid-template-columns: 1fr;
+      }
+
+      .demo-container {
+        aspect-ratio: 4/3;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-left">
+      <a href="../../tech/index.html" class="nav-back">All Projects</a>
+      <span class="nav-sep">/</span>
+      <a href="../../index.html" class="nav-back">Home</a>
+    </div>
+  </nav>
+
+  <!-- Hero with Demo -->
+  <section class="hero">
+    <span class="hero-label">Interactive Demo</span>
+    <h1>Inverse Kinematics</h1>
+    <p class="hero-subtitle">
+      Drag the target. Watch the arm follow. Understand the math.
+    </p>
+
+    <div class="demo-container">
+      <canvas class="demo-canvas" id="mainDemo"></canvas>
+      <span class="demo-hint">click and drag anywhere</span>
+    </div>
+
+    <div class="controls">
+      <button class="control-btn active" data-segments="2">2 Segments</button>
+      <button class="control-btn" data-segments="3">3 Segments</button>
+      <button class="control-btn" data-segments="5">5 Segments</button>
+      <button class="control-btn" id="toggleJacobian">Show Jacobian</button>
+    </div>
+  </section>
+
+  <!-- Lesson -->
+  <section class="lesson">
+
+    <!-- Section 1: The Problem -->
+    <div class="lesson-section">
+      <h2><span class="step">01</span> The Problem</h2>
+      <p>
+        You have a robotic arm. You know where you want the hand to go.
+        But the arm is controlled by <strong>joint angles</strong>, not hand position.
+      </p>
+      <p>
+        <strong>Forward kinematics</strong> is easy: given the angles, calculate where the hand ends up.
+        It's just trigonometry.
+      </p>
+      <p>
+        <strong>Inverse kinematics</strong> is the reverse: given where you want the hand,
+        find the angles. This is hard. Often there are multiple solutions, or none at all.
+      </p>
+
+      <div class="intuition">
+        <div class="intuition-title">Intuition</div>
+        <p>
+          Think of your own arm. You can easily point at something - your brain solves IK instantly.
+          But try to consciously figure out the exact angles of your shoulder, elbow, and wrist? Much harder.
+        </p>
+      </div>
+    </div>
+
+    <!-- Section 2: The Jacobian -->
+    <div class="lesson-section">
+      <h2><span class="step">02</span> The Jacobian</h2>
+      <p>
+        Instead of solving IK directly, we ask a simpler question:
+        <strong>if I wiggle a joint slightly, how does the hand move?</strong>
+      </p>
+      <p>
+        The Jacobian matrix captures exactly this relationship. Each column tells you
+        how the end effector's position changes when you rotate one joint.
+      </p>
+
+      <div class="math-block">
+        <div class="label">JACOBIAN MATRIX</div>
+        <pre>
+J = [ dx/dθ₁  dx/dθ₂  ...  dx/dθₙ ]
+    [ dy/dθ₁  dy/dθ₂  ...  dy/dθₙ ]</pre>
+      </div>
+
+      <p>
+        Each entry is a <strong>partial derivative</strong> - the sensitivity of position to angle.
+        If J[0][1] is large, rotating joint 2 moves the hand a lot in the x direction.
+      </p>
+
+      <div class="intuition">
+        <div class="intuition-title">Intuition</div>
+        <p>
+          The Jacobian is a map of sensitivities. It tells you which joints are most effective
+          at moving the hand in each direction, right now, in this configuration.
+        </p>
+      </div>
+    </div>
+
+    <!-- Section 3: Iterative Solving -->
+    <div class="lesson-section">
+      <h2><span class="step">03</span> Iterative Solving</h2>
+      <p>
+        Here's the trick: we don't solve IK in one step. We take small steps toward the target.
+      </p>
+      <p>
+        Each frame:
+      </p>
+      <ol style="color: var(--text-muted); margin-left: 1.5rem; margin-bottom: 1.5rem;">
+        <li>Calculate the error (target - current hand position)</li>
+        <li>Use the Jacobian to find which joint movements reduce that error</li>
+        <li>Apply small angle changes</li>
+        <li>Repeat</li>
+      </ol>
+
+      <div class="math-block">
+        <div class="label">THE UPDATE RULE</div>
+        <pre>
+Δθ = J⁺ · Δx
+
+where:
+  Δθ = change in joint angles
+  J⁺ = pseudoinverse of Jacobian
+  Δx = (target - current position)</pre>
+      </div>
+
+      <p>
+        The <strong>pseudoinverse</strong> (J⁺) reverses the Jacobian's mapping.
+        Instead of "angles → position change", we get "position change → angles".
+      </p>
+
+      <div class="intuition">
+        <div class="intuition-title">Intuition</div>
+        <p>
+          It's like navigating by feel. You can't teleport to your destination,
+          but you can sense which direction to move and take a step. Repeat until you arrive.
+        </p>
+      </div>
+    </div>
+
+    <!-- Section 4: Why It Works -->
+    <div class="lesson-section">
+      <h2><span class="step">04</span> Why It Works</h2>
+      <p>
+        This approach works because the Jacobian linearizes the problem locally.
+        Even though the full IK problem is nonlinear and complex,
+        <strong>small movements are approximately linear</strong>.
+      </p>
+      <p>
+        The tradeoff: we need multiple iterations, and we might get stuck in local minima
+        (configurations where no small movement helps, even though a solution exists).
+      </p>
+      <p>
+        But for real-time applications like games and robotics, iterative methods are fast
+        and good enough. The arm smoothly follows the target, which often looks more natural anyway.
+      </p>
+    </div>
+
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <a href="../../tech/index.html">All Projects</a>
+    <a href="../../index.html">Home</a>
+    <a href="../../about.html">About</a>
+  </footer>
+
+  <script>
+    // =====================================================
+    // INVERSE KINEMATICS DEMO
+    // =====================================================
+
+    const canvas = document.getElementById('mainDemo');
+    const ctx = canvas.getContext('2d');
+
+    // State
+    let numSegments = 2;
+    let showJacobian = false;
+    let isDragging = false;
+    let target = { x: 0, y: 0 };
+    let angles = [];
+    let segmentLength = 80;
+
+    // Colors
+    const colors = {
+      bg: '#0a0a0f',
+      arm: '#6366f1',
+      joint: '#f59e0b',
+      target: '#10b981',
+      text: 'rgba(255,255,255,0.5)',
+      grid: 'rgba(255,255,255,0.03)'
+    };
+
+    // Initialize
+    function init() {
+      resize();
+      angles = Array(numSegments).fill(0).map((_, i) => -Math.PI/4 + i * 0.2);
+      target = getEndEffector();
+      animate();
+    }
+
+    function resize() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+      canvas.style.width = rect.width + 'px';
+      canvas.style.height = rect.height + 'px';
+
+      // Adjust segment length based on canvas size
+      segmentLength = Math.min(rect.width, rect.height) / (numSegments + 2);
+    }
+
+    // Get joint positions using forward kinematics
+    function getJointPositions() {
+      const positions = [];
+      const centerX = canvas.width / (window.devicePixelRatio || 1) / 2;
+      const centerY = canvas.height / (window.devicePixelRatio || 1) / 2 + 50;
+
+      let x = centerX;
+      let y = centerY;
+      let totalAngle = 0;
+
+      positions.push({ x, y });
+
+      for (let i = 0; i < angles.length; i++) {
+        totalAngle += angles[i];
+        x += Math.cos(totalAngle) * segmentLength;
+        y += Math.sin(totalAngle) * segmentLength;
+        positions.push({ x, y });
+      }
+
+      return positions;
+    }
+
+    function getEndEffector() {
+      const positions = getJointPositions();
+      return positions[positions.length - 1];
+    }
+
+    // Calculate Jacobian matrix
+    function calculateJacobian() {
+      const jacobian = [];
+      const positions = getJointPositions();
+      const end = positions[positions.length - 1];
+
+      for (let i = 0; i < angles.length; i++) {
+        // For each joint, calculate how end effector moves when this joint rotates
+        let totalAngle = 0;
+        for (let j = 0; j <= i; j++) {
+          totalAngle += angles[j];
+        }
+
+        // Distance from this joint to end effector
+        const jointPos = positions[i];
+        const dx = end.x - jointPos.x;
+        const dy = end.y - jointPos.y;
+
+        // Derivative of rotation: perpendicular to radius
+        // d/dθ [r*cos(θ), r*sin(θ)] = [-r*sin(θ), r*cos(θ)]
+        jacobian.push({
+          dx: -dy,  // perpendicular
+          dy: dx
+        });
+      }
+
+      return jacobian;
+    }
+
+    // Solve IK using Jacobian pseudoinverse
+    function solveIK() {
+      const end = getEndEffector();
+      const errorX = target.x - end.x;
+      const errorY = target.y - end.y;
+      const error = Math.sqrt(errorX * errorX + errorY * errorY);
+
+      if (error < 1) return; // Close enough
+
+      const jacobian = calculateJacobian();
+
+      // Simple pseudoinverse for underdetermined system
+      // Using damped least squares for stability
+      const damping = 10;
+
+      for (let i = 0; i < angles.length; i++) {
+        const j = jacobian[i];
+        const jMag = j.dx * j.dx + j.dy * j.dy + damping;
+
+        // How much this joint should move
+        const deltaAngle = (j.dx * errorX + j.dy * errorY) / jMag;
+        angles[i] += deltaAngle * 0.1; // Learning rate
+      }
+    }
+
+    // Drawing functions
+    function drawGrid() {
+      const w = canvas.width / (window.devicePixelRatio || 1);
+      const h = canvas.height / (window.devicePixelRatio || 1);
+      const spacing = 40;
+
+      ctx.strokeStyle = colors.grid;
+      ctx.lineWidth = 1;
+
+      for (let x = spacing; x < w; x += spacing) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+      }
+
+      for (let y = spacing; y < h; y += spacing) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+    }
+
+    function drawArm() {
+      const positions = getJointPositions();
+
+      // Draw segments
+      ctx.strokeStyle = colors.arm;
+      ctx.lineWidth = 4;
+      ctx.lineCap = 'round';
+
+      ctx.beginPath();
+      ctx.moveTo(positions[0].x, positions[0].y);
+      for (let i = 1; i < positions.length; i++) {
+        ctx.lineTo(positions[i].x, positions[i].y);
+      }
+      ctx.stroke();
+
+      // Draw joints
+      for (let i = 0; i < positions.length; i++) {
+        ctx.beginPath();
+        ctx.arc(positions[i].x, positions[i].y, i === 0 ? 8 : 6, 0, Math.PI * 2);
+        ctx.fillStyle = i === 0 ? colors.arm : colors.joint;
+        ctx.fill();
+      }
+
+      // Draw end effector
+      const end = positions[positions.length - 1];
+      ctx.beginPath();
+      ctx.arc(end.x, end.y, 8, 0, Math.PI * 2);
+      ctx.fillStyle = colors.arm;
+      ctx.fill();
+    }
+
+    function drawTarget() {
+      ctx.beginPath();
+      ctx.arc(target.x, target.y, 12, 0, Math.PI * 2);
+      ctx.strokeStyle = colors.target;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(target.x, target.y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = colors.target;
+      ctx.fill();
+    }
+
+    function drawJacobianVectors() {
+      if (!showJacobian) return;
+
+      const positions = getJointPositions();
+      const jacobian = calculateJacobian();
+      const scale = 0.3;
+
+      for (let i = 0; i < jacobian.length; i++) {
+        const joint = positions[i];
+        const j = jacobian[i];
+
+        // Draw vector from joint showing direction of end effector movement
+        ctx.beginPath();
+        ctx.moveTo(joint.x, joint.y);
+        ctx.lineTo(joint.x + j.dx * scale, joint.y + j.dy * scale);
+        ctx.strokeStyle = `hsl(${i * 60}, 70%, 60%)`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Arrowhead
+        const angle = Math.atan2(j.dy, j.dx);
+        ctx.beginPath();
+        ctx.moveTo(joint.x + j.dx * scale, joint.y + j.dy * scale);
+        ctx.lineTo(
+          joint.x + j.dx * scale - 8 * Math.cos(angle - 0.4),
+          joint.y + j.dy * scale - 8 * Math.sin(angle - 0.4)
+        );
+        ctx.moveTo(joint.x + j.dx * scale, joint.y + j.dy * scale);
+        ctx.lineTo(
+          joint.x + j.dx * scale - 8 * Math.cos(angle + 0.4),
+          joint.y + j.dy * scale - 8 * Math.sin(angle + 0.4)
+        );
+        ctx.stroke();
+      }
+    }
+
+    function draw() {
+      const w = canvas.width / (window.devicePixelRatio || 1);
+      const h = canvas.height / (window.devicePixelRatio || 1);
+
+      ctx.fillStyle = colors.bg;
+      ctx.fillRect(0, 0, w, h);
+
+      drawGrid();
+      drawTarget();
+      drawArm();
+      drawJacobianVectors();
+    }
+
+    function animate() {
+      solveIK();
+      draw();
+      requestAnimationFrame(animate);
+    }
+
+    // Event handlers
+    function getMousePos(e) {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      target = getMousePos(e);
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        target = getMousePos(e);
+      }
+    });
+
+    canvas.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    canvas.addEventListener('mouseleave', () => {
+      isDragging = false;
+    });
+
+    // Touch support
+    canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      isDragging = true;
+      const touch = e.touches[0];
+      target = getMousePos(touch);
+    });
+
+    canvas.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (isDragging) {
+        const touch = e.touches[0];
+        target = getMousePos(touch);
+      }
+    });
+
+    canvas.addEventListener('touchend', () => {
+      isDragging = false;
+    });
+
+    // Controls
+    document.querySelectorAll('[data-segments]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-segments]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        numSegments = parseInt(btn.dataset.segments);
+        resize();
+        angles = Array(numSegments).fill(0).map((_, i) => -Math.PI/4 + i * 0.2);
+      });
+    });
+
+    document.getElementById('toggleJacobian').addEventListener('click', (e) => {
+      showJacobian = !showJacobian;
+      e.target.classList.toggle('active', showJacobian);
+      e.target.textContent = showJacobian ? 'Hide Jacobian' : 'Show Jacobian';
+    });
+
+    window.addEventListener('resize', resize);
+
+    // Start
+    init();
+  </script>
+
+</body>
+</html>
