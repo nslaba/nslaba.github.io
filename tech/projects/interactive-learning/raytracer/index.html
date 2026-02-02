@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ray Tracing | Natalie Slaba</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --accent: #6366f1;
+      --green: #10b981;
+      --orange: #f59e0b;
+      --pink: #ec4899;
+      --red: #ef4444;
+      --text: #fff;
+      --text-muted: rgba(255,255,255,0.5);
+      --text-dim: rgba(255,255,255,0.3);
+      --font-sans: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, var(--bg), transparent);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .nav-back {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-back:hover { color: var(--accent); }
+    .nav-sep { color: var(--text-dim); }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      padding: 8rem 2rem 4rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 500;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .hero-subtitle {
+      color: var(--text-muted);
+      text-align: center;
+      max-width: 550px;
+      margin-bottom: 3rem;
+    }
+
+    /* Main Demo */
+    .demo-container {
+      width: 100%;
+      max-width: 800px;
+      aspect-ratio: 4/3;
+      background: var(--surface);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .demo-canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .control-btn {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--text-muted);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .control-btn:hover {
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    .control-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    /* Lesson Sections */
+    .lesson {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    .lesson-section {
+      margin-bottom: 5rem;
+    }
+
+    .lesson-section h2 {
+      font-size: 1.5rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .lesson-section h2 .step {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+
+    .lesson-section p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.8;
+    }
+
+    .lesson-section strong {
+      color: var(--text);
+    }
+
+    /* Math blocks */
+    .math-block {
+      background: var(--surface);
+      border-left: 2px solid var(--accent);
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      overflow-x: auto;
+    }
+
+    .math-block .label {
+      color: var(--accent);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+    }
+
+    .math-block pre {
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    /* Intuition boxes */
+    .intuition {
+      background: rgba(99, 102, 241, 0.08);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .intuition-title {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+    }
+
+    .intuition p {
+      margin: 0;
+      color: var(--text);
+    }
+
+    /* Mini demo containers */
+    .mini-demo {
+      background: var(--surface);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .mini-demo canvas {
+      width: 100%;
+      display: block;
+    }
+
+    .mini-demo-controls {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .slider-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .slider-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      min-width: 60px;
+    }
+
+    .slider {
+      width: 100px;
+      accent-color: var(--accent);
+    }
+
+    .slider-value {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      min-width: 35px;
+    }
+
+    /* Image with caption */
+    .figure {
+      margin: 2rem 0;
+    }
+
+    .figure img {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .figure-caption {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-align: center;
+      margin-top: 0.75rem;
+    }
+
+    /* Image grid */
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .image-grid .figure {
+      margin: 0;
+    }
+
+    /* Project links */
+    .project-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text);
+      text-decoration: none;
+      padding: 0.75rem 1.25rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .project-link:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* Footer */
+    footer {
+      padding: 3rem 2rem;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    footer a {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      margin: 0 1rem;
+    }
+
+    footer a:hover { color: var(--accent); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .image-grid {
+        grid-template-columns: 1fr;
+      }
+      .mini-demo-controls {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-left">
+      <a href="../../../index.html" class="nav-back">All Projects</a>
+      <span class="nav-sep">/</span>
+      <a href="../../../../index.html" class="nav-back">Home</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <span class="hero-label">Interactive Demo</span>
+    <h1>Ray Tracing</h1>
+    <p class="hero-subtitle">
+      Simulate light, one ray at a time. Click to cast rays and watch them bounce.
+    </p>
+
+    <div class="demo-container">
+      <canvas class="demo-canvas" id="mainDemo"></canvas>
+    </div>
+
+    <div class="controls">
+      <button class="control-btn active" id="modeRays">Cast Rays</button>
+      <button class="control-btn" id="modeShadows">Show Shadows</button>
+      <button class="control-btn" id="modeReflect">Show Reflections</button>
+      <button class="control-btn" id="resetDemo">Reset</button>
+    </div>
+  </section>
+
+  <!-- Lessons -->
+  <section class="lesson">
+
+    <!-- Section 1: The Basic Idea -->
+    <div class="lesson-section">
+      <h2><span class="step">01</span> The Basic Idea</h2>
+      <p>
+        Ray tracing answers a simple question: <strong>what color is this pixel?</strong>
+        To find out, we shoot a ray from the camera through that pixel into the scene.
+        If it hits something, we calculate what color that point should be based on lighting.
+      </p>
+      <p>
+        It's backwards from how light actually works (light goes from sources to your eye),
+        but it's equivalent and far more efficient - we only trace rays that matter.
+      </p>
+
+      <div class="mini-demo">
+        <canvas id="rayCastDemo" height="300"></canvas>
+        <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 1rem; text-align: center;">
+          Click anywhere to cast a ray from the camera
+        </p>
+      </div>
+
+      <div class="intuition">
+        <div class="intuition-title">Intuition</div>
+        <p>
+          Imagine standing behind a window screen. For each tiny hole in the screen,
+          you look through it and note what color you see. That grid of colors becomes your image.
+        </p>
+      </div>
+    </div>
+
+    <!-- Section 2: Ray-Sphere Intersection -->
+    <div class="lesson-section">
+      <h2><span class="step">02</span> Ray-Sphere Intersection</h2>
+      <p>
+        The heart of a ray tracer is finding where rays hit objects. For spheres,
+        this becomes a quadratic equation. A ray is defined as <code>P(t) = O + t·D</code>
+        where O is the origin and D is the direction.
+      </p>
+      <p>
+        A point is on a sphere if its distance from the center equals the radius:
+        <code>|P - C|² = r²</code>. Substitute the ray equation and expand:
+      </p>
+
+      <div class="math-block">
+        <div class="label">Ray-Sphere Intersection</div>
+        <pre>
+|O + t·D - C|² = r²
+
+Let L = O - C (vector from center to ray origin)
+
+(D·D)t² + 2(D·L)t + (L·L - r²) = 0
+
+This is at² + bt + c = 0 where:
+  a = D·D
+  b = 2(D·L)
+  c = L·L - r²
+
+Discriminant = b² - 4ac
+  < 0  →  no intersection (ray misses)
+  = 0  →  one intersection (ray grazes)
+  > 0  →  two intersections (ray passes through)</pre>
+      </div>
+
+      <div class="mini-demo">
+        <canvas id="intersectDemo" height="280"></canvas>
+        <div class="mini-demo-controls">
+          <span class="slider-label">Drag the ray direction</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Phong Illumination -->
+    <div class="lesson-section">
+      <h2><span class="step">03</span> Phong Illumination</h2>
+      <p>
+        Once we know where a ray hits, we need to calculate the color. The <strong>Phong model</strong>
+        combines three components that approximate how real surfaces reflect light:
+      </p>
+
+      <div class="math-block">
+        <div class="label">Phong Lighting Model</div>
+        <pre>
+Color = Ambient + Diffuse + Specular
+
+Ambient  = kₐ · Iₐ
+           (constant background light)
+
+Diffuse  = kd · I · max(0, N·L)
+           (matte reflection, depends on angle to light)
+
+Specular = ks · I · max(0, R·V)ⁿ
+           (shiny highlights, depends on view angle)
+
+where:
+  N = surface normal
+  L = direction to light
+  V = direction to viewer
+  R = reflected light direction
+  n = shininess exponent</pre>
+      </div>
+
+      <div class="mini-demo">
+        <canvas id="phongDemo" height="250"></canvas>
+        <div class="mini-demo-controls">
+          <div class="slider-group">
+            <span class="slider-label">Ambient</span>
+            <input type="range" class="slider" id="ambientSlider" min="0" max="100" value="20">
+            <span class="slider-value" id="ambientValue">0.2</span>
+          </div>
+          <div class="slider-group">
+            <span class="slider-label">Diffuse</span>
+            <input type="range" class="slider" id="diffuseSlider" min="0" max="100" value="60">
+            <span class="slider-value" id="diffuseValue">0.6</span>
+          </div>
+          <div class="slider-group">
+            <span class="slider-label">Specular</span>
+            <input type="range" class="slider" id="specularSlider" min="0" max="100" value="40">
+            <span class="slider-value" id="specularValue">0.4</span>
+          </div>
+          <div class="slider-group">
+            <span class="slider-label">Shininess</span>
+            <input type="range" class="slider" id="shininessSlider" min="1" max="128" value="32">
+            <span class="slider-value" id="shininessValue">32</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="image-grid">
+        <div class="figure">
+          <img src="../../../../projects/Raytracer/illumination.png" alt="Phong illumination">
+          <p class="figure-caption">Full Phong illumination</p>
+        </div>
+        <div class="figure">
+          <img src="../../../../projects/Raytracer/specularLight.png" alt="Specular highlights">
+          <p class="figure-caption">Specular highlights</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 4: Shadows -->
+    <div class="lesson-section">
+      <h2><span class="step">04</span> Shadows</h2>
+      <p>
+        Shadows are surprisingly simple: before adding a light's contribution,
+        cast a <strong>shadow ray</strong> from the hit point toward the light.
+        If it hits something else first, that point is in shadow.
+      </p>
+
+      <div class="mini-demo">
+        <canvas id="shadowDemo" height="280"></canvas>
+        <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 1rem; text-align: center;">
+          Drag the light source (yellow) to see shadow rays update
+        </p>
+      </div>
+
+      <div class="figure">
+        <img src="../../../../projects/Raytracer/shadows.png" alt="Shadow rays">
+        <p class="figure-caption">Shadows cast by multiple light sources</p>
+      </div>
+
+      <div class="intuition">
+        <div class="intuition-title">Why Shadow Rays Work</div>
+        <p>
+          We're asking: "can light from this source reach this point?"
+          If another object blocks the path, no light arrives - that's a shadow.
+          It's the same logic as the primary ray, just in a different direction.
+        </p>
+      </div>
+    </div>
+
+    <!-- Section 5: Reflections -->
+    <div class="lesson-section">
+      <h2><span class="step">05</span> Reflections</h2>
+      <p>
+        Reflections make ray tracing recursive. When a ray hits a reflective surface,
+        we spawn a new ray in the reflected direction and trace it. The color we get back
+        contributes to the original pixel.
+      </p>
+
+      <div class="math-block">
+        <div class="label">Reflection Direction</div>
+        <pre>
+R = D - 2(D·N)N
+
+where:
+  D = incoming ray direction
+  N = surface normal
+  R = reflected ray direction
+
+The ray "bounces" off the surface at the same angle it arrived.</pre>
+      </div>
+
+      <p>
+        Without a depth limit, reflections between two mirrors would recurse forever.
+        We cap it - typically at 3-5 bounces. Each bounce attenuates the contribution,
+        so deep reflections matter less anyway.
+      </p>
+
+      <div class="mini-demo">
+        <canvas id="reflectDemo" height="300"></canvas>
+        <div class="mini-demo-controls">
+          <div class="slider-group">
+            <span class="slider-label">Max Depth</span>
+            <input type="range" class="slider" id="depthSlider" min="1" max="5" value="3">
+            <span class="slider-value" id="depthValue">3</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="figure">
+        <img src="../../../../projects/Raytracer/reflections.png" alt="Recursive reflections">
+        <p class="figure-caption">Recursive reflections (depth 3)</p>
+      </div>
+    </div>
+
+    <!-- Section 6: The Original Project -->
+    <div class="lesson-section">
+      <h2><span class="step">06</span> The Original Project</h2>
+      <p>
+        This interactive explainer is based on a C++ ray tracer I built for CSC 305.
+        The full implementation includes scene file parsing, ellipsoid geometry,
+        and outputs PPM images. I chose C++ for performance - renders complete in
+        seconds rather than the minutes Python would have required.
+      </p>
+
+      <div class="figure">
+        <img src="../../../../projects/Raytracer/snapshot.png" alt="Final ray traced scene">
+        <p class="figure-caption">Final render with all features</p>
+      </div>
+
+      <div class="project-links">
+        <a href="https://github.com/nslaba/CSC-305---Assignment-3---RayTracer" target="_blank" rel="noopener" class="project-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+          View Source on GitHub
+        </a>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <a href="../../../index.html">All Projects</a>
+    <a href="../../../../index.html">Home</a>
+    <a href="../../../../about.html">About</a>
+  </footer>
+
+  <script>
+    // =====================================================
+    // MAIN INTERACTIVE DEMO
+    // =====================================================
+
+    const mainCanvas = document.getElementById('mainDemo');
+    const mainCtx = mainCanvas.getContext('2d');
+
+    let mode = 'rays'; // 'rays', 'shadows', 'reflect'
+    let rays = [];
+    let spheres = [];
+
+    const colors = {
+      bg: '#12121a',
+      sphere1: '#6366f1',
+      sphere2: '#10b981',
+      sphere3: '#f59e0b',
+      ray: '#ec4899',
+      shadow: 'rgba(0,0,0,0.5)',
+      light: '#fbbf24',
+      reflect: '#818cf8'
+    };
+
+    function initMainDemo() {
+      resizeMainCanvas();
+      const w = mainCanvas.width / (window.devicePixelRatio || 1);
+      const h = mainCanvas.height / (window.devicePixelRatio || 1);
+
+      spheres = [
+        { x: w * 0.3, y: h * 0.5, r: 60, color: colors.sphere1, reflective: 0.3 },
+        { x: w * 0.6, y: h * 0.6, r: 45, color: colors.sphere2, reflective: 0.5 },
+        { x: w * 0.75, y: h * 0.35, r: 35, color: colors.sphere3, reflective: 0.2 }
+      ];
+
+      rays = [];
+    }
+
+    function resizeMainCanvas() {
+      const rect = mainCanvas.parentElement.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      mainCanvas.width = rect.width * dpr;
+      mainCanvas.height = rect.height * dpr;
+      mainCtx.scale(dpr, dpr);
+    }
+
+    function raySphereIntersect(ox, oy, dx, dy, sphere) {
+      const lx = ox - sphere.x;
+      const ly = oy - sphere.y;
+
+      const a = dx * dx + dy * dy;
+      const b = 2 * (dx * lx + dy * ly);
+      const c = lx * lx + ly * ly - sphere.r * sphere.r;
+
+      const disc = b * b - 4 * a * c;
+      if (disc < 0) return null;
+
+      const t = (-b - Math.sqrt(disc)) / (2 * a);
+      if (t < 0.001) return null;
+
+      return {
+        t,
+        x: ox + dx * t,
+        y: oy + dy * t,
+        sphere
+      };
+    }
+
+    function findClosestHit(ox, oy, dx, dy, excludeSphere = null) {
+      let closest = null;
+      for (const sphere of spheres) {
+        if (sphere === excludeSphere) continue;
+        const hit = raySphereIntersect(ox, oy, dx, dy, sphere);
+        if (hit && (!closest || hit.t < closest.t)) {
+          closest = hit;
+        }
+      }
+      return closest;
+    }
+
+    function reflect(dx, dy, nx, ny) {
+      const dot = dx * nx + dy * ny;
+      return {
+        x: dx - 2 * dot * nx,
+        y: dy - 2 * dot * ny
+      };
+    }
+
+    function drawMainDemo() {
+      const w = mainCanvas.width / (window.devicePixelRatio || 1);
+      const h = mainCanvas.height / (window.devicePixelRatio || 1);
+
+      mainCtx.fillStyle = colors.bg;
+      mainCtx.fillRect(0, 0, w, h);
+
+      // Grid
+      mainCtx.strokeStyle = 'rgba(255,255,255,0.03)';
+      mainCtx.lineWidth = 1;
+      for (let x = 0; x < w; x += 30) {
+        mainCtx.beginPath();
+        mainCtx.moveTo(x, 0);
+        mainCtx.lineTo(x, h);
+        mainCtx.stroke();
+      }
+      for (let y = 0; y < h; y += 30) {
+        mainCtx.beginPath();
+        mainCtx.moveTo(0, y);
+        mainCtx.lineTo(w, y);
+        mainCtx.stroke();
+      }
+
+      // Light source
+      const lightX = w * 0.15;
+      const lightY = h * 0.2;
+      mainCtx.fillStyle = colors.light;
+      mainCtx.beginPath();
+      mainCtx.arc(lightX, lightY, 12, 0, Math.PI * 2);
+      mainCtx.fill();
+
+      // Draw spheres with shading
+      for (const sphere of spheres) {
+        const gradient = mainCtx.createRadialGradient(
+          sphere.x - sphere.r * 0.3, sphere.y - sphere.r * 0.3, 0,
+          sphere.x, sphere.y, sphere.r
+        );
+        gradient.addColorStop(0, sphere.color);
+        gradient.addColorStop(1, 'rgba(0,0,0,0.8)');
+
+        mainCtx.fillStyle = gradient;
+        mainCtx.beginPath();
+        mainCtx.arc(sphere.x, sphere.y, sphere.r, 0, Math.PI * 2);
+        mainCtx.fill();
+      }
+
+      // Draw rays
+      for (const ray of rays) {
+        // Primary ray
+        mainCtx.strokeStyle = colors.ray;
+        mainCtx.lineWidth = 2;
+        mainCtx.beginPath();
+        mainCtx.moveTo(ray.ox, ray.oy);
+        mainCtx.lineTo(ray.hx, ray.hy);
+        mainCtx.stroke();
+
+        // Hit point
+        if (ray.hit) {
+          mainCtx.fillStyle = '#fff';
+          mainCtx.beginPath();
+          mainCtx.arc(ray.hx, ray.hy, 4, 0, Math.PI * 2);
+          mainCtx.fill();
+
+          // Shadow ray (if mode is shadows)
+          if (mode === 'shadows' || mode === 'reflect') {
+            const toLightX = lightX - ray.hx;
+            const toLightY = lightY - ray.hy;
+            const toLightLen = Math.sqrt(toLightX * toLightX + toLightY * toLightY);
+
+            const shadowHit = findClosestHit(
+              ray.hx, ray.hy,
+              toLightX / toLightLen, toLightY / toLightLen,
+              ray.hit.sphere
+            );
+
+            if (shadowHit && shadowHit.t < toLightLen) {
+              mainCtx.strokeStyle = 'rgba(239, 68, 68, 0.5)';
+              mainCtx.setLineDash([4, 4]);
+            } else {
+              mainCtx.strokeStyle = 'rgba(251, 191, 36, 0.4)';
+              mainCtx.setLineDash([]);
+            }
+            mainCtx.lineWidth = 1;
+            mainCtx.beginPath();
+            mainCtx.moveTo(ray.hx, ray.hy);
+            mainCtx.lineTo(lightX, lightY);
+            mainCtx.stroke();
+            mainCtx.setLineDash([]);
+          }
+
+          // Reflection ray (if mode is reflect)
+          if (mode === 'reflect' && ray.reflections) {
+            mainCtx.strokeStyle = colors.reflect;
+            mainCtx.lineWidth = 1.5;
+            for (const refl of ray.reflections) {
+              mainCtx.globalAlpha = refl.alpha;
+              mainCtx.beginPath();
+              mainCtx.moveTo(refl.ox, refl.oy);
+              mainCtx.lineTo(refl.hx, refl.hy);
+              mainCtx.stroke();
+
+              mainCtx.fillStyle = '#fff';
+              mainCtx.beginPath();
+              mainCtx.arc(refl.hx, refl.hy, 3, 0, Math.PI * 2);
+              mainCtx.fill();
+            }
+            mainCtx.globalAlpha = 1;
+          }
+        }
+      }
+
+      // Camera
+      mainCtx.fillStyle = '#fff';
+      mainCtx.fillRect(8, h / 2 - 15, 6, 30);
+      mainCtx.font = '10px JetBrains Mono';
+      mainCtx.fillStyle = 'rgba(255,255,255,0.5)';
+      mainCtx.fillText('camera', 2, h / 2 + 30);
+    }
+
+    mainCanvas.addEventListener('click', (e) => {
+      const rect = mainCanvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const h = mainCanvas.height / (window.devicePixelRatio || 1);
+
+      const ox = 20;
+      const oy = h / 2;
+      const dx = x - ox;
+      const dy = y - oy;
+      const len = Math.sqrt(dx * dx + dy * dy);
+
+      const hit = findClosestHit(ox, oy, dx / len, dy / len);
+
+      const ray = {
+        ox, oy,
+        dx: dx / len,
+        dy: dy / len,
+        hx: hit ? hit.x : ox + dx * 2,
+        hy: hit ? hit.y : oy + dy * 2,
+        hit,
+        reflections: []
+      };
+
+      // Calculate reflections
+      if (hit && mode === 'reflect') {
+        let currentHit = hit;
+        let currentDx = dx / len;
+        let currentDy = dy / len;
+        let alpha = 0.7;
+
+        for (let i = 0; i < 3; i++) {
+          const nx = (currentHit.x - currentHit.sphere.x) / currentHit.sphere.r;
+          const ny = (currentHit.y - currentHit.sphere.y) / currentHit.sphere.r;
+          const refl = reflect(currentDx, currentDy, nx, ny);
+
+          const nextHit = findClosestHit(currentHit.x, currentHit.y, refl.x, refl.y, currentHit.sphere);
+
+          ray.reflections.push({
+            ox: currentHit.x,
+            oy: currentHit.y,
+            hx: nextHit ? nextHit.x : currentHit.x + refl.x * 500,
+            hy: nextHit ? nextHit.y : currentHit.y + refl.y * 500,
+            alpha
+          });
+
+          if (!nextHit) break;
+          currentHit = nextHit;
+          currentDx = refl.x;
+          currentDy = refl.y;
+          alpha *= 0.6;
+        }
+      }
+
+      rays.push(ray);
+      if (rays.length > 10) rays.shift();
+      drawMainDemo();
+    });
+
+    document.getElementById('modeRays').addEventListener('click', (e) => {
+      mode = 'rays';
+      document.querySelectorAll('.controls .control-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      drawMainDemo();
+    });
+
+    document.getElementById('modeShadows').addEventListener('click', (e) => {
+      mode = 'shadows';
+      document.querySelectorAll('.controls .control-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      drawMainDemo();
+    });
+
+    document.getElementById('modeReflect').addEventListener('click', (e) => {
+      mode = 'reflect';
+      document.querySelectorAll('.controls .control-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      drawMainDemo();
+    });
+
+    document.getElementById('resetDemo').addEventListener('click', () => {
+      rays = [];
+      drawMainDemo();
+    });
+
+    // =====================================================
+    // RAY CAST DEMO
+    // =====================================================
+
+    const rayCastCanvas = document.getElementById('rayCastDemo');
+    const rayCastCtx = rayCastCanvas.getContext('2d');
+
+    function drawRayCastDemo(clickX = null, clickY = null) {
+      const w = rayCastCanvas.width;
+      const h = rayCastCanvas.height;
+
+      rayCastCtx.fillStyle = colors.bg;
+      rayCastCtx.fillRect(0, 0, w, h);
+
+      // Camera
+      const camX = 40;
+      const camY = h / 2;
+
+      rayCastCtx.fillStyle = '#fff';
+      rayCastCtx.fillRect(camX - 3, camY - 20, 6, 40);
+
+      // View plane
+      const planeX = 100;
+      rayCastCtx.strokeStyle = 'rgba(99, 102, 241, 0.5)';
+      rayCastCtx.lineWidth = 2;
+      rayCastCtx.beginPath();
+      rayCastCtx.moveTo(planeX, 30);
+      rayCastCtx.lineTo(planeX, h - 30);
+      rayCastCtx.stroke();
+
+      rayCastCtx.font = '10px JetBrains Mono';
+      rayCastCtx.fillStyle = 'rgba(255,255,255,0.4)';
+      rayCastCtx.fillText('view plane', planeX - 25, h - 10);
+
+      // Sphere
+      const sphereX = w * 0.65;
+      const sphereY = h / 2;
+      const sphereR = 70;
+
+      const gradient = rayCastCtx.createRadialGradient(
+        sphereX - 20, sphereY - 20, 0,
+        sphereX, sphereY, sphereR
+      );
+      gradient.addColorStop(0, colors.sphere1);
+      gradient.addColorStop(1, 'rgba(0,0,0,0.9)');
+      rayCastCtx.fillStyle = gradient;
+      rayCastCtx.beginPath();
+      rayCastCtx.arc(sphereX, sphereY, sphereR, 0, Math.PI * 2);
+      rayCastCtx.fill();
+
+      // Ray
+      if (clickX !== null) {
+        const dx = clickX - camX;
+        const dy = clickY - camY;
+        const len = Math.sqrt(dx * dx + dy * dy);
+
+        const hit = raySphereIntersect(camX, camY, dx / len, dy / len, {x: sphereX, y: sphereY, r: sphereR});
+
+        rayCastCtx.strokeStyle = colors.ray;
+        rayCastCtx.lineWidth = 2;
+        rayCastCtx.beginPath();
+        rayCastCtx.moveTo(camX, camY);
+        if (hit) {
+          rayCastCtx.lineTo(hit.x, hit.y);
+          rayCastCtx.stroke();
+
+          rayCastCtx.fillStyle = '#fff';
+          rayCastCtx.beginPath();
+          rayCastCtx.arc(hit.x, hit.y, 5, 0, Math.PI * 2);
+          rayCastCtx.fill();
+
+          rayCastCtx.fillStyle = 'rgba(255,255,255,0.6)';
+          rayCastCtx.fillText('HIT!', hit.x + 10, hit.y - 10);
+        } else {
+          rayCastCtx.lineTo(camX + dx * 3, camY + dy * 3);
+          rayCastCtx.stroke();
+
+          rayCastCtx.fillStyle = 'rgba(255,255,255,0.4)';
+          rayCastCtx.fillText('miss', clickX + 10, clickY);
+        }
+      }
+    }
+
+    rayCastCanvas.addEventListener('click', (e) => {
+      const rect = rayCastCanvas.getBoundingClientRect();
+      drawRayCastDemo(e.clientX - rect.left, e.clientY - rect.top);
+    });
+
+    // =====================================================
+    // INTERSECTION DEMO
+    // =====================================================
+
+    const intersectCanvas = document.getElementById('intersectDemo');
+    const intersectCtx = intersectCanvas.getContext('2d');
+    let intersectAngle = -0.2;
+    let draggingIntersect = false;
+
+    function drawIntersectDemo() {
+      const w = intersectCanvas.width;
+      const h = intersectCanvas.height;
+
+      intersectCtx.fillStyle = colors.bg;
+      intersectCtx.fillRect(0, 0, w, h);
+
+      const sphereX = w / 2;
+      const sphereY = h / 2;
+      const sphereR = 80;
+
+      // Sphere
+      intersectCtx.strokeStyle = 'rgba(99, 102, 241, 0.5)';
+      intersectCtx.lineWidth = 2;
+      intersectCtx.beginPath();
+      intersectCtx.arc(sphereX, sphereY, sphereR, 0, Math.PI * 2);
+      intersectCtx.stroke();
+
+      // Center
+      intersectCtx.fillStyle = 'rgba(99, 102, 241, 0.8)';
+      intersectCtx.beginPath();
+      intersectCtx.arc(sphereX, sphereY, 4, 0, Math.PI * 2);
+      intersectCtx.fill();
+
+      // Ray
+      const rayOX = 50;
+      const rayOY = h / 2 + 50;
+      const rayDX = Math.cos(intersectAngle);
+      const rayDY = Math.sin(intersectAngle);
+
+      const hit = raySphereIntersect(rayOX, rayOY, rayDX, rayDY, {x: sphereX, y: sphereY, r: sphereR});
+
+      intersectCtx.strokeStyle = colors.ray;
+      intersectCtx.lineWidth = 2;
+      intersectCtx.beginPath();
+      intersectCtx.moveTo(rayOX, rayOY);
+      intersectCtx.lineTo(rayOX + rayDX * 400, rayOY + rayDY * 400);
+      intersectCtx.stroke();
+
+      // Hit points
+      if (hit) {
+        // Calculate both intersections
+        const lx = rayOX - sphereX;
+        const ly = rayOY - sphereY;
+        const a = rayDX * rayDX + rayDY * rayDY;
+        const b = 2 * (rayDX * lx + rayDY * ly);
+        const c = lx * lx + ly * ly - sphereR * sphereR;
+        const disc = b * b - 4 * a * c;
+
+        const t1 = (-b - Math.sqrt(disc)) / (2 * a);
+        const t2 = (-b + Math.sqrt(disc)) / (2 * a);
+
+        const h1x = rayOX + rayDX * t1;
+        const h1y = rayOY + rayDY * t1;
+        const h2x = rayOX + rayDX * t2;
+        const h2y = rayOY + rayDY * t2;
+
+        intersectCtx.fillStyle = colors.green;
+        intersectCtx.beginPath();
+        intersectCtx.arc(h1x, h1y, 6, 0, Math.PI * 2);
+        intersectCtx.fill();
+
+        intersectCtx.fillStyle = colors.orange;
+        intersectCtx.beginPath();
+        intersectCtx.arc(h2x, h2y, 6, 0, Math.PI * 2);
+        intersectCtx.fill();
+
+        intersectCtx.font = '11px JetBrains Mono';
+        intersectCtx.fillStyle = colors.green;
+        intersectCtx.fillText(`t₁ = ${t1.toFixed(1)}`, h1x - 30, h1y - 12);
+        intersectCtx.fillStyle = colors.orange;
+        intersectCtx.fillText(`t₂ = ${t2.toFixed(1)}`, h2x + 10, h2y + 20);
+
+        intersectCtx.fillStyle = 'rgba(255,255,255,0.6)';
+        intersectCtx.fillText('discriminant > 0: two hits', 10, 20);
+      } else {
+        intersectCtx.fillStyle = 'rgba(255,255,255,0.4)';
+        intersectCtx.font = '11px JetBrains Mono';
+        intersectCtx.fillText('discriminant < 0: no intersection', 10, 20);
+      }
+
+      // Draggable handle
+      const handleX = rayOX + rayDX * 150;
+      const handleY = rayOY + rayDY * 150;
+      intersectCtx.fillStyle = '#fff';
+      intersectCtx.beginPath();
+      intersectCtx.arc(handleX, handleY, 8, 0, Math.PI * 2);
+      intersectCtx.fill();
+    }
+
+    intersectCanvas.addEventListener('mousedown', () => { draggingIntersect = true; });
+    intersectCanvas.addEventListener('mouseup', () => { draggingIntersect = false; });
+    intersectCanvas.addEventListener('mouseleave', () => { draggingIntersect = false; });
+    intersectCanvas.addEventListener('mousemove', (e) => {
+      if (!draggingIntersect) return;
+      const rect = intersectCanvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const h = intersectCanvas.height;
+      intersectAngle = Math.atan2(y - (h / 2 + 50), x - 50);
+      drawIntersectDemo();
+    });
+
+    // =====================================================
+    // PHONG DEMO
+    // =====================================================
+
+    const phongCanvas = document.getElementById('phongDemo');
+    const phongCtx = phongCanvas.getContext('2d');
+
+    function drawPhongDemo() {
+      const w = phongCanvas.width;
+      const h = phongCanvas.height;
+
+      const ambient = parseInt(document.getElementById('ambientSlider').value) / 100;
+      const diffuse = parseInt(document.getElementById('diffuseSlider').value) / 100;
+      const specular = parseInt(document.getElementById('specularSlider').value) / 100;
+      const shininess = parseInt(document.getElementById('shininessSlider').value);
+
+      phongCtx.fillStyle = colors.bg;
+      phongCtx.fillRect(0, 0, w, h);
+
+      const cx = w / 2;
+      const cy = h / 2;
+      const r = 90;
+
+      const lightX = w * 0.2;
+      const lightY = h * 0.2;
+
+      // Draw sphere with Phong shading (simplified 2D approximation)
+      const imageData = phongCtx.createImageData(w, h);
+
+      for (let y = 0; y < h; y++) {
+        for (let x = 0; x < w; x++) {
+          const dx = x - cx;
+          const dy = y - cy;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < r) {
+            // Calculate normal (treating z as sqrt(r² - x² - y²))
+            const nz = Math.sqrt(r * r - dx * dx - dy * dy) / r;
+            const nx = dx / r;
+            const ny = dy / r;
+
+            // Light direction
+            const lx = lightX - x;
+            const ly = lightY - y;
+            const lz = 100;
+            const lLen = Math.sqrt(lx*lx + ly*ly + lz*lz);
+
+            // View direction (towards camera)
+            const vx = 0, vy = 0, vz = 1;
+
+            // N·L
+            const NdotL = Math.max(0, (nx * lx/lLen + ny * ly/lLen + nz * lz/lLen));
+
+            // Reflect L around N
+            const dot = 2 * NdotL;
+            const rx = lx/lLen - dot * nx;
+            const ry = ly/lLen - dot * ny;
+            const rz = lz/lLen - dot * nz;
+
+            // R·V
+            const RdotV = Math.max(0, rx * vx + ry * vy + rz * vz);
+
+            // Phong
+            const ambientTerm = ambient;
+            const diffuseTerm = diffuse * NdotL;
+            const specularTerm = specular * Math.pow(RdotV, shininess);
+
+            const intensity = Math.min(1, ambientTerm + diffuseTerm + specularTerm);
+
+            const baseR = 99, baseG = 102, baseB = 241; // accent color
+            const idx = (y * w + x) * 4;
+            imageData.data[idx] = Math.floor(baseR * intensity);
+            imageData.data[idx + 1] = Math.floor(baseG * intensity);
+            imageData.data[idx + 2] = Math.floor(baseB * intensity);
+            imageData.data[idx + 3] = 255;
+          }
+        }
+      }
+
+      phongCtx.putImageData(imageData, 0, 0);
+
+      // Light indicator
+      phongCtx.fillStyle = colors.light;
+      phongCtx.beginPath();
+      phongCtx.arc(lightX, lightY, 10, 0, Math.PI * 2);
+      phongCtx.fill();
+
+      phongCtx.font = '10px JetBrains Mono';
+      phongCtx.fillStyle = 'rgba(255,255,255,0.5)';
+      phongCtx.fillText('light', lightX - 12, lightY + 25);
+    }
+
+    ['ambientSlider', 'diffuseSlider', 'specularSlider', 'shininessSlider'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => {
+        document.getElementById('ambientValue').textContent = (document.getElementById('ambientSlider').value / 100).toFixed(1);
+        document.getElementById('diffuseValue').textContent = (document.getElementById('diffuseSlider').value / 100).toFixed(1);
+        document.getElementById('specularValue').textContent = (document.getElementById('specularSlider').value / 100).toFixed(1);
+        document.getElementById('shininessValue').textContent = document.getElementById('shininessSlider').value;
+        drawPhongDemo();
+      });
+    });
+
+    // =====================================================
+    // SHADOW DEMO
+    // =====================================================
+
+    const shadowCanvas = document.getElementById('shadowDemo');
+    const shadowCtx = shadowCanvas.getContext('2d');
+    let shadowLightX, shadowLightY;
+    let draggingShadowLight = false;
+
+    function initShadowDemo() {
+      const w = shadowCanvas.width;
+      const h = shadowCanvas.height;
+      shadowLightX = w * 0.8;
+      shadowLightY = h * 0.15;
+    }
+
+    function drawShadowDemo() {
+      const w = shadowCanvas.width;
+      const h = shadowCanvas.height;
+
+      shadowCtx.fillStyle = colors.bg;
+      shadowCtx.fillRect(0, 0, w, h);
+
+      // Ground
+      shadowCtx.fillStyle = 'rgba(255,255,255,0.03)';
+      shadowCtx.fillRect(0, h * 0.75, w, h * 0.25);
+
+      // Spheres
+      const sphere1 = { x: w * 0.35, y: h * 0.55, r: 50 };
+      const sphere2 = { x: w * 0.6, y: h * 0.6, r: 35 };
+
+      // Draw shadows on ground
+      [sphere1, sphere2].forEach(sphere => {
+        const shadowX = sphere.x + (sphere.x - shadowLightX) * 0.3;
+        const shadowRx = sphere.r * 1.2;
+        const shadowRy = sphere.r * 0.3;
+
+        shadowCtx.fillStyle = 'rgba(0,0,0,0.4)';
+        shadowCtx.beginPath();
+        shadowCtx.ellipse(shadowX, h * 0.75, shadowRx, shadowRy, 0, 0, Math.PI * 2);
+        shadowCtx.fill();
+      });
+
+      // Draw spheres
+      [sphere1, sphere2].forEach((sphere, i) => {
+        const gradient = shadowCtx.createRadialGradient(
+          sphere.x - sphere.r * 0.3, sphere.y - sphere.r * 0.3, 0,
+          sphere.x, sphere.y, sphere.r
+        );
+        gradient.addColorStop(0, i === 0 ? colors.sphere1 : colors.sphere2);
+        gradient.addColorStop(1, 'rgba(0,0,0,0.8)');
+
+        shadowCtx.fillStyle = gradient;
+        shadowCtx.beginPath();
+        shadowCtx.arc(sphere.x, sphere.y, sphere.r, 0, Math.PI * 2);
+        shadowCtx.fill();
+
+        // Shadow ray
+        shadowCtx.strokeStyle = 'rgba(251, 191, 36, 0.3)';
+        shadowCtx.setLineDash([4, 4]);
+        shadowCtx.lineWidth = 1;
+        shadowCtx.beginPath();
+        shadowCtx.moveTo(sphere.x, sphere.y - sphere.r);
+        shadowCtx.lineTo(shadowLightX, shadowLightY);
+        shadowCtx.stroke();
+        shadowCtx.setLineDash([]);
+      });
+
+      // Blocked shadow ray between spheres
+      const hitPoint = { x: sphere1.x + 30, y: sphere1.y - 20 };
+      const toLight = { x: shadowLightX - hitPoint.x, y: shadowLightY - hitPoint.y };
+      const toLightLen = Math.sqrt(toLight.x * toLight.x + toLight.y * toLight.y);
+
+      const blocked = raySphereIntersect(
+        hitPoint.x, hitPoint.y,
+        toLight.x / toLightLen, toLight.y / toLightLen,
+        sphere2
+      );
+
+      if (blocked) {
+        shadowCtx.strokeStyle = 'rgba(239, 68, 68, 0.6)';
+        shadowCtx.lineWidth = 2;
+        shadowCtx.beginPath();
+        shadowCtx.moveTo(hitPoint.x, hitPoint.y);
+        shadowCtx.lineTo(blocked.x, blocked.y);
+        shadowCtx.stroke();
+
+        shadowCtx.fillStyle = colors.red;
+        shadowCtx.beginPath();
+        shadowCtx.arc(blocked.x, blocked.y, 4, 0, Math.PI * 2);
+        shadowCtx.fill();
+
+        shadowCtx.font = '10px JetBrains Mono';
+        shadowCtx.fillStyle = 'rgba(239, 68, 68, 0.8)';
+        shadowCtx.fillText('blocked!', blocked.x + 8, blocked.y - 5);
+      }
+
+      // Light source
+      shadowCtx.fillStyle = colors.light;
+      shadowCtx.beginPath();
+      shadowCtx.arc(shadowLightX, shadowLightY, 15, 0, Math.PI * 2);
+      shadowCtx.fill();
+
+      // Glow
+      const glow = shadowCtx.createRadialGradient(shadowLightX, shadowLightY, 0, shadowLightX, shadowLightY, 40);
+      glow.addColorStop(0, 'rgba(251, 191, 36, 0.3)');
+      glow.addColorStop(1, 'transparent');
+      shadowCtx.fillStyle = glow;
+      shadowCtx.beginPath();
+      shadowCtx.arc(shadowLightX, shadowLightY, 40, 0, Math.PI * 2);
+      shadowCtx.fill();
+    }
+
+    shadowCanvas.addEventListener('mousedown', (e) => {
+      const rect = shadowCanvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      if (Math.hypot(x - shadowLightX, y - shadowLightY) < 20) {
+        draggingShadowLight = true;
+      }
+    });
+
+    shadowCanvas.addEventListener('mousemove', (e) => {
+      if (!draggingShadowLight) return;
+      const rect = shadowCanvas.getBoundingClientRect();
+      shadowLightX = e.clientX - rect.left;
+      shadowLightY = e.clientY - rect.top;
+      drawShadowDemo();
+    });
+
+    shadowCanvas.addEventListener('mouseup', () => { draggingShadowLight = false; });
+    shadowCanvas.addEventListener('mouseleave', () => { draggingShadowLight = false; });
+
+    // =====================================================
+    // REFLECTION DEMO
+    // =====================================================
+
+    const reflectCanvas = document.getElementById('reflectDemo');
+    const reflectCtx = reflectCanvas.getContext('2d');
+
+    function drawReflectDemo() {
+      const w = reflectCanvas.width;
+      const h = reflectCanvas.height;
+      const maxDepth = parseInt(document.getElementById('depthSlider').value);
+
+      reflectCtx.fillStyle = colors.bg;
+      reflectCtx.fillRect(0, 0, w, h);
+
+      // Two spheres facing each other
+      const sphere1 = { x: w * 0.25, y: h * 0.5, r: 70 };
+      const sphere2 = { x: w * 0.75, y: h * 0.5, r: 70 };
+
+      // Draw spheres
+      [sphere1, sphere2].forEach((sphere, i) => {
+        reflectCtx.strokeStyle = i === 0 ? colors.sphere1 : colors.sphere2;
+        reflectCtx.lineWidth = 3;
+        reflectCtx.beginPath();
+        reflectCtx.arc(sphere.x, sphere.y, sphere.r, 0, Math.PI * 2);
+        reflectCtx.stroke();
+
+        reflectCtx.fillStyle = i === 0 ? 'rgba(99,102,241,0.1)' : 'rgba(16,185,129,0.1)';
+        reflectCtx.fill();
+      });
+
+      // Trace ray with reflections
+      let rayX = 50, rayY = h * 0.4;
+      let rayDX = 1, rayDY = 0.15;
+      let len = Math.sqrt(rayDX * rayDX + rayDY * rayDY);
+      rayDX /= len;
+      rayDY /= len;
+
+      const rayColors = ['#ec4899', '#f59e0b', '#10b981', '#6366f1', '#8b5cf6'];
+      let lastHitSphere = null;
+
+      for (let depth = 0; depth < maxDepth; depth++) {
+        let hit = null;
+        for (const sphere of [sphere1, sphere2]) {
+          if (sphere === lastHitSphere) continue;
+          const h = raySphereIntersect(rayX, rayY, rayDX, rayDY, sphere);
+          if (h && (!hit || h.t < hit.t)) {
+            hit = h;
+            hit.sphere = sphere;
+          }
+        }
+
+        reflectCtx.strokeStyle = rayColors[depth % rayColors.length];
+        reflectCtx.lineWidth = 2;
+        reflectCtx.globalAlpha = 1 - depth * 0.15;
+        reflectCtx.beginPath();
+        reflectCtx.moveTo(rayX, rayY);
+
+        if (hit) {
+          reflectCtx.lineTo(hit.x, hit.y);
+          reflectCtx.stroke();
+
+          reflectCtx.fillStyle = '#fff';
+          reflectCtx.beginPath();
+          reflectCtx.arc(hit.x, hit.y, 4, 0, Math.PI * 2);
+          reflectCtx.fill();
+
+          // Calculate reflection
+          const nx = (hit.x - hit.sphere.x) / hit.sphere.r;
+          const ny = (hit.y - hit.sphere.y) / hit.sphere.r;
+          const refl = reflect(rayDX, rayDY, nx, ny);
+
+          // Draw normal
+          reflectCtx.strokeStyle = 'rgba(255,255,255,0.3)';
+          reflectCtx.lineWidth = 1;
+          reflectCtx.beginPath();
+          reflectCtx.moveTo(hit.x, hit.y);
+          reflectCtx.lineTo(hit.x + nx * 30, hit.y + ny * 30);
+          reflectCtx.stroke();
+
+          rayX = hit.x;
+          rayY = hit.y;
+          rayDX = refl.x;
+          rayDY = refl.y;
+          lastHitSphere = hit.sphere;
+        } else {
+          reflectCtx.lineTo(rayX + rayDX * 500, rayY + rayDY * 500);
+          reflectCtx.stroke();
+          break;
+        }
+      }
+
+      reflectCtx.globalAlpha = 1;
+
+      // Labels
+      reflectCtx.font = '11px JetBrains Mono';
+      reflectCtx.fillStyle = 'rgba(255,255,255,0.5)';
+      reflectCtx.fillText(`depth: ${maxDepth}`, 10, 20);
+    }
+
+    document.getElementById('depthSlider').addEventListener('input', (e) => {
+      document.getElementById('depthValue').textContent = e.target.value;
+      drawReflectDemo();
+    });
+
+    // =====================================================
+    // INIT
+    // =====================================================
+
+    function resizeAllCanvases() {
+      // Ray cast demo
+      rayCastCanvas.width = rayCastCanvas.parentElement.clientWidth - 48;
+      drawRayCastDemo();
+
+      // Intersect demo
+      intersectCanvas.width = intersectCanvas.parentElement.clientWidth - 48;
+      drawIntersectDemo();
+
+      // Phong demo
+      phongCanvas.width = phongCanvas.parentElement.clientWidth - 48;
+      drawPhongDemo();
+
+      // Shadow demo
+      shadowCanvas.width = shadowCanvas.parentElement.clientWidth - 48;
+      initShadowDemo();
+      drawShadowDemo();
+
+      // Reflect demo
+      reflectCanvas.width = reflectCanvas.parentElement.clientWidth - 48;
+      drawReflectDemo();
+    }
+
+    window.addEventListener('load', () => {
+      initMainDemo();
+      drawMainDemo();
+      resizeAllCanvases();
+    });
+
+    window.addEventListener('resize', () => {
+      resizeMainCanvas();
+      initMainDemo();
+      drawMainDemo();
+      resizeAllCanvases();
+    });
+  </script>
+
+</body>
+</html>

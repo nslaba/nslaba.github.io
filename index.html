@@ -51,6 +51,16 @@
       pointer-events: none;
     }
 
+    .header-link {
+      pointer-events: auto;
+      text-decoration: none;
+      transition: opacity 0.3s;
+    }
+
+    .header-link:hover {
+      opacity: 0.8;
+    }
+
     .header h1 {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.85rem;
@@ -335,7 +345,7 @@
 
   <!-- Header -->
   <header class="header">
-    <h1>Natalie Slaba</h1>
+    <a href="about.html" class="header-link"><h1>Natalie Slaba</h1></a>
   </header>
 
   <!-- Main -->
