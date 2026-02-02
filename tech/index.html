@@ -21,7 +21,6 @@
 
     :root {
       --accent: #6366f1;
-      --accent-glow: rgba(99, 102, 241, 0.4);
       --bg: #050508;
       --surface: #0a0a0f;
     }
@@ -30,7 +29,6 @@
       background: var(--bg);
       color: #fff;
       font-family: 'Inter', -apple-system, sans-serif;
-      overflow-x: hidden;
     }
 
     /* Navigation */
@@ -52,7 +50,6 @@
       font-size: 0.9rem;
       color: #fff;
       text-decoration: none;
-      letter-spacing: -0.02em;
     }
 
     .nav-links {
@@ -110,21 +107,12 @@
     }
 
     .hero-title {
-      font-size: clamp(3rem, 10vw, 8rem);
+      font-size: clamp(3rem, 10vw, 7rem);
       font-weight: 600;
       letter-spacing: -0.04em;
-      line-height: 0.9;
       margin-bottom: 1.5rem;
       opacity: 0;
       animation: fadeUp 1s ease 0.4s forwards;
-    }
-
-    .hero-title span {
-      display: block;
-      background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
     }
 
     .hero-subtitle {
@@ -173,150 +161,145 @@
       50% { opacity: 1; }
     }
 
-    /* Projects Section */
-    .projects {
-      min-height: 100vh;
-      padding: 8rem 3rem;
-      position: relative;
-    }
-
-    .projects-header {
-      max-width: 1400px;
-      margin: 0 auto 4rem;
-    }
-
-    .projects-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--accent);
-      letter-spacing: 0.2em;
-      margin-bottom: 1rem;
-    }
-
-    .projects-title {
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      font-weight: 500;
-    }
-
-    /* Bento Grid */
-    .bento {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      grid-auto-rows: 120px;
-      gap: 1.25rem;
-      max-width: 1400px;
+    /* Category Sections */
+    .category {
+      padding: 8rem 3rem 3rem;
+      max-width: 1200px;
       margin: 0 auto;
     }
 
-    /* Project Cards */
-    .card {
-      position: relative;
-      border-radius: 16px;
-      overflow: hidden;
-      background: var(--surface);
-      border: 1px solid rgba(255,255,255,0.05);
-      cursor: pointer;
-      transform-style: preserve-3d;
-      transition: transform 0.5s ease, box-shadow 0.5s ease;
+    .category-header {
+      margin-bottom: 4rem;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
     }
 
-    .card:hover {
-      transform: translateY(-8px) rotateX(2deg);
-      box-shadow:
-        0 30px 60px rgba(0,0,0,0.5),
-        0 0 60px var(--accent-glow);
-    }
-
-    /* Card sizes */
-    .card.hero-card {
-      grid-column: span 8;
-      grid-row: span 4;
-    }
-
-    .card.tall {
-      grid-column: span 4;
-      grid-row: span 4;
-    }
-
-    .card.wide {
-      grid-column: span 6;
-      grid-row: span 2;
-    }
-
-    .card.medium {
-      grid-column: span 4;
-      grid-row: span 3;
-    }
-
-    .card.small {
-      grid-column: span 3;
-      grid-row: span 2;
-    }
-
-    /* Card background */
-    .card-bg {
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
-      transition: transform 0.8s ease;
-    }
-
-    .card:hover .card-bg {
-      transform: scale(1.1);
-    }
-
-    .card-gradient {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to top,
-        rgba(5,5,8,0.98) 0%,
-        rgba(5,5,8,0.6) 40%,
-        rgba(5,5,8,0.2) 70%,
-        transparent 100%
-      );
-      opacity: 0.8;
-      transition: opacity 0.5s ease;
-    }
-
-    .card:hover .card-gradient {
+    .category-header.revealed {
       opacity: 1;
+      transform: translateY(0);
     }
 
-    /* Card content */
-    .card-content {
-      position: absolute;
-      inset: 0;
-      padding: 2rem;
+    .category-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
       display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      z-index: 2;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .category-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, var(--accent), transparent);
+      max-width: 100px;
+    }
+
+    .category-title {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 500;
+      color: #fff;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .category-desc {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.4);
+      max-width: 500px;
+      line-height: 1.7;
+    }
+
+    /* Project Grid */
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 3rem 6rem;
+    }
+
+    /* Project Cards */
+    .project-card {
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(60px);
+      transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+    }
+
+    .project-card.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .project-card:hover {
+      border-color: rgba(99, 102, 241, 0.3);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 60px rgba(99, 102, 241, 0.1);
+      transform: translateY(-4px);
+    }
+
+    .project-card.revealed:hover {
+      transform: translateY(-4px);
+    }
+
+    .card-visual {
+      position: relative;
+      aspect-ratio: 16/10;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(99, 102, 241, 0.02));
+    }
+
+    .card-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .project-card:hover .card-visual img {
+      transform: scale(1.05);
+    }
+
+    .card-visual-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.15);
     }
 
     .card-badge {
       position: absolute;
-      top: 1.5rem;
-      left: 1.5rem;
+      top: 1rem;
+      left: 1rem;
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.6rem;
       color: #10b981;
-      background: rgba(16, 185, 129, 0.15);
-      padding: 0.3rem 0.6rem;
-      border-radius: 4px;
+      background: rgba(16, 185, 129, 0.2);
+      padding: 0.35rem 0.7rem;
+      border-radius: 6px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       backdrop-filter: blur(10px);
     }
 
-    .card-number {
-      position: absolute;
-      top: 1.5rem;
-      right: 1.5rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
-      color: rgba(255,255,255,0.2);
+    .card-content {
+      padding: 1.5rem;
     }
 
     .card-tags {
@@ -331,58 +314,62 @@
       font-size: 0.6rem;
       color: var(--accent);
       background: rgba(99, 102, 241, 0.1);
-      padding: 0.25rem 0.6rem;
+      padding: 0.25rem 0.5rem;
       border-radius: 4px;
-      backdrop-filter: blur(10px);
     }
 
     .card-title {
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       font-weight: 500;
-      margin-bottom: 0.5rem;
-      transform: translateY(20px);
-      opacity: 0.9;
-      transition: all 0.4s ease;
-    }
-
-    .card:hover .card-title {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    .card.hero-card .card-title {
-      font-size: 2.5rem;
+      color: #fff;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
     }
 
     .card-desc {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: rgba(255,255,255,0.5);
       line-height: 1.6;
-      max-width: 400px;
-      transform: translateY(20px);
-      opacity: 0;
-      transition: all 0.4s ease 0.1s;
     }
 
-    .card:hover .card-desc {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    /* Card glow effect */
-    .card::before {
-      content: '';
+    .card-arrow {
       position: absolute;
-      inset: -1px;
-      border-radius: 17px;
-      background: linear-gradient(135deg, var(--accent), transparent 50%);
+      bottom: 1rem;
+      right: 1rem;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
       opacity: 0;
-      z-index: -1;
-      transition: opacity 0.5s ease;
+      transform: translateX(-10px);
+      transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s ease;
     }
 
-    .card:hover::before {
-      opacity: 0.5;
+    .project-card:hover .card-arrow {
+      opacity: 1;
+      transform: translateX(0);
+      background: var(--accent);
+    }
+
+    .card-arrow svg {
+      width: 14px;
+      height: 14px;
+      color: #fff;
+    }
+
+    .card-content {
+      position: relative;
+    }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.08), transparent);
+      max-width: 800px;
+      margin: 2rem auto 0;
     }
 
     /* Footer */
@@ -392,7 +379,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      max-width: 1400px;
+      max-width: 1200px;
       margin: 0 auto;
     }
 
@@ -420,66 +407,26 @@
     }
 
     /* Responsive */
-    @media (max-width: 1024px) {
-      .bento {
-        grid-template-columns: repeat(6, 1fr);
+    @media (max-width: 900px) {
+      .project-grid {
+        grid-template-columns: 1fr;
+        padding: 0 1.5rem 4rem;
       }
 
-      .card.hero-card {
-        grid-column: span 6;
-        grid-row: span 3;
+      .category {
+        padding: 5rem 1.5rem 2rem;
       }
 
-      .card.tall {
-        grid-column: span 3;
-        grid-row: span 3;
+      .category-header {
+        margin-bottom: 2.5rem;
       }
 
-      .card.wide {
-        grid-column: span 6;
-      }
-
-      .card.medium {
-        grid-column: span 3;
-        grid-row: span 2;
-      }
-
-      .card.small {
-        grid-column: span 3;
-        grid-row: span 2;
-      }
-    }
-
-    @media (max-width: 640px) {
       .nav {
         padding: 1rem 1.5rem;
       }
 
       .nav-links {
         display: none;
-      }
-
-      .projects {
-        padding: 4rem 1.5rem;
-      }
-
-      .bento {
-        grid-template-columns: 1fr;
-        grid-auto-rows: auto;
-      }
-
-      .card {
-        grid-column: span 1 !important;
-        grid-row: span 1 !important;
-        min-height: 300px;
-      }
-
-      .card.hero-card {
-        min-height: 400px;
-      }
-
-      .hero-title {
-        font-size: 3rem;
       }
 
       .footer {
@@ -507,7 +454,7 @@
     <canvas class="hero-canvas" id="heroCanvas"></canvas>
     <div class="hero-content">
       <p class="hero-label">Projects</p>
-      <h1 class="hero-title"><span>Code</span></h1>
+      <h1 class="hero-title">Code</h1>
       <p class="hero-subtitle">Graphics, simulations, and interactive experiments.</p>
     </div>
     <div class="scroll-indicator">
@@ -516,128 +463,165 @@
     </div>
   </section>
 
-  <!-- Projects -->
-  <section class="projects">
-    <header class="projects-header">
-      <p class="projects-label">// Selected Work</p>
-      <h2 class="projects-title">Projects</h2>
-    </header>
-
-    <div class="bento">
-
-      <!-- Particle System - Hero Card -->
-      <a href="../projects/Vulkan/vulkan.html" class="card hero-card">
-        <div class="card-bg" style="background-image: url('../assets/images/art/chaos.webp');"></div>
-        <div class="card-gradient"></div>
-        <span class="card-badge">Interactive</span>
-        <span class="card-number">01</span>
-        <div class="card-content">
-          <div class="card-tags">
-            <span class="card-tag">WebGL</span>
-            <span class="card-tag">Particles</span>
-            <span class="card-tag">Physics</span>
-          </div>
-          <h3 class="card-title">Particle System</h3>
-          <p class="card-desc">Every pixel becomes a particle. Interactive physics simulation transforming images into fluid, responsive visuals.</p>
-        </div>
-      </a>
-
-      <!-- Inverse Kinematics -->
-      <a href="../projects/IK/index.html" class="card tall">
-        <div class="card-bg" style="background: linear-gradient(135deg, #0a0a12 0%, #1a0a20 100%);"></div>
-        <div class="card-gradient"></div>
-        <span class="card-badge">Interactive</span>
-        <span class="card-number">02</span>
-        <div class="card-content">
-          <div class="card-tags">
-            <span class="card-tag">Math</span>
-            <span class="card-tag">Robotics</span>
-            <span class="card-tag">Education</span>
-          </div>
-          <h3 class="card-title">Inverse Kinematics</h3>
-          <p class="card-desc">Interactive demo explaining the Jacobian method for robotic arm control.</p>
-        </div>
-      </a>
-
-      <!-- Ray Tracer -->
-      <a href="../projects/Raytracer/Raytracer.html" class="card tall">
-        <div class="card-bg" style="background-image: url('../projects/Raytracer/snapshot.png');"></div>
-        <div class="card-gradient"></div>
-        <span class="card-number">03</span>
-        <div class="card-content">
-          <div class="card-tags">
-            <span class="card-tag">C++</span>
-            <span class="card-tag">Graphics</span>
-          </div>
-          <h3 class="card-title">Ray Tracer</h3>
-          <p class="card-desc">Physically-based rendering from scratch. Light, reflections, shadows.</p>
-        </div>
-      </a>
-
-      <!-- Dot Product -->
-      <a href="projects/interactive-learning/dot-product/index.html" class="card wide">
-        <div class="card-bg" style="background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);"></div>
-        <div class="card-gradient"></div>
-        <span class="card-badge">Interactive</span>
-        <span class="card-number">04</span>
-        <div class="card-content">
-          <div class="card-tags">
-            <span class="card-tag">Education</span>
-            <span class="card-tag">Math</span>
-            <span class="card-tag">Game</span>
-          </div>
-          <h3 class="card-title">Orbital Escape</h3>
-          <p class="card-desc">Learn the dot product through play.</p>
-        </div>
-      </a>
-
-      <!-- Hermite Splines -->
-      <a href="../projects/OpenGL/opengl.html" class="card medium">
-        <div class="card-bg" style="background-image: url('../projects/OpenGL/HermiteSpline/hermiteSpline.gif');"></div>
-        <div class="card-gradient"></div>
-        <span class="card-number">05</span>
-        <div class="card-content">
-          <div class="card-tags">
-            <span class="card-tag">OpenGL</span>
-            <span class="card-tag">C++</span>
-          </div>
-          <h3 class="card-title">Hermite Splines</h3>
-          <p class="card-desc">Smooth curves with arc-length parameterization.</p>
-        </div>
-      </a>
-
-      <!-- WebGL Animation -->
-      <a href="../projects/webGL/animation/project.html" class="card medium">
-        <div class="card-bg" style="background-image: url('../projects/webGL/animation/snapshot.png');"></div>
-        <div class="card-gradient"></div>
-        <span class="card-number">06</span>
-        <div class="card-content">
-          <div class="card-tags">
-            <span class="card-tag">WebGL</span>
-            <span class="card-tag">GLSL</span>
-          </div>
-          <h3 class="card-title">WebGL Animation</h3>
-          <p class="card-desc">Hierarchical character animation with custom shaders.</p>
-        </div>
-      </a>
-
-      <!-- Early Interests -->
-      <a href="../projects/Arduino/Arduino.html" class="card small">
-        <div class="card-bg" style="background-image: url('../projects/Arduino/LEDs.jpg');"></div>
-        <div class="card-gradient"></div>
-        <span class="card-number">07</span>
-        <div class="card-content">
-          <div class="card-tags">
-            <span class="card-tag">Arduino</span>
-            <span class="card-tag">Hardware</span>
-          </div>
-          <h3 class="card-title">Early Interests</h3>
-          <p class="card-desc">Where it started.</p>
-        </div>
-      </a>
-
+  <!-- Educational -->
+  <section class="category" id="educational">
+    <div class="category-header">
+      <p class="category-label">01 Educational</p>
+      <h2 class="category-title">Learn by Playing</h2>
+      <p class="category-desc">Interactive explanations of math and graphics concepts. Drag, explore, understand.</p>
     </div>
   </section>
+
+  <div class="project-grid" id="edu-grid">
+    <a href="../projects/IK/index.html" class="project-card">
+      <div class="card-visual">
+        <span class="card-badge">Interactive</span>
+        <div class="card-visual-placeholder">[ drag to control ]</div>
+      </div>
+      <div class="card-content">
+        <div class="card-tags">
+          <span class="card-tag">Robotics</span>
+          <span class="card-tag">Linear Algebra</span>
+        </div>
+        <h3 class="card-title">Inverse Kinematics</h3>
+        <p class="card-desc">Drag a target, watch the arm follow. The Jacobian method for robotic arm control - from math to intuition.</p>
+        <div class="card-arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </div>
+      </div>
+    </a>
+
+    <a href="#" class="project-card">
+      <div class="card-visual">
+        <span class="card-badge">Interactive</span>
+        <div class="card-visual-placeholder">[ coming soon ]</div>
+      </div>
+      <div class="card-content">
+        <div class="card-tags">
+          <span class="card-tag">Vectors</span>
+          <span class="card-tag">Geometry</span>
+        </div>
+        <h3 class="card-title">Dot Product</h3>
+        <p class="card-desc">What does it actually mean? An interactive exploration of projection, similarity, and why it's everywhere in graphics.</p>
+        <div class="card-arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </div>
+      </div>
+    </a>
+
+    <a href="../projects/Raytracer/Raytracer.html" class="project-card">
+      <div class="card-visual">
+        <img src="../projects/Raytracer/snapshot.png" alt="Ray traced scene">
+      </div>
+      <div class="card-content">
+        <div class="card-tags">
+          <span class="card-tag">C++</span>
+          <span class="card-tag">Rendering</span>
+        </div>
+        <h3 class="card-title">Ray Tracer</h3>
+        <p class="card-desc">Physically-based rendering from scratch. Simulating light, reflections, and shadows - one ray at a time.</p>
+        <div class="card-arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </div>
+      </div>
+    </a>
+
+    <a href="../projects/OpenGL/opengl.html" class="project-card">
+      <div class="card-visual">
+        <img src="../projects/OpenGL/HermiteSpline/hermiteSpline.gif" alt="Hermite Spline animation">
+      </div>
+      <div class="card-content">
+        <div class="card-tags">
+          <span class="card-tag">Curves</span>
+          <span class="card-tag">Animation</span>
+        </div>
+        <h3 class="card-title">Hermite Splines</h3>
+        <p class="card-desc">Smooth curves with arc-length parameterization. The math that makes animation feel natural.</p>
+        <div class="card-arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Expressive -->
+  <section class="category" id="expressive">
+    <div class="category-header">
+      <p class="category-label">02 Expressive</p>
+      <h2 class="category-title">Creative Code</h2>
+      <p class="category-desc">Art, animation, and experiments in visual expression.</p>
+    </div>
+  </section>
+
+  <div class="project-grid" id="exp-grid">
+    <a href="../projects/webGL/animation/project.html" class="project-card">
+      <div class="card-visual">
+        <img src="../projects/webGL/animation/snapshot.png" alt="WebGL animation">
+      </div>
+      <div class="card-content">
+        <div class="card-tags">
+          <span class="card-tag">WebGL</span>
+          <span class="card-tag">GLSL</span>
+        </div>
+        <h3 class="card-title">WebGL Animation</h3>
+        <p class="card-desc">Hierarchical character animation with custom shaders. Textures derived from paintings.</p>
+        <div class="card-arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </div>
+      </div>
+    </a>
+
+    <a href="../projects/Vulkan/vulkan.html" class="project-card">
+      <div class="card-visual">
+        <span class="card-badge">Interactive</span>
+        <img src="../assets/images/art/chaos.webp" alt="Particle system">
+      </div>
+      <div class="card-content">
+        <div class="card-tags">
+          <span class="card-tag">Particles</span>
+          <span class="card-tag">Physics</span>
+        </div>
+        <h3 class="card-title">Particle System</h3>
+        <p class="card-desc">Every pixel becomes a particle. Interactive physics transforming images into fluid, responsive visuals.</p>
+        <div class="card-arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </div>
+      </div>
+    </a>
+
+    <a href="#" class="project-card">
+      <div class="card-visual">
+        <div class="card-visual-placeholder">[ coming soon ]</div>
+      </div>
+      <div class="card-content">
+        <div class="card-tags">
+          <span class="card-tag">Arduino</span>
+          <span class="card-tag">Hardware</span>
+        </div>
+        <h3 class="card-title">Arduino</h3>
+        <p class="card-desc">Physical computing and interactive installations. Code meets the real world.</p>
+        <div class="card-arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </div>
+      </div>
+    </a>
+  </div>
 
   <!-- Footer -->
   <footer class="footer">
@@ -650,14 +634,14 @@
   </footer>
 
   <script>
-    // Interactive Hero Canvas
+    // Interactive Hero Canvas - Particle Network
     const canvas = document.getElementById('heroCanvas');
     const ctx = canvas.getContext('2d');
 
     let particles = [];
     let mouse = { x: null, y: null };
-    const PARTICLE_COUNT = 80;
-    const CONNECTION_DISTANCE = 150;
+    const PARTICLE_COUNT = 60;
+    const CONNECTION_DISTANCE = 120;
 
     function resize() {
       canvas.width = window.innerWidth;
@@ -672,34 +656,31 @@
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.vx = (Math.random() - 0.5) * 0.5;
-        this.vy = (Math.random() - 0.5) * 0.5;
-        this.radius = Math.random() * 2 + 1;
-        this.opacity = Math.random() * 0.5 + 0.2;
+        this.vx = (Math.random() - 0.5) * 0.3;
+        this.vy = (Math.random() - 0.5) * 0.3;
+        this.radius = Math.random() * 2 + 0.5;
+        this.opacity = Math.random() * 0.3 + 0.1;
       }
 
       update() {
         this.x += this.vx;
         this.y += this.vy;
 
-        // Mouse interaction
         if (mouse.x !== null) {
           const dx = mouse.x - this.x;
           const dy = mouse.y - this.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 200) {
-            const force = (200 - dist) / 200;
-            this.vx -= (dx / dist) * force * 0.02;
-            this.vy -= (dy / dist) * force * 0.02;
+          if (dist < 150) {
+            const force = (150 - dist) / 150;
+            this.vx -= (dx / dist) * force * 0.01;
+            this.vy -= (dy / dist) * force * 0.01;
           }
         }
 
-        // Friction
         this.vx *= 0.99;
         this.vy *= 0.99;
 
-        // Bounds
         if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
         if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
       }
@@ -728,12 +709,12 @@
           const dist = Math.sqrt(dx * dx + dy * dy);
 
           if (dist < CONNECTION_DISTANCE) {
-            const opacity = (1 - dist / CONNECTION_DISTANCE) * 0.15;
+            const opacity = (1 - dist / CONNECTION_DISTANCE) * 0.08;
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
             ctx.strokeStyle = `rgba(99, 102, 241, ${opacity})`;
-            ctx.lineWidth = 1;
+            ctx.lineWidth = 0.5;
             ctx.stroke();
           }
         }
@@ -752,44 +733,60 @@
       requestAnimationFrame(animate);
     }
 
-    // Events
-    window.addEventListener('resize', () => {
-      resize();
-    });
-
+    window.addEventListener('resize', resize);
     window.addEventListener('mousemove', (e) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
     });
-
     window.addEventListener('mouseleave', () => {
       mouse.x = null;
       mouse.y = null;
     });
 
-    // Card 3D tilt effect
-    document.querySelectorAll('.card').forEach(card => {
-      card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-
-        const rotateX = (y - centerY) / 20;
-        const rotateY = (centerX - x) / 20;
-
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px)`;
-      });
-
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = '';
-      });
-    });
-
-    // Init
     init();
     animate();
+
+    // Scroll-triggered reveal animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    // Reveal category headers
+    const headerObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          headerObserver.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.category-header').forEach(header => {
+      headerObserver.observe(header);
+    });
+
+    // Reveal project cards with stagger
+    const cardObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const grid = entry.target;
+          const cards = grid.querySelectorAll('.project-card');
+
+          cards.forEach((card, index) => {
+            setTimeout(() => {
+              card.classList.add('revealed');
+            }, index * 150); // 150ms stagger between each card
+          });
+
+          cardObserver.unobserve(grid);
+        }
+      });
+    }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+
+    document.querySelectorAll('.project-grid').forEach(grid => {
+      cardObserver.observe(grid);
+    });
   </script>
 
 </body>
