@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250" fill="none">
+  <defs>
+    <linearGradient id="armGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#818cf8;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="targetGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="250" fill="#0a0a0f"/>
+
+  <!-- Subtle grid -->
+  <g stroke="rgba(255,255,255,0.03)" stroke-width="1">
+    <line x1="50" y1="0" x2="50" y2="250"/>
+    <line x1="100" y1="0" x2="100" y2="250"/>
+    <line x1="150" y1="0" x2="150" y2="250"/>
+    <line x1="200" y1="0" x2="200" y2="250"/>
+    <line x1="250" y1="0" x2="250" y2="250"/>
+    <line x1="300" y1="0" x2="300" y2="250"/>
+    <line x1="350" y1="0" x2="350" y2="250"/>
+    <line x1="0" y1="50" x2="400" y2="50"/>
+    <line x1="0" y1="100" x2="400" y2="100"/>
+    <line x1="0" y1="150" x2="400" y2="150"/>
+    <line x1="0" y1="200" x2="400" y2="200"/>
+  </g>
+
+  <!-- Target with glow -->
+  <g filter="url(#targetGlow)">
+    <circle cx="310" cy="80" r="16" stroke="#10b981" stroke-width="2" fill="none" opacity="0.6"/>
+    <circle cx="310" cy="80" r="5" fill="#10b981"/>
+  </g>
+
+  <!-- Robotic arm segments -->
+  <g filter="url(#glow)">
+    <!-- Segment 1 -->
+    <line x1="80" y1="180" x2="160" y2="120" stroke="url(#armGrad)" stroke-width="6" stroke-linecap="round"/>
+    <!-- Segment 2 -->
+    <line x1="160" y1="120" x2="240" y2="90" stroke="url(#armGrad)" stroke-width="5" stroke-linecap="round"/>
+    <!-- Segment 3 -->
+    <line x1="240" y1="90" x2="300" y2="85" stroke="url(#armGrad)" stroke-width="4" stroke-linecap="round"/>
+  </g>
+
+  <!-- Base joint -->
+  <circle cx="80" cy="180" r="10" fill="#6366f1"/>
+  <circle cx="80" cy="180" r="5" fill="#0a0a0f"/>
+
+  <!-- Joint 1 -->
+  <circle cx="160" cy="120" r="8" fill="#f59e0b"/>
+  <circle cx="160" cy="120" r="4" fill="#0a0a0f"/>
+
+  <!-- Joint 2 -->
+  <circle cx="240" cy="90" r="7" fill="#f59e0b"/>
+  <circle cx="240" cy="90" r="3" fill="#0a0a0f"/>
+
+  <!-- End effector -->
+  <circle cx="300" cy="85" r="9" fill="#6366f1"/>
+  <circle cx="300" cy="85" r="4" fill="#818cf8"/>
+
+  <!-- Motion trail hint -->
+  <path d="M 300 85 Q 305 82 310 80" stroke="#10b981" stroke-width="1.5" fill="none" stroke-dasharray="4 3" opacity="0.5"/>
+</svg>

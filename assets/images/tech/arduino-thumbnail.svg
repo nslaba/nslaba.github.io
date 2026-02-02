@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250" fill="none">
+  <defs>
+    <linearGradient id="boardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e3a5f;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f2744;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="ledGlow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="250" fill="#0a0a0f"/>
+
+  <!-- Subtle circuit traces -->
+  <g stroke="rgba(99, 102, 241, 0.08)" stroke-width="1">
+    <path d="M 50 80 L 100 80 L 100 50"/>
+    <path d="M 350 170 L 300 170 L 300 200"/>
+    <path d="M 80 200 L 80 180 L 120 180"/>
+    <path d="M 320 50 L 320 80 L 280 80"/>
+  </g>
+
+  <!-- Arduino board -->
+  <rect x="120" y="60" width="160" height="130" rx="6" fill="url(#boardGrad)" stroke="#2d5a87" stroke-width="1"/>
+
+  <!-- Pin headers (top) -->
+  <g fill="#1a1a1a">
+    <rect x="135" y="55" width="6" height="12" rx="1"/>
+    <rect x="147" y="55" width="6" height="12" rx="1"/>
+    <rect x="159" y="55" width="6" height="12" rx="1"/>
+    <rect x="171" y="55" width="6" height="12" rx="1"/>
+    <rect x="183" y="55" width="6" height="12" rx="1"/>
+    <rect x="195" y="55" width="6" height="12" rx="1"/>
+    <rect x="207" y="55" width="6" height="12" rx="1"/>
+    <rect x="219" y="55" width="6" height="12" rx="1"/>
+    <rect x="231" y="55" width="6" height="12" rx="1"/>
+    <rect x="243" y="55" width="6" height="12" rx="1"/>
+    <rect x="255" y="55" width="6" height="12" rx="1"/>
+  </g>
+
+  <!-- Pin headers (bottom) -->
+  <g fill="#1a1a1a">
+    <rect x="135" y="183" width="6" height="12" rx="1"/>
+    <rect x="147" y="183" width="6" height="12" rx="1"/>
+    <rect x="159" y="183" width="6" height="12" rx="1"/>
+    <rect x="171" y="183" width="6" height="12" rx="1"/>
+    <rect x="183" y="183" width="6" height="12" rx="1"/>
+    <rect x="195" y="183" width="6" height="12" rx="1"/>
+    <rect x="207" y="183" width="6" height="12" rx="1"/>
+    <rect x="219" y="183" width="6" height="12" rx="1"/>
+    <rect x="231" y="183" width="6" height="12" rx="1"/>
+    <rect x="243" y="183" width="6" height="12" rx="1"/>
+    <rect x="255" y="183" width="6" height="12" rx="1"/>
+  </g>
+
+  <!-- Microcontroller chip -->
+  <rect x="170" y="95" width="60" height="50" rx="2" fill="#1a1a1a"/>
+  <circle cx="177" cy="102" r="2" fill="#333"/>
+
+  <!-- USB port -->
+  <rect x="125" y="105" width="18" height="30" rx="2" fill="#444" stroke="#555" stroke-width="1"/>
+  <rect x="128" y="112" width="12" height="16" rx="1" fill="#222"/>
+
+  <!-- Reset button -->
+  <circle cx="250" cy="90" r="6" fill="#333" stroke="#444" stroke-width="1"/>
+  <circle cx="250" cy="90" r="3" fill="#555"/>
+
+  <!-- Power LED (glowing) -->
+  <g filter="url(#ledGlow)">
+    <circle cx="145" cy="170" r="3" fill="#10b981"/>
+  </g>
+
+  <!-- TX/RX LEDs -->
+  <g filter="url(#glow)">
+    <circle cx="155" cy="170" r="2.5" fill="#f59e0b" opacity="0.8"/>
+    <circle cx="165" cy="170" r="2.5" fill="#6366f1" opacity="0.6"/>
+  </g>
+
+  <!-- Wires coming from board -->
+  <g filter="url(#glow)">
+    <path d="M 147 67 C 147 40, 80 40, 80 70" stroke="#ef4444" stroke-width="2" fill="none"/>
+    <path d="M 171 67 C 171 35, 320 35, 320 70" stroke="#10b981" stroke-width="2" fill="none"/>
+    <path d="M 195 183 C 195 210, 90 210, 90 180" stroke="#f59e0b" stroke-width="2" fill="none"/>
+  </g>
+
+  <!-- Wire endpoints (components) -->
+  <circle cx="80" cy="70" r="5" fill="#ef4444" opacity="0.8"/>
+  <circle cx="320" cy="70" r="5" fill="#10b981" opacity="0.8"/>
+  <circle cx="90" cy="180" r="5" fill="#f59e0b" opacity="0.8"/>
+
+  <!-- Label hint -->
+  <text x="200" y="235" fill="rgba(255,255,255,0.2)" font-family="JetBrains Mono, monospace" font-size="11" text-anchor="middle">physical computing</text>
+</svg>
