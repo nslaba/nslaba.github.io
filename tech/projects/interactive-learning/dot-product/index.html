@@ -235,6 +235,40 @@
             color: var(--color-white);
         }
 
+        .dot-display {
+            position: absolute;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 0.75rem 1.25rem;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .dot-label {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--color-gray-400);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.25rem;
+        }
+
+        .dot-value {
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--color-gray-400);
+            transition: color 0.2s;
+        }
+
+        .dot-value.positive { color: var(--color-success); }
+        .dot-value.negative { color: #ef4444; }
+        .dot-value.neutral { color: var(--color-gray-400); }
+
         @media (max-width: 768px) {
             .level-title { font-size: 0.65rem; }
             .objective { font-size: 0.9rem; top: 3rem; }
@@ -269,6 +303,11 @@
         </div>
 
         <div class="instruction" id="instruction">Click anywhere to thrust in that direction</div>
+
+        <div class="dot-display" id="dotDisplay">
+            <span class="dot-label">alignment</span>
+            <span class="dot-value" id="dotValue">—</span>
+        </div>
 
         <div class="success-modal" id="successModal">
             <h2 id="successTitle">Level Complete</h2>
@@ -306,28 +345,28 @@
         const levels = {
             1: {
                 title: "Level 1: Get to Orbit",
-                objective: "Your satellite is stuck! Click to fire thrusts and get it moving fast enough to complete one full orbit.",
-                fuel: 100,
-                targetSpeed: 0.015,
+                objective: "Your satellite is stuck! Click in the direction of movement (along the purple arrow) to speed up.",
+                fuel: 200,
+                targetSpeed: 0.012,
                 successMessage: "You discovered that thrusting <strong>along the direction of movement</strong> speeds things up efficiently.",
-                instruction: "Click anywhere to thrust in that direction"
+                instruction: "Click ahead of the satellite to thrust forward"
             },
             2: {
                 title: "Level 2: Reach the Target",
-                objective: "Accelerate your satellite to reach the outer green ring. You need sustained speed!",
-                fuel: 150,
-                targetDistance: 400,
+                objective: "Accelerate your satellite to reach the outer green ring. Keep thrusting in the direction you're moving!",
+                fuel: 250,
+                targetDistance: 380,
                 successMessage: "You learned that <strong>consistent alignment</strong> with velocity builds momentum.",
-                instruction: "Click to thrust - Build up speed strategically"
+                instruction: "Click to thrust - stay aligned with velocity"
             },
             3: {
                 title: "Level 3: The Landing",
-                objective: "Now slow down! Reduce your speed to safely land (get below 20% speed).",
-                fuel: 120,
-                targetSpeed: 0.003,
+                objective: "Now slow down! Thrust OPPOSITE to your movement to brake.",
+                fuel: 200,
+                targetSpeed: 0.004,
                 reverse: true,
                 successMessage: "You found that thrusting <strong>opposite to velocity</strong> slows you down.",
-                instruction: "Click to thrust - Think about direction"
+                instruction: "Click behind the satellite to slow down"
             },
             4: {
                 title: "The Truth Revealed",
@@ -381,7 +420,7 @@
             document.getElementById('instruction').textContent = config.instruction;
 
             satellite.angle = 0;
-            satellite.velocity = level === 3 ? 0.02 : 0;
+            satellite.velocity = level === 3 ? 0.025 : 0.001; // Small initial velocity so there's a direction
             satellite.distance = 250;
             fuel = config.fuel;
             maxFuel = config.fuel;
@@ -438,6 +477,7 @@
             document.getElementById('instruction').style.display = 'none';
             document.querySelector('.fuel-bar').style.display = 'none';
             document.querySelector('.reset-btn').style.display = 'none';
+            document.getElementById('dotDisplay').style.display = 'none';
 
             setTimeout(() => {
                 const modal = document.getElementById('successModal');
@@ -460,6 +500,8 @@
                     document.querySelector('.instruction').style.display = 'block';
                     document.querySelector('.fuel-bar').style.display = 'block';
                     document.querySelector('.reset-btn').style.display = 'block';
+                    document.getElementById('dotDisplay').style.display = 'block';
+                    document.getElementById('dotValue').textContent = '—';
                     loadLevel(1);
                 };
                 modal.classList.add('show');
@@ -497,12 +539,36 @@
 
             const alignment = velX * thrustX + velY * thrustY;
 
-            satellite.velocity += alignment * 0.002;
-            fuel -= 10;
+            // More powerful thrust, less fuel cost
+            satellite.velocity += alignment * 0.004;
+            fuel -= 8;
             if (fuel < 0) fuel = 0;
+
+            // Show alignment feedback
+            showAlignmentFeedback(alignment, e.clientX, e.clientY);
 
             updateUI();
         });
+
+        // Visual feedback for alignment
+        let feedbackParticles = [];
+
+        function showAlignmentFeedback(alignment, x, y) {
+            const color = alignment > 0.5 ? '#10b981' : alignment > 0 ? '#fbbf24' : '#ef4444';
+            const text = alignment > 0.7 ? 'Great!' : alignment > 0.3 ? 'Good' : alignment > 0 ? 'Weak' : 'Wrong way!';
+            feedbackParticles.push({
+                x, y,
+                text,
+                color,
+                alpha: 1,
+                vy: -2
+            });
+
+            // Update dot product display
+            const dotValue = document.getElementById('dotValue');
+            dotValue.textContent = alignment.toFixed(2);
+            dotValue.className = 'dot-value ' + (alignment > 0.3 ? 'positive' : alignment < -0.3 ? 'negative' : 'neutral');
+        }
 
         function animate() {
             ctx.fillStyle = '#0f0f1a';
@@ -527,7 +593,7 @@
 
             satellite.x = planet.x + Math.cos(satellite.angle) * satellite.distance;
             satellite.y = planet.y + Math.sin(satellite.angle) * satellite.distance;
-            satellite.velocity *= 0.995;
+            satellite.velocity *= 0.998; // Less decay - easier to maintain speed
             satellite.angle += satellite.velocity;
 
             if (currentLevel === 2 && !targetReached) {
@@ -634,6 +700,39 @@
             ctx.textAlign = 'center';
             ctx.fillText(`${speedPercent}%`, satellite.x, satellite.y - 22);
             ctx.textAlign = 'left';
+
+            // Draw alignment feedback particles
+            feedbackParticles = feedbackParticles.filter(p => {
+                p.y += p.vy;
+                p.alpha -= 0.025;
+                if (p.alpha <= 0) return false;
+
+                ctx.globalAlpha = p.alpha;
+                ctx.fillStyle = p.color;
+                ctx.font = 'bold 14px Inter, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(p.text, p.x, p.y);
+                ctx.textAlign = 'left';
+                ctx.globalAlpha = 1;
+                return true;
+            });
+
+            // Hint: show ideal click zone (faint arc in direction of velocity)
+            if (!targetReached && fuel > 0) {
+                const hintAngle = velAngle;
+                const hintDist = 80;
+                ctx.strokeStyle = 'rgba(16, 185, 129, 0.15)';
+                ctx.lineWidth = 20;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                if (currentLevel === 3) {
+                    // For braking level, show opposite direction
+                    ctx.arc(satellite.x, satellite.y, hintDist, hintAngle + Math.PI - 0.5, hintAngle + Math.PI + 0.5);
+                } else {
+                    ctx.arc(satellite.x, satellite.y, hintDist, hintAngle - 0.5, hintAngle + 0.5);
+                }
+                ctx.stroke();
+            }
 
             checkWinCondition();
             requestAnimationFrame(animate);
