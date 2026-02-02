@@ -326,8 +326,7 @@
         let fuel = 100;
         let maxFuel = 100;
         let trail = [];
-        let orbitsCompleted = 0;
-        let lastAngle = 0;
+        let totalAngleTraveled = 0;
         let targetReached = false;
         let showProjection = false;
         let projectionAlpha = 0;
@@ -347,7 +346,7 @@
                 title: "Level 1: Get to Orbit",
                 objective: "Your satellite is stuck! Click in the direction of movement (along the purple arrow) to speed up.",
                 fuel: 200,
-                targetSpeed: 0.012,
+                targetSpeed: 0.008,
                 successMessage: "You discovered that thrusting <strong>along the direction of movement</strong> speeds things up efficiently.",
                 instruction: "Click ahead of the satellite to thrust forward"
             },
@@ -361,9 +360,9 @@
             },
             3: {
                 title: "Level 3: The Landing",
-                objective: "Now slow down! Thrust OPPOSITE to your movement to brake.",
+                objective: "Now slow down! Thrust OPPOSITE to your movement to brake (get below 30% speed).",
                 fuel: 200,
-                targetSpeed: 0.004,
+                targetSpeed: 0.006,
                 reverse: true,
                 successMessage: "You found that thrusting <strong>opposite to velocity</strong> slows you down.",
                 instruction: "Click behind the satellite to slow down"
@@ -420,13 +419,12 @@
             document.getElementById('instruction').textContent = config.instruction;
 
             satellite.angle = 0;
-            satellite.velocity = level === 3 ? 0.025 : 0.001; // Small initial velocity so there's a direction
+            satellite.velocity = level === 3 ? 0.02 : 0.002; // Level 3 starts fast, others start with slight movement
             satellite.distance = 250;
             fuel = config.fuel;
             maxFuel = config.fuel;
             trail = [];
-            orbitsCompleted = 0;
-            lastAngle = 0;
+            totalAngleTraveled = 0;
             targetReached = false;
             showProjection = false;
             projectionAlpha = 0;
@@ -438,16 +436,10 @@
             const config = levels[currentLevel];
 
             if (currentLevel === 1) {
-                const currentAngle = satellite.angle % (Math.PI * 2);
-                if (Math.abs(satellite.velocity) > config.targetSpeed) {
-                    if (lastAngle > Math.PI * 1.5 && currentAngle < Math.PI * 0.5) {
-                        orbitsCompleted++;
-                        if (orbitsCompleted >= 1) {
-                            showSuccess();
-                        }
-                    }
+                // Complete one full orbit (2π radians) while still moving
+                if (totalAngleTraveled >= Math.PI * 2 && Math.abs(satellite.velocity) > 0.005) {
+                    showSuccess();
                 }
-                lastAngle = currentAngle;
             } else if (currentLevel === 2) {
                 if (satellite.distance >= config.targetDistance) {
                     showSuccess();
@@ -593,7 +585,8 @@
 
             satellite.x = planet.x + Math.cos(satellite.angle) * satellite.distance;
             satellite.y = planet.y + Math.sin(satellite.angle) * satellite.distance;
-            satellite.velocity *= 0.998; // Less decay - easier to maintain speed
+            satellite.velocity *= 0.9995; // Minimal decay - focus on learning alignment
+            totalAngleTraveled += Math.abs(satellite.velocity);
             satellite.angle += satellite.velocity;
 
             if (currentLevel === 2 && !targetReached) {
