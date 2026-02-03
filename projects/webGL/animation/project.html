@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="WebGL character animation with hierarchical modeling and custom shaders.">
+  <meta name="description" content="WebGL character animation with hierarchical modeling, Blinn-Phong shading, and custom GLSL shaders.">
 
   <title>WebGL Animation | Natalie Slaba</title>
 
@@ -12,117 +12,41 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="../../../css/main.css">
-  <link rel="stylesheet" href="../../../css/tech.css">
   <style>
-    .project-page {
-      min-height: 100vh;
-      background: var(--color-tech-bg);
-      color: var(--color-white);
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --accent: #6366f1;
+      --green: #10b981;
+      --orange: #f59e0b;
+      --text: #fff;
+      --text-muted: rgba(255,255,255,0.5);
+      --text-dim: rgba(255,255,255,0.3);
+      --font-sans: 'Inter', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
     }
 
-    .project-header {
-      padding: 8rem 2rem 2rem;
-      max-width: 900px;
-      margin: 0 auto;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
     }
 
-    .project-header .label {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: var(--color-tech-primary);
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      margin-bottom: 1rem;
-    }
-
-    .project-header h1 {
-      font-size: clamp(2rem, 5vw, 3rem);
-      font-weight: 600;
-      margin-bottom: 1rem;
-    }
-
-    .project-header .intro {
-      font-size: 1rem;
-      color: var(--color-gray-400);
-      line-height: 1.8;
-      max-width: 600px;
-    }
-
-    .project-content {
-      padding: 0 2rem 4rem;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    .video-container {
-      margin: 2rem 0;
-      border-radius: 4px;
-      overflow: hidden;
-      border: 1px solid rgba(99, 102, 241, 0.2);
-    }
-
-    .video-container video {
-      width: 100%;
-      display: block;
-    }
-
-    .project-section {
-      margin-bottom: 2rem;
-    }
-
-    .project-section h2 {
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      color: var(--color-tech-primary);
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      margin-bottom: 1rem;
-    }
-
-    .project-section p {
-      color: var(--color-gray-300);
-      line-height: 1.8;
-      margin-bottom: 1rem;
-    }
-
-    .tech-list {
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1.5rem 2rem;
       display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin: 1rem 0;
-    }
-
-    .tech-item {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: var(--color-tech-primary);
-      background: rgba(99, 102, 241, 0.1);
-      padding: 0.25rem 0.75rem;
-      border-radius: 2px;
-    }
-
-    .project-footer {
-      padding: 2rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    .back-link {
-      font-family: var(--font-mono);
-      font-size: 0.85rem;
-      color: var(--color-gray-500);
-      text-decoration: none;
-      display: inline-flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 0.5rem;
-      transition: color 0.2s;
-    }
-
-    .back-link:hover {
-      color: var(--color-tech-primary);
+      background: linear-gradient(to bottom, var(--bg), transparent);
     }
 
     .nav-left {
@@ -134,34 +58,247 @@
     .nav-back {
       font-family: var(--font-mono);
       font-size: 0.8rem;
-      color: var(--color-gray-400);
+      color: var(--text-muted);
       text-decoration: none;
       transition: color 0.2s;
     }
 
-    .nav-back:hover {
-      color: var(--color-tech-primary);
+    .nav-back:hover { color: var(--accent); }
+    .nav-sep { color: var(--text-dim); }
+
+    /* Header */
+    .project-header {
+      padding: 8rem 2rem 2rem;
+      max-width: 900px;
+      margin: 0 auto;
     }
 
-    .nav-sep {
-      color: var(--color-gray-600);
+    .label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .project-header h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .intro {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      max-width: 650px;
+    }
+
+    /* Content */
+    .project-content {
+      padding: 0 2rem 4rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .video-container {
+      margin: 2rem 0 3rem;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .video-container video {
+      width: 100%;
+      display: block;
+    }
+
+    .tech-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .tech-item {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent);
+      background: rgba(99, 102, 241, 0.1);
+      padding: 0.3rem 0.75rem;
+      border-radius: 4px;
+    }
+
+    /* Sections */
+    .section {
+      margin-bottom: 3.5rem;
+    }
+
+    .section h2 {
+      font-size: 1.3rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section h2 .step {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+    }
+
+    .section p {
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      line-height: 1.8;
+    }
+
+    .section strong {
+      color: var(--text);
+    }
+
+    /* Math blocks */
+    .math-block {
+      background: var(--surface);
+      border-left: 2px solid var(--accent);
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+      font-family: var(--font-mono);
       font-size: 0.8rem;
+      overflow-x: auto;
+    }
+
+    .math-block .label {
+      color: var(--accent);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    .math-block pre {
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* Code blocks */
+    .code-block {
+      background: var(--surface);
+      border-radius: 6px;
+      padding: 1.25rem;
+      margin: 1.5rem 0;
+      overflow-x: auto;
+    }
+
+    .code-block .lang {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--orange);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .code-block pre {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .code-block .comment { color: var(--text-dim); }
+    .code-block .keyword { color: var(--accent); }
+    .code-block .function { color: var(--green); }
+
+    /* Intuition boxes */
+    .intuition {
+      background: rgba(99, 102, 241, 0.08);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin: 1.5rem 0;
+    }
+
+    .intuition-title {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    .intuition p {
+      margin: 0;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    /* Project links */
+    .project-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text);
+      text-decoration: none;
+      padding: 0.75rem 1.25rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+
+    .project-link:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* Footer */
+    footer {
+      padding: 3rem 2rem;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    footer a {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      margin: 0 1rem;
+    }
+
+    footer a:hover { color: var(--accent); }
+
+    @media (max-width: 768px) {
+      .nav { padding: 1rem; }
+      .project-header { padding: 6rem 1.5rem 1.5rem; }
+      .project-content { padding: 0 1.5rem 3rem; }
     }
   </style>
 </head>
-<body class="project-page">
+<body>
 
   <!-- Navigation -->
-  <nav class="tech-nav">
+  <nav class="nav">
     <div class="nav-left">
       <a href="../../../tech/index.html" class="nav-back">All Projects</a>
       <span class="nav-sep">/</span>
       <a href="../../../index.html" class="nav-back">Home</a>
     </div>
-    <ul class="tech-nav-links">
-      <li><a href="../../../art/index.html">Art</a></li>
-      <li><a href="../../../about.html">About</a></li>
-    </ul>
   </nav>
 
   <!-- Header -->
@@ -169,7 +306,8 @@
     <span class="label">// Graphics Programming</span>
     <h1>WebGL Animation</h1>
     <p class="intro">
-      Hierarchical character animation built with WebGL and custom GLSL shaders.
+      Hierarchical character animation with 360° camera flyaround, Blinn-Phong illumination,
+      physics simulation, and custom time-based GLSL shaders. Textures derived from my own paintings.
     </p>
   </header>
 
@@ -182,39 +320,235 @@
       </video>
     </div>
 
-    <section class="project-section">
-      <h2>Overview</h2>
+    <div class="tech-list">
+      <span class="tech-item">WebGL</span>
+      <span class="tech-item">GLSL</span>
+      <span class="tech-item">JavaScript</span>
+      <span class="tech-item">Hierarchical Modeling</span>
+      <span class="tech-item">Blinn-Phong</span>
+      <span class="tech-item">Physics Sim</span>
+    </div>
+
+    <!-- Section 1: Hierarchical Modeling -->
+    <section class="section">
+      <h2><span class="step">01</span> Hierarchical Modeling</h2>
       <p>
-        Characters constructed as hierarchical objects using WebGL's primitive shapes.
-        The scene uses custom fragment shaders for dynamic visual effects, with textures
-        derived from my own paintings.
+        The characters are built as <strong>scene graphs</strong> - tree structures where each body part
+        is a child of its parent. When the torso moves, the arms, legs, and head move with it automatically.
+        This is achieved through a <strong>matrix stack</strong>.
       </p>
-      <div class="tech-list">
-        <span class="tech-item">WebGL</span>
-        <span class="tech-item">GLSL</span>
-        <span class="tech-item">JavaScript</span>
-        <span class="tech-item">Hierarchical Modeling</span>
+      <p>
+        Each transformation (translate, rotate, scale) post-multiplies the current model matrix.
+        <code>gPush()</code> saves the current state, <code>gPop()</code> restores it.
+        This lets child nodes inherit parent transformations while keeping their own.
+      </p>
+
+      <div class="code-block">
+        <div class="lang">JavaScript</div>
+        <pre><span class="comment">// Draw arm attached to shoulder</span>
+<span class="function">gPush</span>();                    <span class="comment">// Save torso transform</span>
+  <span class="function">gTranslate</span>(0.8, 0.5, 0);  <span class="comment">// Move to shoulder joint</span>
+  <span class="function">gRotate</span>(armAngle, 1,0,0); <span class="comment">// Swing arm</span>
+  <span class="function">gPush</span>();
+    <span class="function">gScale</span>(0.15, 0.4, 0.15); <span class="comment">// Shape the upper arm</span>
+    <span class="function">drawCylinder</span>();
+  <span class="function">gPop</span>();
+
+  <span class="comment">// Forearm inherits shoulder + upper arm transforms</span>
+  <span class="function">gTranslate</span>(0, -0.5, 0);
+  <span class="function">gRotate</span>(elbowAngle, 1,0,0);
+  <span class="function">drawCylinder</span>();
+<span class="function">gPop</span>();                    <span class="comment">// Restore to torso</span></pre>
+      </div>
+
+      <div class="math-block">
+        <div class="label">Transformation Composition</div>
+        <pre>
+M_final = M_torso × T_shoulder × R_arm × S_arm
+
+Each primitive is drawn with:
+  gl_Position = P × V × M_final × vertex
+
+where:
+  P = projection matrix (perspective)
+  V = view matrix (camera)
+  M = accumulated model matrix</pre>
       </div>
     </section>
 
-    <section class="project-section">
-      <h2>Features</h2>
+    <!-- Section 2: Camera Math -->
+    <section class="section">
+      <h2><span class="step">02</span> 360° Camera Flyaround</h2>
       <p>
-        The animation includes a 360-degree camera flyaround synchronized with real-time
-        parameters - light and color shift based on elapsed time. The psychedelic aesthetic
-        combines technical constraints with playful visual experimentation.
+        The camera orbits the scene using <strong>parametric circular motion</strong>.
+        The eye position traces a circle in the XZ plane while simultaneously spiraling inward,
+        creating the dramatic zoom effect.
+      </p>
+
+      <div class="math-block">
+        <div class="label">Orbital Camera Position</div>
+        <pre>
+eyeX = r(t) × sin(θ(t))
+eyeZ = r(t) × cos(θ(t))
+eyeY = constant
+
+where:
+  θ(t) = angular position, incremented each frame
+  r(t) = radius, decreasing over time (spiral inward)
+
+The lookAt matrix constructs the view transform:
+  V = lookAt(eye, target, up)</pre>
+      </div>
+
+      <p>
+        The <code>lookAt</code> function builds an orthonormal basis from three vectors:
+        the forward direction (eye to target), the right vector (cross product with up),
+        and the true up (cross of forward and right). These form the rotation part of the view matrix.
       </p>
     </section>
+
+    <!-- Section 3: Blinn-Phong -->
+    <section class="section">
+      <h2><span class="step">03</span> Blinn-Phong Illumination</h2>
+      <p>
+        The shading uses <strong>Blinn-Phong</strong>, a modification of Phong that replaces the
+        reflection vector with a <strong>half-vector</strong>. It's computationally cheaper and
+        often looks more realistic for certain materials.
+      </p>
+
+      <div class="math-block">
+        <div class="label">Blinn-Phong Model</div>
+        <pre>
+H = normalize(L + V)      // Half-vector
+
+Color = Ambient + Diffuse + Specular
+
+Ambient  = kₐ × Iₐ
+Diffuse  = kd × I × max(0, N·L)
+Specular = ks × I × max(0, N·H)ⁿ    // Note: N·H not R·V
+
+The half-vector H bisects the angle between
+the light direction L and view direction V.</pre>
+      </div>
+
+      <div class="code-block">
+        <div class="lang">GLSL Fragment Shader</div>
+        <pre><span class="keyword">vec4</span> <span class="function">ads</span>(vec3 pos, vec3 Lpos, vec3 fN) {
+    vec3 N = <span class="function">normalize</span>(fN);
+    vec3 L = <span class="function">normalize</span>(Lpos - pos);
+    vec3 V = <span class="function">normalize</span>(-pos);
+    vec3 H = <span class="function">normalize</span>(V + L); <span class="comment">// Blinn-Phong half vector</span>
+
+    vec4 ambient = ambientProduct;
+    vec4 diffuse = <span class="function">max</span>(<span class="function">dot</span>(L,N), 0.0) * diffuseProduct;
+    vec4 specular = <span class="function">pow</span>(<span class="function">max</span>(<span class="function">dot</span>(N,H), 0.0), 30.0)
+                    * specularProduct;
+
+    <span class="keyword">return</span> ambient + diffuse + specular;
+}</pre>
+      </div>
+
+      <div class="intuition">
+        <div class="intuition-title">Why Blinn-Phong?</div>
+        <p>
+          Computing the reflection vector R requires a dot product and subtraction.
+          The half-vector H is just a normalized sum - cheaper. Plus, Blinn-Phong handles
+          edge cases better when the light is at grazing angles.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 4: Physics Simulation -->
+    <section class="section">
+      <h2><span class="step">04</span> Physics Simulation</h2>
+      <p>
+        The bouncing character uses <strong>Euler integration</strong> to simulate gravity.
+        Each frame, velocity is updated by acceleration, then position is updated by velocity.
+        On collision with the ground, velocity is reflected and reduced by an energy loss factor.
+      </p>
+
+      <div class="math-block">
+        <div class="label">Euler Integration</div>
+        <pre>
+Each timestep dt:
+  v(t+dt) = v(t) + a × dt        // Update velocity
+  p(t+dt) = p(t) + v(t+dt) × dt  // Update position
+
+On collision (p.y < ground):
+  v.y = -energyLoss × v.y        // Reflect and dampen
+  p.y = ground                   // Correct penetration
+
+The twist: gravity decreases over time, so the character
+jumps higher and higher until he "flies away".</pre>
+      </div>
+
+      <p>
+        The variable gravity creates the narrative arc - the character's jumps grow until
+        he escapes entirely, then returns out of control. Simple physics, dramatic effect.
+      </p>
+    </section>
+
+    <!-- Section 5: Time-based Shaders -->
+    <section class="section">
+      <h2><span class="step">05</span> Time-Based Fragment Shaders</h2>
+      <p>
+        The psychedelic color effects come from <strong>sinusoidal functions of time</strong>
+        passed to the fragment shader. Combined with depth-based attenuation, this creates
+        the day/night cycle inside the cone.
+      </p>
+
+      <div class="code-block">
+        <div class="lang">GLSL Fragment Shader</div>
+        <pre><span class="keyword">void</span> <span class="function">funkyColorShaded</span>(out vec4 fragColor, in vec2 uv, in vec3 pos) {
+    <span class="comment">// Brightness varies with time (simulates sun rising/setting)</span>
+    <span class="keyword">float</span> brightness = <span class="function">sin</span>((3.14/32.0) * (iTime - 13.0));
+
+    <span class="comment">// Color cycles through RGB based on time and UV position</span>
+    vec3 col = brightness + 0.5 * <span class="function">sin</span>(iTime + uv.xyx + vec3(0,2,4));
+
+    <span class="comment">// Depth-based shading: farther = darker</span>
+    <span class="keyword">float</span> depth = pos.z / 28.0;
+    col += vec3(depth);
+
+    fragColor = vec4(col, 1.0);
+}</pre>
+      </div>
+
+      <div class="intuition">
+        <div class="intuition-title">The Color Formula</div>
+        <p>
+          <code>sin(iTime + uv.xyx + vec3(0,2,4))</code> creates three phase-shifted sine waves
+          for R, G, and B. As time advances, the colors cycle smoothly through the spectrum.
+          The UV coordinates add spatial variation so the effect isn't uniform.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 6: Links -->
+    <section class="section">
+      <h2><span class="step">06</span> Source Code</h2>
+      <p>
+        The complete implementation includes hierarchical character construction, texture mapping
+        with my own paintings, and the full narrative animation sequence.
+      </p>
+
+      <div class="project-links">
+        <a href="https://github.com/nslaba/CSC-305---Assignment-2---Animation" target="_blank" rel="noopener" class="project-link">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+          </svg>
+          View Source on GitHub
+        </a>
+      </div>
+    </section>
+
   </main>
 
   <!-- Footer -->
-  <footer class="project-footer">
-    <a href="../../../tech/index.html" class="back-link">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-      </svg>
-      All Projects
-    </a>
+  <footer>
+    <a href="../../../tech/index.html">All Projects</a>
+    <a href="../../../index.html">Home</a>
+    <a href="../../../about.html">About</a>
   </footer>
 
 </body>
