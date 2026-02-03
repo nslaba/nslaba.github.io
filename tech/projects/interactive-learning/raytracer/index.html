@@ -100,6 +100,7 @@
       width: 100%;
       max-width: 800px;
       aspect-ratio: 4/3;
+      min-height: 400px;
       background: var(--surface);
       border-radius: 12px;
       border: 1px solid rgba(255,255,255,0.08);
@@ -110,6 +111,8 @@
     .demo-canvas {
       width: 100%;
       height: 100%;
+      display: block;
+      cursor: crosshair;
     }
 
     /* Controls */
@@ -671,8 +674,7 @@ The ray "bounces" off the surface at the same angle it arrived.</pre>
 
     function initMainDemo() {
       resizeMainCanvas();
-      const w = mainCanvas.width / (window.devicePixelRatio || 1);
-      const h = mainCanvas.height / (window.devicePixelRatio || 1);
+      const { w, h } = getMainCanvasSize();
 
       spheres = [
         { x: w * 0.3, y: h * 0.5, r: 60, color: colors.sphere1, reflective: 0.3 },
@@ -686,8 +688,15 @@ The ray "bounces" off the surface at the same angle it arrived.</pre>
     function resizeMainCanvas() {
       const rect = mainCanvas.parentElement.getBoundingClientRect();
       const dpr = window.devicePixelRatio || 1;
-      mainCanvas.width = rect.width * dpr;
-      mainCanvas.height = rect.height * dpr;
+
+      const w = rect.width || 800;
+      const h = rect.height || 600;
+
+      mainCanvas.width = w * dpr;
+      mainCanvas.height = h * dpr;
+
+      // Reset transform before scaling to prevent compound scaling
+      mainCtx.setTransform(1, 0, 0, 1, 0, 0);
       mainCtx.scale(dpr, dpr);
     }
 
@@ -733,9 +742,19 @@ The ray "bounces" off the surface at the same angle it arrived.</pre>
       };
     }
 
+    function getMainCanvasSize() {
+      const dpr = window.devicePixelRatio || 1;
+      return {
+        w: mainCanvas.width / dpr,
+        h: mainCanvas.height / dpr
+      };
+    }
+
     function drawMainDemo() {
-      const w = mainCanvas.width / (window.devicePixelRatio || 1);
-      const h = mainCanvas.height / (window.devicePixelRatio || 1);
+      const { w, h } = getMainCanvasSize();
+
+      // Skip if canvas not sized yet
+      if (w <= 0 || h <= 0) return;
 
       mainCtx.fillStyle = colors.bg;
       mainCtx.fillRect(0, 0, w, h);
@@ -856,7 +875,7 @@ The ray "bounces" off the surface at the same angle it arrived.</pre>
       const rect = mainCanvas.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-      const h = mainCanvas.height / (window.devicePixelRatio || 1);
+      const { h } = getMainCanvasSize();
 
       const ox = 20;
       const oy = h / 2;
