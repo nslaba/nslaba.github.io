@@ -370,6 +370,37 @@
   opacity: 0.85;
 }
 
+.exhibition-subheading {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  text-transform: lowercase;
+  letter-spacing: 0.1em;
+  margin-top: 2.5rem;
+  margin-bottom: 0;
+}
+
+.exhibition-gallery video {
+  width: 100%;
+  display: block;
+  margin-bottom: 0.5rem;
+  border-radius: 2px;
+}
+
+.exhibition-details p + p {
+  margin-top: 0.75rem;
+}
+
+.exhibition-details a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.exhibition-details a:hover {
+  opacity: 0.7;
+}
+
 /* Thoughts & Experiments */
 .art-thoughts {
   padding: 4rem 2rem;
