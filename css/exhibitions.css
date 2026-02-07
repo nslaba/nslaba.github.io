@@ -1,0 +1,443 @@
+/* ==========================================================================
+   Exhibitions Pages
+   Reuses patterns from art.css — same variables, nav, footer, lightbox
+   ========================================================================== */
+
+/* Variables — same as art page */
+.art-page {
+  --bg-primary: #ffffff;
+  --bg-surface: #ffffff;
+  --text-primary: #000000;
+  --text-secondary: #333333;
+  --text-muted: #666666;
+  --accent: #000000;
+  --border: #e0e0e0;
+}
+
+.art-page {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Navigation — same as art page */
+.art-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+.art-nav .logo {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+
+.art-nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.art-nav-links a {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.art-nav-links a:hover {
+  color: var(--text-primary);
+}
+
+/* Footer — same as art page */
+.art-footer {
+  padding: 2rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.art-footer-nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.art-footer-nav a {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.art-footer-nav a:hover {
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   Landing Page
+   ========================================================================== */
+
+/* Hero banner */
+.exhibitions-hero {
+  padding-top: 5rem;
+  width: 100%;
+  max-height: 70vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.exhibitions-hero img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  max-height: 70vh;
+}
+
+/* Intro text */
+.exhibitions-intro {
+  max-width: 650px;
+  margin: 3rem auto;
+  text-align: center;
+  padding: 0 2rem;
+}
+
+.exhibitions-intro p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.9;
+}
+
+/* Exhibit cards grid */
+.exhibitions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto 4rem;
+  padding: 0 2rem;
+}
+
+.exhibit-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s;
+  text-decoration: none;
+  display: block;
+}
+
+.exhibit-card:hover {
+  transform: translateY(-4px);
+}
+
+.exhibit-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.exhibit-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transition: opacity 0.3s;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.5rem;
+}
+
+.exhibit-card:hover .exhibit-card-overlay {
+  opacity: 1;
+}
+
+.exhibit-card-title {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #fff;
+  margin-bottom: 0.25rem;
+}
+
+.exhibit-card-date {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ==========================================================================
+   Individual Exhibit Pages
+   ========================================================================== */
+
+/* Back link */
+.exhibit-back {
+  display: inline-block;
+  padding: 6rem 2rem 1rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.exhibit-back:hover {
+  color: var(--text-primary);
+}
+
+/* Hero area */
+.exhibit-header {
+  padding: 1rem 2rem 2rem;
+  max-width: 800px;
+}
+
+.exhibit-header h1 {
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.exhibit-meta {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.exhibit-meta span + span::before {
+  content: " \2014 ";
+}
+
+/* Story text */
+.exhibit-story {
+  max-width: 650px;
+  padding: 2rem 2rem 3rem;
+}
+
+.exhibit-story p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.9;
+}
+
+.exhibit-story p + p {
+  margin-top: 0.75rem;
+}
+
+.exhibit-story a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.exhibit-story a:hover {
+  opacity: 0.7;
+}
+
+/* Section subheadings */
+.exhibit-subheading {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  text-transform: lowercase;
+  letter-spacing: 0.1em;
+  padding: 0 2rem;
+  margin-top: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Photo gallery — column layout */
+.exhibit-gallery {
+  column-count: 3;
+  column-gap: 0.5rem;
+  padding: 0.5rem 2rem 2rem;
+  max-width: 1200px;
+}
+
+.exhibit-gallery img {
+  width: 100%;
+  display: block;
+  margin-bottom: 0.5rem;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.exhibit-gallery img:hover {
+  opacity: 0.85;
+}
+
+.exhibit-gallery video {
+  width: 100%;
+  display: block;
+  margin-bottom: 0.5rem;
+  border-radius: 2px;
+}
+
+/* Photo credit */
+.exhibit-credit {
+  padding: 1rem 2rem 3rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Lightbox — same as art page */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.95);
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.lightbox.active {
+  display: flex;
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lightbox-content img {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+}
+
+.lightbox-caption {
+  margin-top: 1rem;
+  text-align: center;
+  color: #fff;
+}
+
+.lightbox-title {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: -2.5rem;
+  right: 0;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  line-height: 1;
+}
+
+.lightbox-close:hover {
+  opacity: 1;
+}
+
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2.5rem;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  padding: 1rem;
+}
+
+.lightbox-nav:hover {
+  opacity: 1;
+}
+
+.lightbox-prev {
+  left: -4rem;
+}
+
+.lightbox-next {
+  right: -4rem;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .art-nav {
+    padding: 1rem;
+  }
+
+  .art-nav-links {
+    display: none;
+  }
+
+  .exhibitions-hero {
+    padding-top: 3.5rem;
+  }
+
+  .exhibitions-grid {
+    grid-template-columns: 1fr;
+    padding: 0 1.5rem;
+  }
+
+  .exhibit-back {
+    padding-top: 4.5rem;
+  }
+
+  .exhibit-header,
+  .exhibit-story,
+  .exhibit-gallery,
+  .exhibit-credit {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .exhibit-subheading {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .exhibit-gallery {
+    column-count: 2;
+  }
+
+  .art-footer {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .lightbox-nav {
+    font-size: 1.5rem;
+    padding: 0.5rem;
+  }
+
+  .lightbox-prev {
+    left: 0;
+  }
+
+  .lightbox-next {
+    right: 0;
+  }
+}

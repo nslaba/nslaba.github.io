@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="L'expo a Montreal avec Karim — a collaboration at Galerie Parfois, May 2019.">
+
+  <title>L'expo a Montreal avec Karim - Nat's Art</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../../css/main.css">
+  <link rel="stylesheet" href="../../css/exhibitions.css">
+</head>
+<body class="art-page">
+
+  <!-- Navigation -->
+  <nav class="art-nav">
+    <a href="../../index.html" class="logo">Home</a>
+    <ul class="art-nav-links">
+      <li><a href="./">Exhibitions</a></li>
+      <li><a href="../index.html">Gallery</a></li>
+      <li><a href="../../tech/index.html">Tech</a></li>
+    </ul>
+  </nav>
+
+  <!-- Back link -->
+  <a href="./" class="exhibit-back">&larr; exhibitions</a>
+
+  <!-- Header -->
+  <div class="exhibit-header">
+    <h1>L'expo a Montreal avec Karim</h1>
+    <div class="exhibit-meta">
+      <span>May 22, 2019</span>
+      <span>Galerie Parfois, Montreal</span>
+    </div>
+  </div>
+
+  <!-- Story -->
+  <div class="exhibit-story">
+    <p>a collaboration with Karim — combining both of our work to bring the community together. beautiful souls gathering at Galerie Parfois on boulevard St-Laurent with no agenda beyond looking at art, mingling, and having a good time.</p>
+  </div>
+
+  <!-- Gallery -->
+  <div class="exhibit-gallery">
+    <img src="../../assets/images/art/expo-montreal/poster.webp" alt="Expo Mirak & Natalie poster" loading="lazy">
+    <img src="../../assets/images/art/expo-montreal/18.webp" alt="Gallery Parfois entrance" loading="lazy">
+    <img src="../../assets/images/art/expo-montreal/19.webp" alt="gallery view with art on the walls" loading="lazy">
+    <img src="../../assets/images/art/expo-montreal/12.webp" alt="visitors viewing art on the gallery wall" loading="lazy">
+    <img src="../../assets/images/art/expo-montreal/5.webp" alt="guests looking at paintings" loading="lazy">
+    <img src="../../assets/images/art/expo-montreal/17.webp" alt="conversation in front of artwork" loading="lazy">
+    <img src="../../assets/images/art/expo-montreal/11.webp" alt="crowd mingling at the opening" loading="lazy">
+    <img src="../../assets/images/art/expo-montreal/6.webp" alt="Karim in front of paintings" loading="lazy">
+    <img src="../../assets/images/art/expo-montreal/10.webp" alt="Karim and a friend" loading="lazy">
+    <img src="../../assets/images/art/expo-montreal/7.webp" alt="friends embracing at the gallery" loading="lazy">
+    <img src="../../assets/images/art/expo-montreal/8.webp" alt="people socializing" loading="lazy">
+    <img src="../../assets/images/art/expo-montreal/14.webp" alt="young visitor admiring the art" loading="lazy">
+    <img src="../../assets/images/art/expo-montreal/9.webp" alt="kids drawing on the community wall" loading="lazy">
+    <img src="../../assets/images/art/expo-montreal/16.webp" alt="Karim drawing on the wall" loading="lazy">
+    <img src="../../assets/images/art/expo-montreal/2.webp" alt="the community drawing wall" loading="lazy">
+    <img src="../../assets/images/art/expo-montreal/15.webp" alt="snack table" loading="lazy">
+    <img src="../../assets/images/art/expo-montreal/13.webp" alt="baby at the exhibition" loading="lazy">
+    <img src="../../assets/images/art/expo-montreal/3.webp" alt="arriving at the gallery" loading="lazy">
+    <img src="../../assets/images/art/expo-montreal/4.webp" alt="coming up the stairs" loading="lazy">
+  </div>
+
+  <!-- Footer -->
+  <footer class="art-footer">
+    <nav class="art-footer-nav">
+      <a href="../../index.html">Home</a>
+      <a href="./">Exhibitions</a>
+      <a href="../index.html">Gallery</a>
+      <a href="../../tech/index.html">Tech</a>
+    </nav>
+    <span style="font-size: 0.75rem; color: #999;">
+      &copy; 2025 Natalie Slaba
+    </span>
+  </footer>
+
+  <!-- Lightbox Modal -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-content">
+      <button class="lightbox-close" aria-label="Close">&times;</button>
+      <button class="lightbox-nav lightbox-prev" aria-label="Previous">&lsaquo;</button>
+      <img src="" alt="">
+      <button class="lightbox-nav lightbox-next" aria-label="Next">&rsaquo;</button>
+      <div class="lightbox-caption">
+        <div class="lightbox-title"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = lightbox.querySelector('.lightbox-content > img');
+      const lightboxTitle = lightbox.querySelector('.lightbox-title');
+      const closeBtn = lightbox.querySelector('.lightbox-close');
+      const prevBtn = lightbox.querySelector('.lightbox-prev');
+      const nextBtn = lightbox.querySelector('.lightbox-next');
+
+      const images = Array.from(document.querySelectorAll('.exhibit-gallery img'));
+      let currentIndex = 0;
+
+      function openLightbox(index) {
+        currentIndex = index;
+        updateLightbox();
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      function updateLightbox() {
+        const img = images[currentIndex];
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt;
+        lightboxTitle.textContent = img.alt;
+      }
+
+      function showPrev() {
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        updateLightbox();
+      }
+
+      function showNext() {
+        currentIndex = (currentIndex + 1) % images.length;
+        updateLightbox();
+      }
+
+      images.forEach((img, index) => {
+        img.addEventListener('click', () => openLightbox(index));
+      });
+
+      closeBtn.addEventListener('click', closeLightbox);
+      prevBtn.addEventListener('click', showPrev);
+      nextBtn.addEventListener('click', showNext);
+
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) closeLightbox();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') showPrev();
+        if (e.key === 'ArrowRight') showNext();
+      });
+    });
+  </script>
+
+</body>
+</html>
