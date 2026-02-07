@@ -719,13 +719,37 @@
   <!-- Exhibitions -->
   <section class="art-exhibitions" id="exhibitions">
     <h2>exhibitions</h2>
+    <div class="exhibitions-intro">
+      <p>when i first started showing my work, i had no real sense of what i wanted from it. the impulse to make art has always been about expression — trying to communicate something i can't quite grasp with words yet, and wanting that idea to be seen, to connect with the world around me. early on i thought exhibiting was about putting yourself out there, standing alone in a spotlight. with time i realized it was less about me and more about the pure act of bringing people into the same room. getting them to look, to talk, to be present together. connection is the primary intention behind my art making — and the exhibitions became the clearest expression of that.</p>
+    </div>
     <div class="exhibitions-list">
 
-      <div class="exhibition-item">
-        <span class="exhibition-date">May 2019</span>
+      <div class="exhibition-item exhibition-item--has-gallery">
+        <span class="exhibition-date">May 22, 2019</span>
         <div class="exhibition-details">
           <h3>L'expo à Montreal avec Karim</h3>
-          <p>a very fun collaboration with Karim, combining both of our work to engage the community. all kinds of beautiful souls gathering to view art and socialize.</p>
+          <p>a collaboration with Karim — combining both of our work to bring the community together. beautiful souls gathering at Galerie Parfois on boulevard St-Laurent with no agenda beyond looking at art, mingling, and having a good time.</p>
+        </div>
+        <div class="exhibition-gallery">
+          <img src="../assets/images/art/expo-montreal/poster.webp" alt="Expo Mirak & Natalie poster" loading="lazy">
+          <img src="../assets/images/art/expo-montreal/18.webp" alt="Gallery Parfois entrance" loading="lazy">
+          <img src="../assets/images/art/expo-montreal/19.webp" alt="gallery view with art on the walls" loading="lazy">
+          <img src="../assets/images/art/expo-montreal/12.webp" alt="visitors viewing art on the gallery wall" loading="lazy">
+          <img src="../assets/images/art/expo-montreal/5.webp" alt="guests looking at paintings" loading="lazy">
+          <img src="../assets/images/art/expo-montreal/17.webp" alt="conversation in front of artwork" loading="lazy">
+          <img src="../assets/images/art/expo-montreal/11.webp" alt="crowd mingling at the opening" loading="lazy">
+          <img src="../assets/images/art/expo-montreal/6.webp" alt="Karim in front of paintings" loading="lazy">
+          <img src="../assets/images/art/expo-montreal/10.webp" alt="Karim and a friend" loading="lazy">
+          <img src="../assets/images/art/expo-montreal/7.webp" alt="friends embracing at the gallery" loading="lazy">
+          <img src="../assets/images/art/expo-montreal/8.webp" alt="people socializing" loading="lazy">
+          <img src="../assets/images/art/expo-montreal/14.webp" alt="young visitor admiring the art" loading="lazy">
+          <img src="../assets/images/art/expo-montreal/9.webp" alt="kids drawing on the community wall" loading="lazy">
+          <img src="../assets/images/art/expo-montreal/16.webp" alt="Karim drawing on the wall" loading="lazy">
+          <img src="../assets/images/art/expo-montreal/2.webp" alt="the community drawing wall" loading="lazy">
+          <img src="../assets/images/art/expo-montreal/15.webp" alt="snack table" loading="lazy">
+          <img src="../assets/images/art/expo-montreal/13.webp" alt="baby at the exhibition" loading="lazy">
+          <img src="../assets/images/art/expo-montreal/3.webp" alt="arriving at the gallery" loading="lazy">
+          <img src="../assets/images/art/expo-montreal/4.webp" alt="coming up the stairs" loading="lazy">
         </div>
       </div>
 
@@ -737,11 +761,21 @@
         </div>
       </div>
 
-      <div class="exhibition-item">
-        <span class="exhibition-date">October 2014</span>
+      <div class="exhibition-item exhibition-item--has-gallery">
+        <span class="exhibition-date">October 2, 2014</span>
         <div class="exhibition-details">
           <h3>First ART Exhibit @ Lux</h3>
-          <p>Lux Laundromat, Downtown Calgary. my debut exhibition — 21 of my pieces.</p>
+          <p>my first taste of exposure — 21 pieces hung above washing machines and dryers at Lux Laundromat in downtown Calgary. i had no idea what i was doing, just that i wanted my work out in the world. opening night was packed, string lights and all.</p>
+        </div>
+        <div class="exhibition-gallery">
+          <img src="../assets/images/art/first-exhibit/addition.webp" alt="Lux Laundromat exterior on opening night" loading="lazy">
+          <img src="../assets/images/art/first-exhibit/12.webp" alt="wide view of the laundromat gallery with string lights" loading="lazy">
+          <img src="../assets/images/art/first-exhibit/11.webp" alt="crowd viewing art at Lux Laundromat" loading="lazy">
+          <img src="../assets/images/art/first-exhibit/15.webp" alt="paintings hung above the washing machines" loading="lazy">
+          <img src="../assets/images/art/first-exhibit/3.webp" alt="framed paintings on the wall" loading="lazy">
+          <img src="../assets/images/art/first-exhibit/13.webp" alt="guests mingling among the artwork" loading="lazy">
+          <img src="../assets/images/art/first-exhibit/16.webp" alt="art displayed on the machines" loading="lazy">
+          <img src="../assets/images/art/first-exhibit/2.webp" alt="friends at the opening" loading="lazy">
         </div>
       </div>
 
@@ -924,6 +958,40 @@
         if (e.key === 'Escape') closeLightbox();
         if (e.key === 'ArrowLeft') showPrev();
         if (e.key === 'ArrowRight') showNext();
+      });
+
+      // Exhibition gallery lightbox
+      let expoMode = false;
+      let expoList = [];
+
+      const origUpdateLightbox = updateLightbox;
+      updateLightbox = function() {
+        if (expoMode) {
+          const img = expoList[currentIndex];
+          lightboxImg.src = img.src;
+          lightboxImg.alt = img.alt;
+          lightboxTitle.textContent = '';
+          lightboxMedium.textContent = '';
+        } else {
+          origUpdateLightbox();
+        }
+      };
+
+      const expoImages = document.querySelectorAll('.exhibition-gallery img');
+      expoImages.forEach((img, index) => {
+        img.addEventListener('click', () => {
+          expoMode = true;
+          expoList = Array.from(expoImages);
+          currentIndex = index;
+          updateLightbox();
+          lightbox.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+
+      // Reset expo mode when opening gallery items
+      items.forEach((item) => {
+        item.addEventListener('click', () => { expoMode = false; });
       });
     });
   </script>

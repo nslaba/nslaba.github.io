@@ -296,8 +296,20 @@
   text-transform: lowercase;
 }
 
+.exhibitions-intro {
+  max-width: 650px;
+  margin: 0 auto 3rem;
+  text-align: center;
+}
+
+.exhibitions-intro p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.9;
+}
+
 .exhibitions-list {
-  max-width: 700px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
@@ -328,6 +340,34 @@
   font-size: 0.9rem;
   color: var(--text-secondary);
   line-height: 1.7;
+}
+
+.exhibition-item--has-gallery {
+  grid-template-columns: 1fr;
+  max-width: none;
+}
+
+.exhibition-item--has-gallery .exhibition-date {
+  margin-bottom: 0.25rem;
+}
+
+.exhibition-gallery {
+  column-count: 3;
+  column-gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.exhibition-gallery img {
+  width: 100%;
+  display: block;
+  margin-bottom: 0.5rem;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.exhibition-gallery img:hover {
+  opacity: 0.85;
 }
 
 /* Thoughts & Experiments */
@@ -563,6 +603,10 @@
   .exhibition-item {
     grid-template-columns: 1fr;
     gap: 0.5rem;
+  }
+
+  .exhibition-gallery {
+    column-count: 2;
   }
 
   .art-footer {
