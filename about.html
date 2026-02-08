@@ -78,17 +78,21 @@
 
     /* Main Content */
     main {
-      max-width: 900px;
+      max-width: 1100px;
       margin: 0 auto;
       padding: 10rem 2rem 6rem;
     }
 
-    /* Intro Section */
+    /* Intro Section — side by side */
     .intro {
+      display: grid;
+      grid-template-columns: 1fr 260px;
+      gap: 3rem;
+      align-items: start;
       margin-bottom: 5rem;
     }
 
-    .intro h1 {
+    .intro-left h1 {
       font-family: 'Cormorant Garamond', serif;
       font-size: clamp(2.5rem, 6vw, 4rem);
       font-weight: 300;
@@ -98,25 +102,24 @@
     }
 
     .intro-text {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       color: rgba(255,255,255,0.7);
       line-height: 1.9;
-      max-width: 700px;
     }
 
     .intro-text p {
       margin-bottom: 1.5rem;
     }
 
-    /* Climbing Slideshow */
+    /* Climbing Slideshow — sidebar */
     .climbing {
-      margin-bottom: 5rem;
+      position: sticky;
+      top: 8rem;
     }
 
     .climbing-frame {
       position: relative;
-      width: 100%;
-      max-width: 500px;
+      width: 260px;
       aspect-ratio: 3 / 4;
       overflow: hidden;
       border-radius: 4px;
@@ -139,10 +142,11 @@
     }
 
     .climbing-caption {
-      margin-top: 1rem;
-      font-size: 0.95rem;
-      color: rgba(255,255,255,0.5);
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.4);
       font-style: italic;
+      line-height: 1.5;
     }
 
     /* Section styling */
@@ -312,6 +316,18 @@
         padding: 8rem 1.5rem 4rem;
       }
 
+      .intro {
+        grid-template-columns: 1fr;
+      }
+
+      .climbing {
+        position: static;
+      }
+
+      .climbing-frame {
+        width: 200px;
+      }
+
       .languages-grid {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -337,55 +353,55 @@
   <!-- Main Content -->
   <main>
 
-    <!-- Intro -->
+    <!-- Intro + Climbing sidebar -->
     <section class="intro">
-      <h1>Engineer, artist, polyglot</h1>
-      <div class="intro-text">
-        <p>
-          I build embedded systems by day and paint by night. Currently a software engineer at
-          Electronic Theatre Controls, working on real-time firmware under strict memory and
-          timing constraints. Previously at Visual Concepts (2K Games), where I developed
-          level-of-detail techniques for next-gen game engines.
-        </p>
-        <p>
-          My work sits at the intersection of technical rigor and creative exploration. I studied
-          Computer Science and Visual Arts at the University of Victoria, and spent a semester
-          doing AI research on simulating human movement through egocentric perception models.
-          I use visual art as a language for ideas that exist between or beyond words.
-        </p>
-        <p>
-          Growing up across continents shaped how I think about communication, identity, and
-          understanding. I speak six languages fluently, and that experience has made me
-          endlessly curious about how we construct meaning and connect across difference.
-        </p>
-        <p>
-          This site exists for a few reasons. Partly as a living portfolio - a place to gather
-          the scattered threads of what I've built over the years. Partly as a map for myself,
-          tracing the territories I've wandered through and looking for where they might one day
-          converge. And partly so that when friends and family ask what I mean by "graphics,"
-          I can finally point them somewhere instead of watching their eyes glaze over.
-        </p>
-        <p>
-          I've pulled myself in different directions over the years - logical, creative, cultural -
-          each path driven by curiosity about what it means to experience life from another angle.
-          What I keep coming back to is this: I care about people. About connection. About the way
-          understanding something new can shift how you see everything else. Education, in particular,
-          draws me - the kind that makes complex ideas click, that turns confusion into clarity.
-          If I can eventually weave these scattered skills into something that gives back, that's
-          the through-line I'm looking for.
-        </p>
+      <div class="intro-left">
+        <h1>Engineer, artist, polyglot</h1>
+        <div class="intro-text">
+          <p>
+            I build embedded systems by day and paint by night. Currently a software engineer at
+            Electronic Theatre Controls, working on real-time firmware under strict memory and
+            timing constraints. Previously at Visual Concepts (2K Games), where I developed
+            level-of-detail techniques for next-gen game engines.
+          </p>
+          <p>
+            My work sits at the intersection of technical rigor and creative exploration. I studied
+            Computer Science and Visual Arts at the University of Victoria, and spent a semester
+            doing AI research on simulating human movement through egocentric perception models.
+            I use visual art as a language for ideas that exist between or beyond words.
+          </p>
+          <p>
+            Growing up across continents shaped how I think about communication, identity, and
+            understanding. I speak six languages fluently, and that experience has made me
+            endlessly curious about how we construct meaning and connect across difference.
+          </p>
+          <p>
+            This site exists for a few reasons. Partly as a living portfolio - a place to gather
+            the scattered threads of what I've built over the years. Partly as a map for myself,
+            tracing the territories I've wandered through and looking for where they might one day
+            converge. And partly so that when friends and family ask what I mean by "graphics,"
+            I can finally point them somewhere instead of watching their eyes glaze over.
+          </p>
+          <p>
+            I've pulled myself in different directions over the years - logical, creative, cultural -
+            each path driven by curiosity about what it means to experience life from another angle.
+            What I keep coming back to is this: I care about people. About connection. About the way
+            understanding something new can shift how you see everything else. Education, in particular,
+            draws me - the kind that makes complex ideas click, that turns confusion into clarity.
+            If I can eventually weave these scattered skills into something that gives back, that's
+            the through-line I'm looking for.
+          </p>
+        </div>
       </div>
-    </section>
-
-    <!-- Climbing -->
-    <section class="climbing">
-      <div class="climbing-frame" id="climbing-slideshow">
-        <img src="assets/images/about/climbing/climbing-1.jpeg" alt="Climbing" class="active">
-        <img src="assets/images/about/climbing/climbing-2.jpeg" alt="Climbing" loading="lazy">
-        <img src="assets/images/about/climbing/climbing-3.jpeg" alt="Climbing" loading="lazy">
-        <img src="assets/images/about/climbing/climbing-4.jpeg" alt="Climbing" loading="lazy">
+      <div class="climbing">
+        <div class="climbing-frame" id="climbing-slideshow">
+          <img src="assets/images/about/climbing/climbing-1.jpeg" alt="Climbing" class="active">
+          <img src="assets/images/about/climbing/climbing-2.jpeg" alt="Climbing" loading="lazy">
+          <img src="assets/images/about/climbing/climbing-3.jpeg" alt="Climbing" loading="lazy">
+          <img src="assets/images/about/climbing/climbing-4.jpeg" alt="Climbing" loading="lazy">
+        </div>
+        <p class="climbing-caption">I enjoy being outside, whether skiing or climbing.</p>
       </div>
-      <p class="climbing-caption">I enjoy being outside, whether skiing or climbing.</p>
     </section>
 
     <!-- Languages -->
