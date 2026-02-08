@@ -108,6 +108,43 @@
       margin-bottom: 1.5rem;
     }
 
+    /* Climbing Slideshow */
+    .climbing {
+      margin-bottom: 5rem;
+    }
+
+    .climbing-frame {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      border-radius: 4px;
+      cursor: pointer;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .climbing-frame img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    .climbing-frame img.active {
+      opacity: 1;
+    }
+
+    .climbing-caption {
+      margin-top: 1rem;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.5);
+      font-style: italic;
+    }
+
     /* Section styling */
     .section {
       margin-bottom: 5rem;
@@ -340,6 +377,17 @@
       </div>
     </section>
 
+    <!-- Climbing -->
+    <section class="climbing">
+      <div class="climbing-frame" id="climbing-slideshow">
+        <img src="assets/images/about/climbing/climbing-1.jpeg" alt="Climbing" class="active">
+        <img src="assets/images/about/climbing/climbing-2.jpeg" alt="Climbing" loading="lazy">
+        <img src="assets/images/about/climbing/climbing-3.jpeg" alt="Climbing" loading="lazy">
+        <img src="assets/images/about/climbing/climbing-4.jpeg" alt="Climbing" loading="lazy">
+      </div>
+      <p class="climbing-caption">I enjoy being outside, whether skiing or climbing.</p>
+    </section>
+
     <!-- Languages -->
     <section class="section">
       <p class="section-label">// Languages</p>
@@ -438,6 +486,33 @@
     <a href="tech/index.html">Code</a>
     <a href="art/index.html">Art</a>
   </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const frame = document.getElementById('climbing-slideshow');
+      const imgs = frame.querySelectorAll('img');
+      let current = 0;
+      let timer;
+
+      function next() {
+        imgs[current].classList.remove('active');
+        current = (current + 1) % imgs.length;
+        imgs[current].classList.add('active');
+      }
+
+      function startTimer() {
+        timer = setInterval(next, 4000);
+      }
+
+      frame.addEventListener('click', () => {
+        clearInterval(timer);
+        next();
+        startTimer();
+      });
+
+      startTimer();
+    });
+  </script>
 
 </body>
 </html>
