@@ -90,70 +90,40 @@
    Landing Page
    ========================================================================== */
 
-/* Hero — text with image on hover (same pattern as gallery page) */
+/* Hero — image + text side by side */
 .exhibitions-hero {
-  min-height: 60vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3rem;
   align-items: center;
-  padding: 8rem 2rem 4rem;
-  text-align: center;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 7rem 2rem 4rem;
 }
 
-.exhibitions-hero-content {
-  max-width: 650px;
+.exhibitions-hero-image {
+  max-width: 280px;
 }
 
-.exhibitions-hero h2 {
+.exhibitions-hero-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.exhibitions-hero-text h2 {
   font-size: 0.8rem;
   font-weight: 400;
   letter-spacing: 0.2em;
   color: var(--text-muted);
   text-transform: lowercase;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
-.exhibitions-hero p {
+.exhibitions-hero-text p {
   font-size: 0.95rem;
   color: var(--text-secondary);
   line-height: 1.9;
-  max-width: 650px;
-}
-
-/* Hero swap effect */
-.hero-swap {
-  position: relative;
-  cursor: pointer;
-}
-
-.hero-text,
-.hero-image {
-  transition: opacity 0.4s ease;
-}
-
-.hero-image {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  width: auto;
-  height: 55vh;
-}
-
-.hero-image img {
-  height: 100%;
-  width: auto;
-  display: block;
-}
-
-.hero-swap:hover .hero-text {
-  opacity: 0;
-}
-
-.hero-swap:hover .hero-image {
-  opacity: 1;
 }
 
 /* Exhibit bands — stacked full-width rows */
@@ -463,8 +433,14 @@
   }
 
   .exhibitions-hero {
-    padding: 6rem 1.5rem 3rem;
-    min-height: 50vh;
+    grid-template-columns: 1fr;
+    padding: 5rem 1.5rem 2rem;
+    gap: 2rem;
+  }
+
+  .exhibitions-hero-image {
+    max-width: 200px;
+    margin: 0 auto;
   }
 
   .exhibitions-list {
