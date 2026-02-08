@@ -135,8 +135,8 @@
 
 /* Intro text below hero */
 .exhibitions-intro {
-  max-width: 650px;
-  margin: 4rem auto;
+  max-width: 600px;
+  margin: 5rem auto 4rem;
   text-align: center;
   padding: 0 2rem;
 }
@@ -147,11 +147,26 @@
   line-height: 1.9;
 }
 
+.exhibitions-intro p + p {
+  margin-top: 1rem;
+}
+
 /* Exhibit bands — stacked full-width rows */
 .exhibitions-list {
   max-width: 1000px;
   margin: 0 auto 4rem;
   padding: 0 2rem;
+}
+
+.exhibitions-list-heading {
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  text-transform: lowercase;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
 }
 
 .exhibit-band {
