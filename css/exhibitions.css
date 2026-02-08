@@ -214,6 +214,38 @@
   color: var(--text-muted);
 }
 
+/* Upcoming exhibit */
+.exhibit-row--upcoming {
+  cursor: default;
+}
+
+.exhibit-row--upcoming:hover {
+  background: transparent;
+}
+
+.exhibit-row--upcoming .exhibit-row-title {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.exhibit-row-soon {
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+}
+
+.exhibit-row-dates {
+  grid-column: 2;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
 /* ==========================================================================
    Individual Exhibit Pages
    ========================================================================== */
