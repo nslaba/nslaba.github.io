@@ -338,6 +338,21 @@
       border-radius: 4px;
     }
 
+    .difficulty-note {
+      display: inline-block;
+      margin-left: 0.25rem;
+      font-style: italic;
+      opacity: 0.7;
+    }
+
+    .card-prereq {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
     .card-title {
       font-size: 1.3rem;
       font-weight: 500;
@@ -488,7 +503,7 @@
     <div class="category-header">
       <p class="category-label">01 Educational</p>
       <h2 class="category-title">Learn by Playing</h2>
-      <p class="category-desc">Interactive explanations of math and graphics concepts. Drag, explore, understand.</p>
+      <p class="category-desc">Interactive explanations of math and graphics concepts. Drag, explore, understand. <span class="difficulty-note">Ordered easiest → hardest.</span></p>
     </div>
   </section>
 
@@ -504,6 +519,7 @@
           <span class="card-tag">Geometry</span>
         </div>
         <h3 class="card-title">Dot Product</h3>
+        <p class="card-prereq">Prerequisites: Vectors</p>
         <p class="card-desc">Learn by playing. An orbital game that teaches vector alignment and projection through thrust mechanics.</p>
         <div class="card-arrow">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -524,6 +540,7 @@
           <span class="card-tag">Animation</span>
         </div>
         <h3 class="card-title">Hermite Splines</h3>
+        <p class="card-prereq">Prerequisites: Vectors, Calculus</p>
         <p class="card-desc">Drag control points, adjust tangents, and discover why arc-length parameterization requires approximation.</p>
         <div class="card-arrow">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -544,6 +561,7 @@
           <span class="card-tag">Rendering</span>
         </div>
         <h3 class="card-title">Ray Tracer</h3>
+        <p class="card-prereq">Prerequisites: Geometry, Graphics fundamentals</p>
         <p class="card-desc">Cast rays, watch them bounce. Interactive explainer for ray-sphere intersection, Phong lighting, shadows, and reflections.</p>
         <div class="card-arrow">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -564,6 +582,7 @@
           <span class="card-tag">Linear Algebra</span>
         </div>
         <h3 class="card-title">Inverse Kinematics</h3>
+        <p class="card-prereq">Prerequisites: Linear Algebra, Physics</p>
         <p class="card-desc">Drag a target, watch the arm follow. The Jacobian method for robotic arm control - from math to intuition.</p>
         <div class="card-arrow">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
