@@ -156,11 +156,10 @@
   }
 }
 
-/* Intro text below hero — two columns */
+/* Intro text below hero */
 .exhibitions-intro {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2.5rem;
+  column-count: 2;
+  column-gap: 2.5rem;
   max-width: 1000px;
   margin: 5rem auto 4rem;
   padding: 0 2rem;
@@ -170,6 +169,10 @@
   font-size: 0.9rem;
   color: var(--text-secondary);
   line-height: 1.9;
+}
+
+.exhibitions-intro p + p {
+  margin-top: 1rem;
 }
 
 /* Exhibit bands — stacked full-width rows */
@@ -523,10 +526,9 @@
   }
 
   .exhibitions-intro {
-    grid-template-columns: 1fr;
+    column-count: 1;
     margin: 3rem auto;
     padding: 0 1.5rem;
-    gap: 1rem;
   }
 
   .exhibitions-list {
