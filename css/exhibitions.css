@@ -86,6 +86,29 @@
   color: var(--text-primary);
 }
 
+.art-footer-contact {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.art-footer-contact a {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+}
+
+.art-footer-contact a:hover {
+  color: var(--text-primary);
+}
+
+.art-footer-location {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
 /* ==========================================================================
    Landing Page
    ========================================================================== */
@@ -133,22 +156,20 @@
   }
 }
 
-/* Intro text below hero */
+/* Intro text below hero — two columns */
 .exhibitions-intro {
-  max-width: 600px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  max-width: 1000px;
   margin: 5rem auto 4rem;
-  text-align: center;
   padding: 0 2rem;
 }
 
 .exhibitions-intro p {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: var(--text-secondary);
   line-height: 1.9;
-}
-
-.exhibitions-intro p + p {
-  margin-top: 1rem;
 }
 
 /* Exhibit bands — stacked full-width rows */
@@ -482,8 +503,10 @@
   }
 
   .exhibitions-intro {
+    grid-template-columns: 1fr;
     margin: 3rem auto;
     padding: 0 1.5rem;
+    gap: 1rem;
   }
 
   .exhibitions-list {
