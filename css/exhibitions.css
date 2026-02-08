@@ -90,37 +90,58 @@
    Landing Page
    ========================================================================== */
 
-/* Hero — image + text side by side */
+/* Hero — full-page image with animated title */
 .exhibitions-hero {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 3rem;
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
   align-items: center;
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 7rem 2rem 4rem;
 }
 
-.exhibitions-hero-image {
-  max-width: 280px;
-}
-
-.exhibitions-hero-image img {
+.exhibitions-hero-bg {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: auto;
-  display: block;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  background: #000;
 }
 
-.exhibitions-hero-text h2 {
-  font-size: 0.8rem;
-  font-weight: 400;
-  letter-spacing: 0.2em;
-  color: var(--text-muted);
+.exhibitions-hero-overlay {
+  position: relative;
+  z-index: 1;
+}
+
+.exhibitions-hero-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  color: #fff;
   text-transform: lowercase;
-  margin-bottom: 1.5rem;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: heroFadeIn 1.2s ease forwards 0.3s;
 }
 
-.exhibitions-hero-text p {
+@keyframes heroFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Intro text below hero */
+.exhibitions-intro {
+  max-width: 650px;
+  margin: 4rem auto;
+  text-align: center;
+  padding: 0 2rem;
+}
+
+.exhibitions-intro p {
   font-size: 0.95rem;
   color: var(--text-secondary);
   line-height: 1.9;
@@ -432,15 +453,9 @@
     display: none;
   }
 
-  .exhibitions-hero {
-    grid-template-columns: 1fr;
-    padding: 5rem 1.5rem 2rem;
-    gap: 2rem;
-  }
-
-  .exhibitions-hero-image {
-    max-width: 200px;
-    margin: 0 auto;
+  .exhibitions-intro {
+    margin: 3rem auto;
+    padding: 0 1.5rem;
   }
 
   .exhibitions-list {
