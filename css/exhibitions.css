@@ -305,6 +305,26 @@
   margin-top: 0.75rem;
 }
 
+/* Two-column story layout */
+.exhibit-story--columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  max-width: 1000px;
+}
+
+.exhibit-story--columns p + p {
+  margin-top: 0;
+}
+
+.exhibit-story-closing {
+  grid-column: 1 / -1;
+  max-width: 600px;
+  margin-top: 0.5rem;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
 .exhibit-story a {
   color: var(--text-primary);
   text-decoration: underline;
@@ -528,6 +548,11 @@
   .exhibit-credit {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
+  }
+
+  .exhibit-story--columns {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
   }
 
   .exhibit-gallery {
