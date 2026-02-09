@@ -465,24 +465,22 @@
   border-color: var(--text-primary);
 }
 
-.shop-coming-soon {
-  padding: 2.5rem;
-  border: 1px dashed var(--border);
-  text-align: center;
-}
-
-.shop-coming-soon span {
-  font-size: 0.75rem;
-  font-weight: 500;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.shop-coming-soon p {
+.shop-store-link {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
   font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-top: 0.5rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  color: #fff;
+  background: var(--text-primary);
+  border: 1px solid var(--text-primary);
+  transition: all 0.2s;
+}
+
+.shop-store-link:hover {
+  background: transparent;
+  color: var(--text-primary);
 }
 
 /* Contact */
