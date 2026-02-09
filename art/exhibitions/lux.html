@@ -21,6 +21,11 @@
   <!-- Navigation -->
   <nav class="art-nav">
     <a href="../index.html" class="logo">Gallery</a>
+    <button class="art-nav-toggle" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
     <ul class="art-nav-links">
       <li><a href="../../index.html">Home</a></li>
       <li><a href="./">Exhibitions</a></li>
@@ -82,6 +87,21 @@
       </div>
     </div>
   </div>
+
+  <script>
+    const navToggle = document.querySelector('.art-nav-toggle');
+    const navLinks = document.querySelector('.art-nav-links');
+    navToggle.addEventListener('click', () => {
+      navToggle.classList.toggle('open');
+      navLinks.classList.toggle('open');
+    });
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navToggle.classList.remove('open');
+        navLinks.classList.remove('open');
+      });
+    });
+  </script>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {

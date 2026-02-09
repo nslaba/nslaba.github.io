@@ -21,6 +21,11 @@
   <!-- Navigation -->
   <nav class="art-nav">
     <a href="../index.html" class="logo">Home</a>
+    <button class="art-nav-toggle" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
     <ul class="art-nav-links">
       <li><a href="#gallery">Gallery</a></li>
       <li><a href="exhibitions/">Exhibitions</a></li>
@@ -872,6 +877,23 @@
   <!-- Category filter and lightbox script -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // Mobile nav toggle
+      const navToggle = document.querySelector('.art-nav-toggle');
+      const navLinks = document.querySelector('.art-nav-links');
+
+      navToggle.addEventListener('click', () => {
+        navToggle.classList.toggle('open');
+        navLinks.classList.toggle('open');
+      });
+
+      // Close menu when a link is tapped
+      navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          navToggle.classList.remove('open');
+          navLinks.classList.remove('open');
+        });
+      });
+
       // Category filter
       const buttons = document.querySelectorAll('.category-btn');
       const items = document.querySelectorAll('.gallery-item');
