@@ -347,10 +347,19 @@
 
     .card-prereq {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.6rem;
-      color: rgba(255,255,255,0.35);
+      font-size: 0.65rem;
+      color: var(--accent);
       letter-spacing: 0.05em;
       margin-bottom: 0.5rem;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.3s ease;
+    }
+
+    .project-card:hover .card-prereq {
+      max-height: 2rem;
+      opacity: 1;
     }
 
     .card-title {
