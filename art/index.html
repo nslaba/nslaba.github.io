@@ -846,6 +846,12 @@
     </div>
   </section>
 
+  <!-- Exhibit notification -->
+  <a href="exhibitions/" class="exhibit-notify" id="exhibitNotify">
+    <span class="exhibit-notify-text">Upcoming exhibit — Squamish Art Gallery, July–Sept 2025</span>
+    <button class="exhibit-notify-close" aria-label="Dismiss">&times;</button>
+  </a>
+
   <!-- Footer -->
   <footer class="art-footer">
     <nav class="art-footer-nav">
@@ -1004,6 +1010,16 @@
         if (e.key === 'ArrowRight') showNext();
       });
 
+    });
+
+      // Exhibit notification dismiss
+      const notify = document.getElementById('exhibitNotify');
+      const notifyClose = notify.querySelector('.exhibit-notify-close');
+      notifyClose.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        notify.classList.add('hidden');
+      });
     });
   </script>
 
