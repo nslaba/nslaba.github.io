@@ -1,0 +1,482 @@
+/* ==========================================================================
+   Shop Page
+   Standalone — same pattern as exhibitions.css
+   Organic, painterly feel with warm tones
+   ========================================================================== */
+
+/* Variables — same as art page */
+.art-page {
+  --bg-primary: #faf9f7;
+  --bg-surface: #ffffff;
+  --text-primary: #000000;
+  --text-secondary: #333333;
+  --text-muted: #666666;
+  --accent: #000000;
+  --border: #e0e0e0;
+}
+
+.art-page {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Navigation — same as art page */
+.art-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(250, 249, 247, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+.art-nav .logo {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+
+.art-nav-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.art-nav-links a {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.art-nav-links a:hover {
+  color: var(--text-primary);
+}
+
+/* Mobile menu toggle */
+.art-nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  width: 28px;
+  height: 20px;
+  position: relative;
+}
+
+.art-nav-toggle span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: var(--text-primary);
+  position: absolute;
+  left: 0;
+  transition: all 0.3s ease;
+}
+
+.art-nav-toggle span:nth-child(1) { top: 0; }
+.art-nav-toggle span:nth-child(2) { top: 9px; }
+.art-nav-toggle span:nth-child(3) { top: 18px; }
+
+.art-nav-toggle.open span:nth-child(1) {
+  top: 9px;
+  transform: rotate(45deg);
+}
+
+.art-nav-toggle.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.art-nav-toggle.open span:nth-child(3) {
+  top: 9px;
+  transform: rotate(-45deg);
+}
+
+/* Footer — same as art page */
+.art-footer {
+  padding: 2rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.art-footer-nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.art-footer-nav a {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.art-footer-nav a:hover {
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   Hero
+   ========================================================================== */
+
+.shop-hero {
+  position: relative;
+  min-height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.shop-hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.shop-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.shop-hero-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 2rem;
+}
+
+.shop-hero-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 300;
+  letter-spacing: 0.3em;
+  color: #fff;
+  text-transform: lowercase;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: shopHeroIn 1.2s ease forwards 0.3s;
+}
+
+.shop-hero-subtitle {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 1rem;
+  letter-spacing: 0.05em;
+  opacity: 0;
+  animation: shopHeroIn 1.2s ease forwards 0.6s;
+}
+
+@keyframes shopHeroIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   Texture Divider
+   ========================================================================== */
+
+.texture-divider {
+  width: 100%;
+  height: 4px;
+  background-image: url('../assets/images/art/chaos.webp');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.3;
+}
+
+/* ==========================================================================
+   Sections — shared
+   ========================================================================== */
+
+.shop-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+.shop-section h2 {
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  text-transform: lowercase;
+  margin-bottom: 0.75rem;
+}
+
+.shop-section-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  max-width: 550px;
+  margin-bottom: 2.5rem;
+}
+
+/* ==========================================================================
+   Originals Grid
+   ========================================================================== */
+
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.shop-item {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.3s, box-shadow 0.3s;
+}
+
+.shop-item:hover {
+  border-color: var(--text-muted);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.shop-item-img {
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+.shop-item-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.shop-item:hover .shop-item-img img {
+  transform: scale(1.03);
+}
+
+.shop-item-info {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.shop-item-title {
+  font-size: 0.9rem;
+  font-weight: 400;
+}
+
+.shop-item-detail {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.shop-item-btn {
+  display: inline-block;
+  margin-top: 0.75rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.shop-item-btn:hover {
+  background: var(--text-primary);
+  color: #fff;
+  border-color: var(--text-primary);
+}
+
+/* ==========================================================================
+   Prints & Merch
+   ========================================================================== */
+
+.shop-prints {
+  background: var(--bg-surface);
+}
+
+.shop-cta {
+  display: inline-block;
+  padding: 0.85rem 2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  color: #fff;
+  background: var(--text-primary);
+  border: 1px solid var(--text-primary);
+  transition: all 0.2s;
+}
+
+.shop-cta:hover {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   Inquiry Form
+   ========================================================================== */
+
+.shop-inquiry {
+  position: relative;
+}
+
+.shop-inquiry::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('../assets/images/art/biological_mark_making.webp');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.04;
+  pointer-events: none;
+}
+
+.shop-form {
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: relative;
+}
+
+.shop-form label {
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.shop-form input,
+.shop-form textarea {
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  transition: border-color 0.2s;
+}
+
+.shop-form input:focus,
+.shop-form textarea:focus {
+  outline: none;
+  border-color: var(--text-primary);
+}
+
+.shop-form textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.shop-form button {
+  align-self: flex-start;
+  padding: 0.7rem 2rem;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--text-primary);
+  border: 1px solid var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.shop-form button:hover {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+/* Hidden fields for formsubmit */
+.shop-form input[type="hidden"] {
+  display: none;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .art-nav {
+    padding: 1rem;
+  }
+
+  .art-nav-toggle {
+    display: block;
+  }
+
+  .art-nav-links {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(250, 249, 247, 0.98);
+    backdrop-filter: blur(10px);
+    flex-direction: column;
+    padding: 1rem 1.5rem 1.5rem;
+    gap: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .art-nav-links.open {
+    display: flex;
+  }
+
+  .art-nav-links a {
+    font-size: 1rem;
+    padding: 0.25rem 0;
+  }
+
+  .shop-hero {
+    min-height: 45vh;
+  }
+
+  .shop-section {
+    padding: 3rem 1.5rem;
+  }
+
+  .shop-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .art-footer {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .shop-grid {
+    grid-template-columns: 1fr;
+  }
+}
