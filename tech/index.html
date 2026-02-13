@@ -71,6 +71,47 @@
       opacity: 1;
     }
 
+    /* Mobile menu toggle */
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.25rem;
+      width: 28px;
+      height: 20px;
+      position: relative;
+      z-index: 101;
+    }
+
+    .nav-toggle span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: #fff;
+      position: absolute;
+      left: 0;
+      transition: all 0.3s ease;
+    }
+
+    .nav-toggle span:nth-child(1) { top: 0; }
+    .nav-toggle span:nth-child(2) { top: 9px; }
+    .nav-toggle span:nth-child(3) { top: 18px; }
+
+    .nav-toggle.open span:nth-child(1) {
+      top: 9px;
+      transform: rotate(45deg);
+    }
+
+    .nav-toggle.open span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .nav-toggle.open span:nth-child(3) {
+      top: 9px;
+      transform: rotate(-45deg);
+    }
+
     /* Hero */
     .hero {
       height: 100vh;
@@ -467,10 +508,36 @@
 
       .nav {
         padding: 1rem 1.5rem;
+        mix-blend-mode: normal;
+        background: rgba(5,5,8,0.95);
+        backdrop-filter: blur(10px);
+      }
+
+      .nav-toggle {
+        display: block;
       }
 
       .nav-links {
         display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(5,5,8,0.98);
+        backdrop-filter: blur(10px);
+        flex-direction: column;
+        padding: 1rem 1.5rem 1.5rem;
+        gap: 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-links a {
+        font-size: 1rem;
+        padding: 0.25rem 0;
       }
 
       .footer {
@@ -487,8 +554,15 @@
   <!-- Navigation -->
   <nav class="nav">
     <a href="../index.html" class="nav-logo">natalie slaba</a>
+    <button class="nav-toggle" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
     <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
       <li><a href="../art/index.html">Art</a></li>
+      <li><a href="../art/shop.html">Shop</a></li>
       <li><a href="../about.html">About</a></li>
     </ul>
   </nav>
@@ -791,6 +865,20 @@
 
     init();
     animate();
+
+    // Mobile nav toggle
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    navToggle.addEventListener('click', () => {
+      navToggle.classList.toggle('open');
+      navLinks.classList.toggle('open');
+    });
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navToggle.classList.remove('open');
+        navLinks.classList.remove('open');
+      });
+    });
 
     // Scroll-triggered reveal animations
     const observerOptions = {
