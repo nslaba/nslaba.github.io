@@ -10,598 +10,425 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cormorant+Garamond:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    :root {
-      --tech-accent: #6366f1;
-      --bg-dark: #050508;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      font-family: 'Inter', -apple-system, sans-serif;
-      background: var(--bg-dark);
-      color: #fff;
+      background: #050508;
       overflow: hidden;
+      font-family: 'Inter', sans-serif;
     }
 
-    /* Main container */
-    .home {
-      display: flex;
+    #canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100vw;
       height: 100vh;
     }
 
-    /* Header */
-    .header {
+    /* ---- Text overlay ---- */
+    .overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      padding: 2rem 3rem;
-      display: flex;
-      justify-content: center;
-      pointer-events: none;
-    }
-
-    .header-link {
-      pointer-events: auto;
-      text-decoration: none;
-      transition: opacity 0.3s;
-    }
-
-    .header-link:hover {
-      opacity: 0.8;
-    }
-
-    .header h1 {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
-      font-weight: 400;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.6);
-      opacity: 0;
-      animation: fadeIn 1s ease 0.5s forwards;
-    }
-
-    /* Panels */
-    .panel {
-      position: relative;
-      flex: 1;
+      inset: 0;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      cursor: pointer;
-      text-decoration: none;
-      transition: flex 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-      overflow: hidden;
-    }
-
-    .panel:hover {
-      flex: 1.3;
-    }
-
-    .home:has(.panel-tech:hover) .panel-art {
-      flex: 0.7;
-    }
-
-    .home:has(.panel-art:hover) .panel-tech {
-      flex: 0.7;
-    }
-
-    /* Tech Panel */
-    .panel-tech {
-      background: linear-gradient(135deg, #0a0a12 0%, #050510 100%);
-    }
-
-    .panel-tech .panel-canvas {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-    }
-
-    /* Art Panel */
-    .panel-art {
-      background: linear-gradient(135deg, #0f0a05 0%, #0a0805 100%);
-    }
-
-    .panel-art .panel-bg {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(3, 1fr);
-      gap: 4px;
-      padding: 4px;
-      opacity: 0.15;
-      transition: opacity 0.6s ease;
-    }
-
-    .panel-art:hover .panel-bg {
-      opacity: 0.3;
-    }
-
-    .panel-bg img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    /* Panel Content */
-    .panel-content {
-      position: relative;
+      pointer-events: none;
       z-index: 10;
-      text-align: center;
-      padding: 2rem;
-      max-width: 500px;
     }
 
-    .panel-title {
-      font-size: clamp(2.5rem, 6vw, 4rem);
+    .welcome {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 4vw, 3.2rem);
       font-weight: 300;
-      line-height: 1.1;
+      font-style: italic;
+      color: rgba(255, 255, 255, 0.92);
+      text-shadow: 0 2px 40px rgba(0,0,0,0.9), 0 0 80px rgba(0,0,0,0.6);
+      letter-spacing: 0.04em;
       margin-bottom: 2rem;
       opacity: 0;
-      transform: translateY(30px);
-      animation: fadeUp 0.8s ease 0.8s forwards;
+      animation: textIn 2.5s ease 1.8s forwards;
     }
 
-    .panel-tech .panel-title {
-      font-family: 'Inter', sans-serif;
-      letter-spacing: -0.02em;
-      color: #fff;
-    }
-
-    .panel-art .panel-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 300;
-      color: #fff;
-      letter-spacing: 0.02em;
-    }
-
-    /* Enter button */
-    .panel-enter {
-      display: inline-flex;
+    .mediums {
+      display: flex;
       align-items: center;
-      gap: 0.75rem;
-      padding: 1rem 2rem;
+      gap: 1rem;
+      opacity: 0;
+      animation: textIn 2.5s ease 2.6s forwards;
+    }
+
+    .mediums-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      text-shadow: 0 1px 15px rgba(0,0,0,0.9);
+    }
+
+    .medium-link {
+      pointer-events: auto;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+      font-weight: 400;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      text-shadow: 0 2px 30px rgba(0,0,0,0.9);
+      transition: all 0.4s ease;
+      letter-spacing: 0.05em;
+      padding: 0.5rem 1rem;
+    }
+
+    .medium-link:hover {
+      color: #fff;
+      text-shadow: 0 0 40px rgba(255,255,255,0.25), 0 2px 30px rgba(0,0,0,0.9);
+    }
+
+    .medium-sep {
+      color: rgba(255,255,255,0.15);
+      font-size: 1rem;
+      text-shadow: 0 1px 10px rgba(0,0,0,0.9);
+    }
+
+    /* ---- Name ---- */
+    .name {
+      position: fixed;
+      top: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      text-decoration: none;
+      opacity: 0;
+      animation: textIn 2s ease 0.5s forwards;
+    }
+
+    .name h1 {
+      font-family: 'JetBrains Mono', monospace;
       font-size: 0.8rem;
-      font-weight: 500;
+      font-weight: 400;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      text-decoration: none;
-      border: 1px solid;
-      background: transparent;
-      transition: all 0.4s ease;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeUp 0.8s ease 1s forwards;
+      color: rgba(255,255,255,0.45);
+      text-shadow: 0 1px 15px rgba(0,0,0,0.7);
+      transition: color 0.3s;
     }
 
-    .panel-tech .panel-enter {
-      font-family: 'JetBrains Mono', monospace;
-      color: rgba(255,255,255,0.8);
-      border-color: rgba(255, 255, 255, 0.3);
+    .name:hover h1 {
+      color: rgba(255,255,255,0.85);
     }
 
-    .panel-tech .panel-enter:hover {
-      background: rgba(255,255,255,0.1);
-      color: #fff;
-      border-color: rgba(255, 255, 255, 0.5);
-      box-shadow: 0 0 30px rgba(255, 255, 255, 0.15);
-      transform: translateY(-2px);
-    }
-
-    .panel-art .panel-enter {
-      font-family: 'Cormorant Garamond', serif;
-      font-weight: 500;
-      color: #d97706;
-      border-color: rgba(217, 119, 6, 0.6);
-      letter-spacing: 0.1em;
-    }
-
-    .panel-art .panel-enter:hover {
-      background: #d97706;
-      color: #fff;
-      border-color: #d97706;
-      box-shadow: 0 0 50px rgba(217, 119, 6, 0.5);
-      transform: translateY(-2px);
-    }
-
-    .panel-enter svg {
-      width: 18px;
-      height: 18px;
-      transition: transform 0.3s ease;
-    }
-
-    .panel-enter:hover svg {
-      transform: translateX(4px);
-    }
-
-    /* Divider */
-    .divider {
-      position: fixed;
-      left: 50%;
-      top: 0;
-      bottom: 0;
-      width: 1px;
-      background: linear-gradient(
-        to bottom,
-        transparent 10%,
-        rgba(255,255,255,0.15) 30%,
-        rgba(255,255,255,0.3) 50%,
-        rgba(255,255,255,0.15) 70%,
-        transparent 90%
-      );
-      transform: translateX(-50%);
-      z-index: 50;
-      pointer-events: none;
-    }
-
-    .divider::before {
-      content: '';
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: 8px;
-      height: 8px;
-      background: #fff;
-      border-radius: 50%;
-      box-shadow: 0 0 20px rgba(255,255,255,0.5);
-    }
-
-    /* About link */
+    /* ---- Bottom links ---- */
     .about-link {
       position: fixed;
       bottom: 2rem;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 100;
+      z-index: 20;
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.7rem;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.25);
       text-decoration: none;
       transition: color 0.3s;
+      text-shadow: 0 1px 10px rgba(0,0,0,0.7);
       opacity: 0;
-      animation: fadeIn 1s ease 2s forwards;
+      animation: textIn 2s ease 3.2s forwards;
     }
 
     .about-link:hover {
-      color: #fff;
+      color: rgba(255,255,255,0.8);
     }
 
-    /* Exhibit notification */
-    .exhibit-notify {
+    .hint {
       position: fixed;
-      top: 2rem;
-      right: 2rem;
-      z-index: 90;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0;
-      background: rgba(255,255,255,0.1);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 6px;
+      bottom: 4.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem;
+      color: rgba(255,255,255,0.12);
+      letter-spacing: 0.1em;
+      pointer-events: none;
       opacity: 0;
-      transform: translateY(-10px);
-      animation: notifySlideIn 0.6s ease 2.5s forwards, notifyPulse 2s ease 3.1s 3;
+      animation: textIn 2s ease 4s forwards;
     }
 
-    .exhibit-notify:hover {
-      background: rgba(255,255,255,0.15);
-      border-color: rgba(255,255,255,0.25);
-    }
-
-    .exhibit-notify.hidden {
-      display: none;
-    }
-
-    .exhibit-notify-text {
-      display: block;
-      padding: 0.75rem 0 0.75rem 1.25rem;
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.85);
-      letter-spacing: 0.02em;
-      text-decoration: none;
-    }
-
-    .exhibit-notify-text:hover {
-      color: #fff;
-    }
-
-    .exhibit-notify-close {
-      background: none;
-      border: none;
-      color: rgba(255,255,255,0.4);
-      font-size: 1.2rem;
-      cursor: pointer;
-      padding: 0.75rem 1rem;
-      line-height: 1;
-      transition: color 0.2s;
-    }
-
-    .exhibit-notify-close:hover {
-      color: #fff;
-    }
-
-    @keyframes notifySlideIn {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes notifyPulse {
-      0%, 100% { border-color: rgba(255,255,255,0.15); }
-      50% { border-color: rgba(255,255,255,0.4); box-shadow: 0 0 15px rgba(255,255,255,0.08); }
-    }
-
-    /* Animations */
-    @keyframes fadeIn {
+    @keyframes textIn {
       to { opacity: 1; }
     }
 
-    @keyframes fadeUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Responsive */
-    @media (max-width: 900px) {
-      .home {
-        flex-direction: column;
-      }
-
-      .panel:hover {
-        flex: 1.2;
-      }
-
-      .home:has(.panel-tech:hover) .panel-art,
-      .home:has(.panel-art:hover) .panel-tech {
-        flex: 0.8;
-      }
-
-      .divider {
-        left: 0;
-        right: 0;
-        top: 50%;
-        bottom: auto;
-        width: 100%;
-        height: 1px;
-        background: linear-gradient(
-          to right,
-          transparent 10%,
-          rgba(255,255,255,0.15) 30%,
-          rgba(255,255,255,0.3) 50%,
-          rgba(255,255,255,0.15) 70%,
-          transparent 90%
-        );
-        transform: translateY(-50%);
-      }
-
-      .divider::before {
-        display: none;
-      }
-
-      .panel-title {
-        font-size: clamp(2rem, 10vw, 3.5rem);
-      }
-
-      .header {
-        padding: 1.5rem;
-      }
+    @media (max-width: 600px) {
+      .mediums { flex-direction: column; gap: 0.25rem; }
+      .medium-sep { display: none; }
+      .name { top: 1.25rem; }
+      .name h1 { font-size: 0.7rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Header -->
-  <header class="header">
-    <a href="about.html" class="header-link"><h1>Natalie Slaba</h1></a>
-  </header>
+  <canvas id="canvas"></canvas>
 
-  <!-- Main -->
-  <main class="home">
+  <a href="about.html" class="name"><h1>Natalie Slaba</h1></a>
 
-    <!-- Tech Panel -->
-    <a href="tech/index.html" class="panel panel-tech">
-      <canvas class="panel-canvas" id="techCanvas"></canvas>
-      <div class="panel-content">
-        <h2 class="panel-title">Tech</h2>
-        <span class="panel-enter">
-          Explore Projects
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-          </svg>
-        </span>
-      </div>
-    </a>
-
-    <!-- Divider -->
-    <div class="divider"></div>
-
-    <!-- Art Panel -->
-    <a href="art/index.html" class="panel panel-art">
-      <div class="panel-bg">
-        <img src="assets/images/art/chaos.webp" alt="">
-        <img src="assets/images/art/ballerinas.webp" alt="">
-        <img src="assets/images/art/birds_eye_view.webp" alt="">
-        <img src="assets/images/art/bourgeois_living.webp" alt="">
-        <img src="assets/images/art/gentleman_in_disguise.webp" alt="">
-        <img src="assets/images/art/highliner.webp" alt="">
-        <img src="assets/images/art/hands.webp" alt="">
-        <img src="assets/images/art/fishing.webp" alt="">
-        <img src="assets/images/art/fields.webp" alt="">
-      </div>
-      <div class="panel-content">
-        <h2 class="panel-title">Art</h2>
-        <span class="panel-enter">
-          View Gallery
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-          </svg>
-        </span>
-      </div>
-    </a>
-
-  </main>
-
-  <!-- Exhibit notification -->
-  <div class="exhibit-notify" id="exhibitNotify">
-    <a href="art/exhibitions/" class="exhibit-notify-text">Upcoming exhibit — Squamish Art Gallery, July–Sept 2025</a>
-    <button class="exhibit-notify-close" aria-label="Dismiss">&times;</button>
+  <div class="overlay">
+    <p class="welcome">welcome to my canvas</p>
+    <div class="mediums">
+      <span class="mediums-label">mediums:</span>
+      <a href="tech/index.html" class="medium-link">Tech</a>
+      <span class="medium-sep">&middot;</span>
+      <a href="art/index.html" class="medium-link">Art</a>
+    </div>
   </div>
 
-  <!-- About Link -->
+  <span class="hint">touch the canvas</span>
   <a href="about.html" class="about-link">About</a>
 
   <script>
-    // Tech panel particle system
-    const canvas = document.getElementById('techCanvas');
+    // ----------------------------------------------------------------
+    // Particle system — image texels with water-like physics
+    // Adapted from projects/Vulkan/vulkan.html
+    // ----------------------------------------------------------------
+
+    const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
 
     let particles = [];
-    let mouse = { x: null, y: null };
-    const PARTICLE_COUNT = 60;
-    const CONNECTION_DISTANCE = 120;
+    let mouse = { x: null, y: null, prevX: null, prevY: null };
+    let animationId;
+    const startTime = performance.now();
 
+    // --- Tuning ---
+    const TARGET_PARTICLES = 50000;
+    const PARTICLE_SIZE    = 2;
+    const RETURN_SPEED     = 0.012;   // soft spring — slow, fluid return
+    const FRICTION         = 0.96;    // high value = low drag = more glide
+    const MOUSE_RADIUS     = 100;
+    const MOUSE_FORCE      = 3.5;
+
+    // --- Canvas setup ---
     function resize() {
-      const panel = canvas.parentElement;
-      canvas.width = panel.offsetWidth;
-      canvas.height = panel.offsetHeight;
+      canvas.width  = window.innerWidth  * devicePixelRatio;
+      canvas.height = window.innerHeight * devicePixelRatio;
+      ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
     }
 
+    // --- Particle ---
     class Particle {
-      constructor() {
-        this.reset();
+      constructor(homeX, homeY, r, g, b) {
+        // start scattered for the intro materialisation
+        this.x  = Math.random() * window.innerWidth;
+        this.y  = Math.random() * window.innerHeight;
+        this.homeX = homeX;
+        this.homeY = homeY;
+        this.vx = (Math.random() - 0.5) * 1.5;
+        this.vy = (Math.random() - 0.5) * 1.5;
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        // per-particle variation → organic feel
+        this.returnK  = RETURN_SPEED * (0.7 + Math.random() * 0.6);
+        this.friction  = FRICTION + (Math.random() - 0.5) * 0.015;
+        this.phase     = Math.random() * Math.PI * 2;   // for idle drift
       }
 
-      reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.vx = (Math.random() - 0.5) * 0.3;
-        this.vy = (Math.random() - 0.5) * 0.3;
-        this.radius = Math.random() * 2 + 0.5;
-        this.opacity = Math.random() * 0.4 + 0.1;
-      }
+      update(t) {
+        // --- mouse repulsion (water displacement) ---
+        if (mouse.x !== null) {
+          const dx = this.x - mouse.x;
+          const dy = this.y - mouse.y;
+          const dist2 = dx * dx + dy * dy;
+          const radius2 = MOUSE_RADIUS * MOUSE_RADIUS;
 
-      update() {
+          if (dist2 < radius2 && dist2 > 1) {
+            const dist  = Math.sqrt(dist2);
+            const force = ((MOUSE_RADIUS - dist) / MOUSE_RADIUS) * MOUSE_FORCE;
+            const nx = dx / dist;
+            const ny = dy / dist;
+            this.vx += nx * force;
+            this.vy += ny * force;
+
+            // inherit mouse velocity → "dragging through water"
+            if (mouse.prevX !== null) {
+              const mvx = (mouse.x - mouse.prevX) * 0.25;
+              const mvy = (mouse.y - mouse.prevY) * 0.25;
+              this.vx += mvx * force * 0.4;
+              this.vy += mvy * force * 0.4;
+            }
+          }
+        }
+
+        // --- spring back home ---
+        this.vx += (this.homeX - this.x) * this.returnK;
+        this.vy += (this.homeY - this.y) * this.returnK;
+
+        // --- friction (viscosity) ---
+        this.vx *= this.friction;
+        this.vy *= this.friction;
+
+        // --- subtle idle drift (water is never still) ---
+        this.vx += Math.sin(t * 0.4 + this.phase) * 0.003;
+        this.vy += Math.cos(t * 0.3 + this.phase * 1.3) * 0.003;
+
         this.x += this.vx;
         this.y += this.vy;
+      }
+    }
 
-        // Mouse interaction
-        if (mouse.x !== null) {
-          const dx = mouse.x - this.x;
-          const dy = mouse.y - this.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
+    // --- Load painting & spawn particles ---
+    function loadImage(src) {
+      const img = new Image();
+      img.crossOrigin = 'Anonymous';
 
-          if (dist < 150) {
-            const force = (150 - dist) / 150;
-            this.vx -= (dx / dist) * force * 0.015;
-            this.vy -= (dy / dist) * force * 0.015;
-          }
+      img.onload = function () {
+        particles = [];
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+
+        // cover-fit the image to the viewport
+        const imgAspect    = img.width / img.height;
+        const canvasAspect = vw / vh;
+        let drawW, drawH, offsetX, offsetY;
+
+        if (imgAspect > canvasAspect) {
+          drawH = vh; drawW = vh * imgAspect;
+          offsetX = (vw - drawW) / 2; offsetY = 0;
+        } else {
+          drawW = vw; drawH = vw / imgAspect;
+          offsetX = 0; offsetY = (vh - drawH) / 2;
         }
 
-        // Friction
-        this.vx *= 0.99;
-        this.vy *= 0.99;
+        // dynamic sample gap so particle count stays near TARGET
+        const sampleGap = Math.max(1, Math.round(Math.sqrt(
+          (img.width * img.height) / TARGET_PARTICLES
+        )));
 
-        // Bounds
-        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-      }
+        // read pixels
+        const tmp    = document.createElement('canvas');
+        const tmpCtx = tmp.getContext('2d');
+        tmp.width  = img.width;
+        tmp.height = img.height;
+        tmpCtx.drawImage(img, 0, 0);
+        const { data } = tmpCtx.getImageData(0, 0, img.width, img.height);
 
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(99, 102, 241, ${this.opacity})`;
-        ctx.fill();
-      }
-    }
+        for (let y = 0; y < img.height; y += sampleGap) {
+          for (let x = 0; x < img.width; x += sampleGap) {
+            const px = offsetX + (x / img.width)  * drawW;
+            const py = offsetY + (y / img.height) * drawH;
+            if (px < -5 || px > vw + 5 || py < -5 || py > vh + 5) continue;
 
-    function init() {
-      resize();
-      particles = [];
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        particles.push(new Particle());
-      }
-    }
+            const i = (y * img.width + x) * 4;
+            const r = data[i], g = data[i+1], b = data[i+2], a = data[i+3];
+            if (a < 128) continue;
 
-    function drawConnections() {
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < CONNECTION_DISTANCE) {
-            const opacity = (1 - dist / CONNECTION_DISTANCE) * 0.1;
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(99, 102, 241, ${opacity})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
+            particles.push(new Particle(px, py, r, g, b));
           }
         }
-      }
+      };
+
+      img.src = src;
     }
+
+    // --- Render loop ---
+    // batch-draw by colour is expensive to sort; instead use imageData buffer
+    // for maximum performance with tens of thousands of particles.
 
     function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const t = (performance.now() - startTime) * 0.001;
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
 
-      particles.forEach(p => {
-        p.update();
-        p.draw();
-      });
+      // clear
+      ctx.clearRect(0, 0, vw, vh);
 
-      drawConnections();
-      requestAnimationFrame(animate);
+      // create an imageData buffer at device-pixel size
+      const w = canvas.width;
+      const h = canvas.height;
+      const imgData = ctx.createImageData(w, h);
+      const buf = imgData.data;
+      const dpr = devicePixelRatio;
+      const size = Math.round(PARTICLE_SIZE * dpr);
+
+      for (const p of particles) {
+        p.update(t);
+
+        // plot into imageData (much faster than fillRect per particle)
+        const sx = Math.round(p.x * dpr);
+        const sy = Math.round(p.y * dpr);
+
+        for (let dy = 0; dy < size; dy++) {
+          const py = sy + dy;
+          if (py < 0 || py >= h) continue;
+          const rowOff = py * w;
+          for (let dx = 0; dx < size; dx++) {
+            const px = sx + dx;
+            if (px < 0 || px >= w) continue;
+            const idx = (rowOff + px) * 4;
+            buf[idx]     = p.r;
+            buf[idx + 1] = p.g;
+            buf[idx + 2] = p.b;
+            buf[idx + 3] = 255;
+          }
+        }
+      }
+
+      ctx.putImageData(imgData, 0, 0);
+
+      // store previous mouse position for velocity calc
+      mouse.prevX = mouse.x;
+      mouse.prevY = mouse.y;
+
+      animationId = requestAnimationFrame(animate);
     }
 
-    // Events
-    window.addEventListener('resize', resize);
-
-    canvas.parentElement.addEventListener('mousemove', (e) => {
-      const rect = canvas.getBoundingClientRect();
-      mouse.x = e.clientX - rect.left;
-      mouse.y = e.clientY - rect.top;
+    // --- Events ---
+    window.addEventListener('mousemove', e => {
+      mouse.prevX = mouse.x;
+      mouse.prevY = mouse.y;
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+    window.addEventListener('mouseleave', () => {
+      mouse.x = mouse.y = mouse.prevX = mouse.prevY = null;
     });
 
-    canvas.parentElement.addEventListener('mouseleave', () => {
-      mouse.x = null;
-      mouse.y = null;
+    // touch
+    canvas.addEventListener('touchstart', e => {
+      e.preventDefault();
+      const t = e.touches[0];
+      mouse.x = t.clientX;  mouse.y = t.clientY;
+    }, { passive: false });
+    canvas.addEventListener('touchmove', e => {
+      e.preventDefault();
+      mouse.prevX = mouse.x; mouse.prevY = mouse.y;
+      const t = e.touches[0];
+      mouse.x = t.clientX;  mouse.y = t.clientY;
+    }, { passive: false });
+    canvas.addEventListener('touchend', () => {
+      mouse.x = mouse.y = mouse.prevX = mouse.prevY = null;
     });
 
-    // Init
-    init();
+    // resize → reload
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        resize();
+        loadImage('assets/images/art/feet.webp');
+      }, 250);
+    });
+
+    // --- Boot ---
+    resize();
+    loadImage('assets/images/art/feet.webp');
     animate();
-  </script>
-
-  <script>
-    // Exhibit notification dismiss
-    const notify = document.getElementById('exhibitNotify');
-    const notifyCloseBtn = notify.querySelector('.exhibit-notify-close');
-    notifyCloseBtn.addEventListener('click', () => {
-      notify.classList.add('hidden');
-    });
   </script>
 
 </body>
