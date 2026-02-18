@@ -312,12 +312,13 @@
         const canvasAspect = vw / vh;
         let drawW, drawH, offsetX, offsetY;
 
+        // contain-fit: show entire painting, black space on sides
         if (imgAspect > canvasAspect) {
-          drawH = vh; drawW = vh * imgAspect;
-          offsetX = (vw - drawW) / 2; offsetY = 0;
-        } else {
           drawW = vw; drawH = vw / imgAspect;
           offsetX = 0; offsetY = (vh - drawH) / 2;
+        } else {
+          drawH = vh; drawW = vh * imgAspect;
+          offsetX = (vw - drawW) / 2; offsetY = 0;
         }
 
         const sampleGap = Math.max(1, Math.round(Math.sqrt(
