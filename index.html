@@ -333,19 +333,10 @@
         tmpCtx.drawImage(img, 0, 0);
         const { data } = tmpCtx.getImageData(0, 0, img.width, img.height);
 
-        // Crop margins — skip the white paper border of the source image
-        const crop = 0.04;  // trim 4% from each edge
-        const x0 = Math.floor(img.width  * crop);
-        const y0 = Math.floor(img.height * crop);
-        const x1 = Math.floor(img.width  * (1 - crop));
-        const y1 = Math.floor(img.height * (1 - crop));
-        const cropW = x1 - x0;
-        const cropH = y1 - y0;
-
-        for (let y = y0; y < y1; y += sampleGap) {
-          for (let x = x0; x < x1; x += sampleGap) {
-            const px = offsetX + ((x - x0) / cropW) * drawW;
-            const py = offsetY + ((y - y0) / cropH) * drawH;
+        for (let y = 0; y < img.height; y += sampleGap) {
+          for (let x = 0; x < img.width; x += sampleGap) {
+            const px = offsetX + (x / img.width)  * drawW;
+            const py = offsetY + (y / img.height) * drawH;
             if (px < -5 || px > vw + 5 || py < -5 || py > vh + 5) continue;
 
             const i = (y * img.width + x) * 4;
@@ -436,13 +427,13 @@
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
         resize();
-        loadImage('assets/images/art/feet.webp');
+        loadImage('assets/images/art/feet_cropped.jpg');
       }, 250);
     });
 
     // --- Boot ---
     resize();
-    loadImage('assets/images/art/feet.webp');
+    loadImage('assets/images/art/feet_cropped.jpg');
     animate();
   </script>
 
