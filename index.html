@@ -333,22 +333,24 @@
         tmpCtx.drawImage(img, 0, 0);
         const { data } = tmpCtx.getImageData(0, 0, img.width, img.height);
 
-        for (let y = 0; y < img.height; y += sampleGap) {
-          for (let x = 0; x < img.width; x += sampleGap) {
-            const px = offsetX + (x / img.width)  * drawW;
-            const py = offsetY + (y / img.height) * drawH;
+        // Crop margins — skip the white paper border of the source image
+        const crop = 0.04;  // trim 4% from each edge
+        const x0 = Math.floor(img.width  * crop);
+        const y0 = Math.floor(img.height * crop);
+        const x1 = Math.floor(img.width  * (1 - crop));
+        const y1 = Math.floor(img.height * (1 - crop));
+        const cropW = x1 - x0;
+        const cropH = y1 - y0;
+
+        for (let y = y0; y < y1; y += sampleGap) {
+          for (let x = x0; x < x1; x += sampleGap) {
+            const px = offsetX + ((x - x0) / cropW) * drawW;
+            const py = offsetY + ((y - y0) / cropH) * drawH;
             if (px < -5 || px > vw + 5 || py < -5 || py > vh + 5) continue;
 
             const i = (y * img.width + x) * 4;
-            let r = data[i], g = data[i+1], b = data[i+2], a = data[i+3];
+            const r = data[i], g = data[i+1], b = data[i+2], a = data[i+3];
             if (a < 128) continue;
-
-            // Fade out bright pixels near edges (kills white paper border)
-            const edgeX = Math.min(px, vw - px) / vw;
-            const edgeY = Math.min(py, vh - py) / vh;
-            const edge  = Math.min(edgeX, edgeY);
-            const brightness = (r + g + b) / 765;
-            if (brightness > 0.65 && edge < 0.12) continue;
 
             particles.push(new Particle(px, py, r, g, b));
           }
