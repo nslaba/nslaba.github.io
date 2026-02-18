@@ -312,14 +312,15 @@
         const canvasAspect = vw / vh;
         let drawW, drawH, offsetX, offsetY;
 
-        // contain-fit: show entire painting, black space on sides
+        // contain-fit with padding: show entire painting, black space around
+        const scale = 0.85;
         if (imgAspect > canvasAspect) {
-          drawW = vw; drawH = vw / imgAspect;
-          offsetX = 0; offsetY = (vh - drawH) / 2;
+          drawW = vw * scale; drawH = drawW / imgAspect;
         } else {
-          drawH = vh; drawW = vh * imgAspect;
-          offsetX = (vw - drawW) / 2; offsetY = 0;
+          drawH = vh * scale; drawW = drawH * imgAspect;
         }
+        offsetX = (vw - drawW) / 2;
+        offsetY = (vh - drawH) / 2;
 
         const sampleGap = Math.max(1, Math.round(Math.sqrt(
           (img.width * img.height) / TARGET_PARTICLES
