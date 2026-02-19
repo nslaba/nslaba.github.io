@@ -998,6 +998,15 @@ Total length ≈ sum of all segment lengths</pre>
       };
     }
 
+    function getTouchPos(e) {
+      const touch = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: touch.clientX - rect.left,
+        y: touch.clientY - rect.top
+      };
+    }
+
     function findNearestElement(pos, threshold = 20) {
       // Check tangent handles first (they're on top)
       if (showTangents) {
@@ -1060,6 +1069,32 @@ Total length ≈ sum of all segment lengths</pre>
       controlPoints.push(pos);
       generateTangents();
     });
+
+    // Touch support
+    canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      const pos = getTouchPos(e);
+      dragging = findNearestElement(pos, 30); // Larger threshold for fingers
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (!dragging) return;
+      const pos = getTouchPos(e);
+
+      if (dragging.type === 'point') {
+        controlPoints[dragging.index] = pos;
+      } else if (dragging.type === 'tangent') {
+        const p = controlPoints[dragging.index];
+        tangents[dragging.index] = {
+          x: (pos.x - p.x) * dragging.side,
+          y: (pos.y - p.y) * dragging.side
+        };
+      }
+    }, { passive: false });
+
+    canvas.addEventListener('touchend', () => { dragging = null; });
+    canvas.addEventListener('touchcancel', () => { dragging = null; });
 
     // Controls
     document.getElementById('toggleTangents').addEventListener('click', (e) => {

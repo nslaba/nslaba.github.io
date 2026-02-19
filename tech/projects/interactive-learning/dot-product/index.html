@@ -330,12 +330,18 @@
         let targetReached = false;
         let showProjection = false;
         let projectionAlpha = 0;
+        let scaleFactor = 1;
 
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             planet.x = canvas.width / 2;
             planet.y = canvas.height / 2;
+            // Scale everything relative to the smaller viewport dimension
+            const minDim = Math.min(canvas.width, canvas.height);
+            scaleFactor = minDim / 900; // 900 is the reference size
+            planet.radius = Math.max(20, 40 * scaleFactor);
+            satellite.distance = Math.max(100, 250 * scaleFactor);
         }
 
         resizeCanvas();
@@ -354,7 +360,7 @@
                 title: "Level 2: Reach the Target",
                 objective: "Accelerate your satellite to reach the outer green ring. Keep thrusting in the direction you're moving!",
                 fuel: 250,
-                targetDistance: 380,
+                targetDistanceFactor: 1.52,
                 successMessage: "You learned that <strong>consistent alignment</strong> with velocity builds momentum.",
                 instruction: "Click to thrust - stay aligned with velocity"
             },
@@ -420,7 +426,7 @@
 
             satellite.angle = 0;
             satellite.velocity = level === 3 ? 0.02 : 0.002; // Level 3 starts fast, others start with slight movement
-            satellite.distance = 250;
+            satellite.distance = Math.max(100, 250 * scaleFactor);
             fuel = config.fuel;
             maxFuel = config.fuel;
             trail = [];
@@ -441,7 +447,7 @@
                     showSuccess();
                 }
             } else if (currentLevel === 2) {
-                if (satellite.distance >= config.targetDistance) {
+                if (satellite.distance >= (config.targetDistanceFactor || 1.52) * 250 * scaleFactor) {
                     showSuccess();
                 }
             } else if (currentLevel === 3) {
@@ -513,13 +519,13 @@
             loadLevel(currentLevel);
         }
 
-        canvas.addEventListener('click', (e) => {
+        function handleThrust(clientX, clientY) {
             if (targetReached || levels[currentLevel].isReveal) return;
             if (fuel <= 0) return;
 
             const rect = canvas.getBoundingClientRect();
-            const mouseX = e.clientX - rect.left;
-            const mouseY = e.clientY - rect.top;
+            const mouseX = clientX - rect.left;
+            const mouseY = clientY - rect.top;
 
             const thrustAngle = Math.atan2(mouseY - satellite.y, mouseX - satellite.x);
             const velAngle = satellite.angle + Math.PI / 2;
@@ -531,16 +537,21 @@
 
             const alignment = velX * thrustX + velY * thrustY;
 
-            // More powerful thrust, less fuel cost
             satellite.velocity += alignment * 0.004;
             fuel -= 8;
             if (fuel < 0) fuel = 0;
 
-            // Show alignment feedback
-            showAlignmentFeedback(alignment, e.clientX, e.clientY);
-
+            showAlignmentFeedback(alignment, clientX, clientY);
             updateUI();
-        });
+        }
+
+        canvas.addEventListener('click', (e) => handleThrust(e.clientX, e.clientY));
+
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const touch = e.touches[0];
+            handleThrust(touch.clientX, touch.clientY);
+        }, { passive: false });
 
         // Visual feedback for alignment
         let feedbackParticles = [];
@@ -604,7 +615,7 @@
                 ctx.strokeStyle = 'rgba(16, 185, 129, 0.3)';
                 ctx.lineWidth = 2;
                 ctx.beginPath();
-                ctx.arc(planet.x, planet.y, 400, 0, Math.PI * 2);
+                ctx.arc(planet.x, planet.y, 400 * scaleFactor, 0, Math.PI * 2);
                 ctx.stroke();
             }
 
@@ -612,7 +623,7 @@
             ctx.strokeStyle = 'rgba(99, 102, 241, 0.15)';
             ctx.lineWidth = 1;
             ctx.beginPath();
-            ctx.arc(planet.x, planet.y, 250, 0, Math.PI * 2);
+            ctx.arc(planet.x, planet.y, 250 * scaleFactor, 0, Math.PI * 2);
             ctx.stroke();
 
             // Trail
@@ -637,38 +648,40 @@
             // Satellite
             ctx.fillStyle = '#10b981';
             ctx.beginPath();
-            ctx.arc(satellite.x, satellite.y, 8, 0, Math.PI * 2);
+            ctx.arc(satellite.x, satellite.y, Math.max(5, 8 * scaleFactor), 0, Math.PI * 2);
             ctx.fill();
 
             // Velocity vector
             const velAngle = satellite.angle + Math.PI / 2;
             const velX = Math.cos(velAngle);
             const velY = Math.sin(velAngle);
+            const arrowLen = 50 * scaleFactor;
             drawArrow(satellite.x, satellite.y,
-                satellite.x + velX * 50, satellite.y + velY * 50, '#6366f1', 2);
+                satellite.x + velX * arrowLen, satellite.y + velY * arrowLen, '#6366f1', 2);
 
             // Projection visualization after success
             if (showProjection && !levels[currentLevel].isReveal) {
                 projectionAlpha = Math.min(1, projectionAlpha + 0.02);
 
+                const projLen = 70 * scaleFactor;
                 const exampleAngle = velAngle + 0.3;
                 const thrustX = Math.cos(exampleAngle);
                 const thrustY = Math.sin(exampleAngle);
                 const alignment = velX * thrustX + velY * thrustY;
-                const projMag = alignment * 70;
+                const projMag = alignment * projLen;
                 const projEndX = satellite.x + velX * projMag;
                 const projEndY = satellite.y + velY * projMag;
 
                 ctx.globalAlpha = projectionAlpha;
 
                 drawArrow(satellite.x, satellite.y,
-                    satellite.x + thrustX * 70, satellite.y + thrustY * 70, '#ec4899', 2);
+                    satellite.x + thrustX * projLen, satellite.y + thrustY * projLen, '#ec4899', 2);
 
                 ctx.strokeStyle = `rgba(251, 191, 36, ${0.4 * projectionAlpha})`;
                 ctx.lineWidth = 1;
                 ctx.setLineDash([4, 4]);
                 ctx.beginPath();
-                ctx.moveTo(satellite.x + thrustX * 70, satellite.y + thrustY * 70);
+                ctx.moveTo(satellite.x + thrustX * projLen, satellite.y + thrustY * projLen);
                 ctx.lineTo(projEndX, projEndY);
                 ctx.stroke();
                 ctx.setLineDash([]);
@@ -681,9 +694,10 @@
             }
 
             // Labels
+            const labelOffset = (arrowLen + 5);
             ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
             ctx.font = '12px Inter, sans-serif';
-            ctx.fillText('velocity', satellite.x + velX * 55 + 5, satellite.y + velY * 55);
+            ctx.fillText('velocity', satellite.x + velX * labelOffset + 5, satellite.y + velY * labelOffset);
 
             // Speed indicator
             const speed = Math.abs(satellite.velocity);
@@ -713,13 +727,12 @@
             // Hint: show ideal click zone (faint arc in direction of velocity)
             if (!targetReached && fuel > 0) {
                 const hintAngle = velAngle;
-                const hintDist = 80;
+                const hintDist = 80 * scaleFactor;
                 ctx.strokeStyle = 'rgba(16, 185, 129, 0.15)';
-                ctx.lineWidth = 20;
+                ctx.lineWidth = Math.max(10, 20 * scaleFactor);
                 ctx.lineCap = 'round';
                 ctx.beginPath();
                 if (currentLevel === 3) {
-                    // For braking level, show opposite direction
                     ctx.arc(satellite.x, satellite.y, hintDist, hintAngle + Math.PI - 0.5, hintAngle + Math.PI + 0.5);
                 } else {
                     ctx.arc(satellite.x, satellite.y, hintDist, hintAngle - 0.5, hintAngle + 0.5);
