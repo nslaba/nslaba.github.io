@@ -806,116 +806,116 @@
   </footer>
 
   <script>
-    // Interactive Hero Canvas - Particle Network
+    // Starfield
     const canvas = document.getElementById('heroCanvas');
     const ctx = canvas.getContext('2d');
 
-    let particles = [];
-    let mouse = { x: null, y: null };
-    const PARTICLE_COUNT = 60;
-    const CONNECTION_DISTANCE = 120;
+    let stars = [];
+    let time = 0;
+
+    // Star color temperatures — white, blue-white, warm
+    const STAR_COLORS = [
+      [255, 255, 255],   // pure white
+      [200, 210, 255],   // blue-white
+      [180, 200, 255],   // cool blue
+      [255, 240, 220],   // warm white
+      [255, 220, 180],   // warm yellow
+      [160, 180, 255],   // blue
+    ];
 
     function resize() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      createStars();
     }
 
-    class Particle {
-      constructor() {
-        this.reset();
+    function createStars() {
+      const area = canvas.width * canvas.height;
+      const count = Math.floor(area / 2000); // density scales with screen
+      stars = [];
+
+      for (let i = 0; i < count; i++) {
+        // Most stars are dim and tiny, few are bright
+        const brightness = Math.random();
+        const isBright = brightness > 0.97;
+        const isMedium = brightness > 0.85;
+
+        const color = STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)];
+
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: isBright ? (Math.random() * 1.5 + 1) :
+                  isMedium ? (Math.random() * 0.8 + 0.5) :
+                             (Math.random() * 0.5 + 0.2),
+          baseOpacity: isBright ? (Math.random() * 0.3 + 0.7) :
+                       isMedium ? (Math.random() * 0.3 + 0.3) :
+                                  (Math.random() * 0.2 + 0.05),
+          color: color,
+          // Twinkle parameters — each star has its own rhythm
+          twinkleSpeed: Math.random() * 0.02 + 0.005,
+          twinkleOffset: Math.random() * Math.PI * 2,
+          twinkleAmount: isBright ? 0.4 : (Math.random() * 0.3 + 0.1),
+          // Subtle drift
+          vx: (Math.random() - 0.5) * 0.02,
+          vy: (Math.random() - 0.5) * 0.02,
+          // Glow for bright stars
+          hasGlow: isBright,
+        });
       }
+    }
 
-      reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.vx = (Math.random() - 0.5) * 0.3;
-        this.vy = (Math.random() - 0.5) * 0.3;
-        this.radius = Math.random() * 2 + 0.5;
-        this.opacity = Math.random() * 0.3 + 0.1;
-      }
+    function drawStar(star) {
+      // Twinkle
+      const twinkle = Math.sin(time * star.twinkleSpeed + star.twinkleOffset);
+      const opacity = star.baseOpacity + twinkle * star.twinkleAmount * star.baseOpacity;
+      if (opacity <= 0) return;
 
-      update() {
-        this.x += this.vx;
-        this.y += this.vy;
+      const [r, g, b] = star.color;
 
-        if (mouse.x !== null) {
-          const dx = mouse.x - this.x;
-          const dy = mouse.y - this.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < 150) {
-            const force = (150 - dist) / 150;
-            this.vx -= (dx / dist) * force * 0.01;
-            this.vy -= (dy / dist) * force * 0.01;
-          }
-        }
-
-        this.vx *= 0.99;
-        this.vy *= 0.99;
-
-        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-      }
-
-      draw() {
+      // Soft glow for bright stars
+      if (star.hasGlow) {
+        const glowRadius = star.radius * 6;
+        const glow = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, glowRadius);
+        glow.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${opacity * 0.15})`);
+        glow.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${opacity * 0.04})`);
+        glow.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+        ctx.fillStyle = glow;
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(99, 102, 241, ${this.opacity})`;
+        ctx.arc(star.x, star.y, glowRadius, 0, Math.PI * 2);
         ctx.fill();
       }
-    }
 
-    function init() {
-      resize();
-      particles = [];
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        particles.push(new Particle());
-      }
-    }
-
-    function drawConnections() {
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < CONNECTION_DISTANCE) {
-            const opacity = (1 - dist / CONNECTION_DISTANCE) * 0.08;
-            ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(99, 102, 241, ${opacity})`;
-            ctx.lineWidth = 0.5;
-            ctx.stroke();
-          }
-        }
-      }
+      // Star core
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${Math.min(opacity, 1)})`;
+      ctx.fill();
     }
 
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      time++;
 
-      particles.forEach(p => {
-        p.update();
-        p.draw();
-      });
+      for (let i = 0; i < stars.length; i++) {
+        const s = stars[i];
+        // Gentle drift
+        s.x += s.vx;
+        s.y += s.vy;
+        // Wrap around
+        if (s.x < -5) s.x = canvas.width + 5;
+        if (s.x > canvas.width + 5) s.x = -5;
+        if (s.y < -5) s.y = canvas.height + 5;
+        if (s.y > canvas.height + 5) s.y = -5;
 
-      drawConnections();
+        drawStar(s);
+      }
+
       requestAnimationFrame(animate);
     }
 
     window.addEventListener('resize', resize);
-    window.addEventListener('mousemove', (e) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    });
-    window.addEventListener('mouseleave', () => {
-      mouse.x = null;
-      mouse.y = null;
-    });
-
-    init();
+    resize();
     animate();
 
     // Mobile nav toggle
