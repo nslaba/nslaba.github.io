@@ -10,7 +10,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Roboto+Slab:wght@300;400;500&display=swap" rel="stylesheet">
 
   <style>
     * {
@@ -157,12 +157,14 @@
     }
 
     .hero-subtitle {
-      font-size: clamp(1.2rem, 3vw, 1.8rem);
+      font-family: 'Roboto Slab', serif;
+      font-size: clamp(1.3rem, 3vw, 2rem);
       font-weight: 300;
       color: rgba(255,255,255,0.6);
       max-width: 500px;
       margin: 0 auto;
-      letter-spacing: 0.01em;
+      letter-spacing: 0.02em;
+      line-height: 2;
       opacity: 0;
       animation: fadeUp 1s ease 0.4s forwards;
     }
@@ -609,7 +611,7 @@
   <section class="hero">
     <canvas class="hero-canvas" id="heroCanvas"></canvas>
     <div class="hero-content">
-      <p class="hero-subtitle">Graphics programming and interactive simulations.</p>
+      <p class="hero-subtitle">Graphics Programming<br>&amp; Interactive Simulations</p>
     </div>
     <div class="scroll-indicator">
       <span>SCROLL</span>
