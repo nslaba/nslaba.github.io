@@ -387,20 +387,36 @@
     }
 
     .card-prereq {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.65rem;
-      color: var(--accent);
-      letter-spacing: 0.05em;
-      margin-bottom: 0.5rem;
-      max-height: 0;
-      opacity: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease, opacity 0.3s ease;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+      margin-bottom: 0.75rem;
     }
 
-    .project-card:hover .card-prereq {
-      max-height: 2rem;
-      opacity: 1;
+    .card-prereq-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-right: 0.25rem;
+    }
+
+    .card-prereq-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.7);
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      padding: 0.3rem 0.65rem;
+      border-radius: 20px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .project-card:hover .card-prereq-item {
+      background: rgba(99, 102, 241, 0.2);
+      border-color: rgba(99, 102, 241, 0.4);
     }
 
     .card-title {
@@ -602,7 +618,10 @@
           <span class="card-tag">Geometry</span>
         </div>
         <h3 class="card-title">Dot Product</h3>
-        <p class="card-prereq">Prerequisites: Vectors</p>
+        <div class="card-prereq">
+          <span class="card-prereq-label">prereqs:</span>
+          <span class="card-prereq-item">Vectors</span>
+        </div>
         <p class="card-desc">Learn by playing. An orbital game that teaches vector alignment and projection through thrust mechanics.</p>
         <div class="card-arrow">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -623,7 +642,11 @@
           <span class="card-tag">Animation</span>
         </div>
         <h3 class="card-title">Hermite Splines</h3>
-        <p class="card-prereq">Prerequisites: Vectors, Calculus</p>
+        <div class="card-prereq">
+          <span class="card-prereq-label">prereqs:</span>
+          <span class="card-prereq-item">Vectors</span>
+          <span class="card-prereq-item">Calculus</span>
+        </div>
         <p class="card-desc">Drag control points, adjust tangents, and discover why arc-length parameterization requires approximation.</p>
         <div class="card-arrow">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -644,7 +667,11 @@
           <span class="card-tag">Rendering</span>
         </div>
         <h3 class="card-title">Ray Tracer</h3>
-        <p class="card-prereq">Prerequisites: Geometry, Graphics fundamentals</p>
+        <div class="card-prereq">
+          <span class="card-prereq-label">prereqs:</span>
+          <span class="card-prereq-item">Geometry</span>
+          <span class="card-prereq-item">Graphics Fundamentals</span>
+        </div>
         <p class="card-desc">Cast rays, watch them bounce. Interactive explainer for ray-sphere intersection, Phong lighting, shadows, and reflections.</p>
         <div class="card-arrow">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -665,7 +692,11 @@
           <span class="card-tag">Linear Algebra</span>
         </div>
         <h3 class="card-title">Inverse Kinematics</h3>
-        <p class="card-prereq">Prerequisites: Linear Algebra, Physics</p>
+        <div class="card-prereq">
+          <span class="card-prereq-label">prereqs:</span>
+          <span class="card-prereq-item">Linear Algebra</span>
+          <span class="card-prereq-item">Physics</span>
+        </div>
         <p class="card-desc">Drag a target, watch the arm follow. The Jacobian method for robotic arm control - from math to intuition.</p>
         <div class="card-arrow">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
