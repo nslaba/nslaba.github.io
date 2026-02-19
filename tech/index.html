@@ -250,7 +250,7 @@
       line-height: 1.8;
     }
 
-    /* Project Grid */
+    /* Project Grid — default 2-col for expressive */
     .project-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -258,6 +258,78 @@
       max-width: 1200px;
       margin: 0 auto;
       padding: 0 3rem 6rem;
+    }
+
+    /* Educational path — constellation layout */
+    .project-path {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 0 3rem 6rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .project-path .project-card {
+      width: 100%;
+      max-width: 600px;
+    }
+
+    /* Stagger cards left/right */
+    .project-path .project-card:nth-child(odd) {
+      align-self: flex-start;
+    }
+
+    .project-path .project-card:nth-child(even) {
+      align-self: flex-end;
+    }
+
+    /* Star connector between cards */
+    .star-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      padding: 0.75rem 0;
+      position: relative;
+      height: 4.5rem;
+      width: 100%;
+    }
+
+    .star-connector-line {
+      width: 1px;
+      flex: 1;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.08), rgba(255,255,255,0.15), rgba(255,255,255,0.08));
+    }
+
+    .star-connector-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      box-shadow: 0 0 8px rgba(255,255,255,0.2), 0 0 20px rgba(255,255,255,0.05);
+      flex-shrink: 0;
+    }
+
+    .star-connector-dot--bright {
+      width: 8px;
+      height: 8px;
+      background: rgba(255,255,255,0.7);
+      box-shadow: 0 0 10px rgba(255,255,255,0.3), 0 0 25px rgba(255,255,255,0.1);
+    }
+
+    /* Difficulty label on connector */
+    .star-connector-label {
+      position: absolute;
+      right: -4rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem;
+      color: rgba(255,255,255,0.15);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      white-space: nowrap;
     }
 
     /* Project Cards */
@@ -573,6 +645,26 @@
         padding: 0.25rem 0;
       }
 
+      .project-path {
+        padding: 0 1.5rem 4rem;
+      }
+
+      .project-path .project-card,
+      .project-path .project-card:nth-child(odd),
+      .project-path .project-card:nth-child(even) {
+        align-self: center;
+        max-width: 100%;
+      }
+
+      .star-connector {
+        height: 3rem;
+        padding: 0.5rem 0;
+      }
+
+      .star-connector-label {
+        display: none;
+      }
+
       .footer {
         flex-direction: column;
         gap: 1.5rem;
@@ -603,7 +695,7 @@
   <section class="hero">
     <canvas class="hero-canvas" id="heroCanvas"></canvas>
     <div class="hero-content">
-      <p class="hero-subtitle">Graphics Programming<br>&amp; Interactive Simulations</p>
+      <p class="hero-subtitle">Graphics Programming<br>&amp;<br>Interactive Simulations</p>
     </div>
     <div class="scroll-indicator">
       <span>SCROLL</span>
@@ -620,7 +712,8 @@
     </div>
   </section>
 
-  <div class="project-grid" id="edu-grid">
+  <div class="project-path" id="edu-grid">
+
     <a href="projects/interactive-learning/dot-product/index.html" class="project-card">
       <div class="card-visual">
         <span class="card-badge">Interactive</span>
@@ -644,6 +737,12 @@
         </div>
       </div>
     </a>
+
+    <div class="star-connector">
+      <div class="star-connector-line"></div>
+      <div class="star-connector-dot"></div>
+      <div class="star-connector-line"></div>
+    </div>
 
     <a href="projects/interactive-learning/hermite-splines/index.html" class="project-card">
       <div class="card-visual">
@@ -670,6 +769,12 @@
       </div>
     </a>
 
+    <div class="star-connector">
+      <div class="star-connector-line"></div>
+      <div class="star-connector-dot star-connector-dot--bright"></div>
+      <div class="star-connector-line"></div>
+    </div>
+
     <a href="projects/interactive-learning/raytracer/index.html" class="project-card">
       <div class="card-visual">
         <span class="card-badge">Interactive</span>
@@ -695,6 +800,14 @@
       </div>
     </a>
 
+    <div class="star-connector">
+      <div class="star-connector-line"></div>
+      <div class="star-connector-dot"></div>
+      <div class="star-connector-line"></div>
+      <div class="star-connector-dot star-connector-dot--bright"></div>
+      <div class="star-connector-line"></div>
+    </div>
+
     <a href="../projects/IK/index.html" class="project-card">
       <div class="card-visual">
         <span class="card-badge">Interactive</span>
@@ -719,6 +832,7 @@
         </div>
       </div>
     </a>
+
   </div>
 
   <div class="divider"></div>
@@ -1071,7 +1185,7 @@
       });
     }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
 
-    document.querySelectorAll('.project-grid').forEach(grid => {
+    document.querySelectorAll('.project-grid, .project-path').forEach(grid => {
       cardObserver.observe(grid);
     });
   </script>
