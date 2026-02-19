@@ -185,7 +185,9 @@
 .shop-hint {
   font-size: 0.8rem;
   color: var(--text-muted);
-  margin-top: 2rem;
+  margin-top: 3rem;
+  position: relative;
+  z-index: 2;
 }
 
 .shop-hint a {
