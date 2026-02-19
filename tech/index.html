@@ -387,36 +387,57 @@
     }
 
     .card-prereq {
+      position: absolute;
+      inset: 0;
       display: flex;
       flex-wrap: wrap;
-      gap: 0.4rem;
+      gap: 0.5rem;
       align-items: center;
-      margin-bottom: 0.75rem;
+      align-content: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .project-card:hover .card-prereq {
+      opacity: 1;
     }
 
     .card-prereq-label {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.6rem;
-      color: rgba(255,255,255,0.35);
-      letter-spacing: 0.08em;
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      margin-right: 0.25rem;
+      width: 100%;
+      text-align: center;
+      margin-bottom: 0.25rem;
     }
 
     .card-prereq-item {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
-      color: rgba(255,255,255,0.7);
-      background: rgba(99, 102, 241, 0.12);
-      border: 1px solid rgba(99, 102, 241, 0.2);
-      padding: 0.3rem 0.65rem;
+      font-size: 0.8rem;
+      color: #fff;
+      background: rgba(99, 102, 241, 0.25);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      padding: 0.4rem 0.9rem;
       border-radius: 20px;
-      transition: background 0.2s, border-color 0.2s;
     }
 
-    .project-card:hover .card-prereq-item {
-      background: rgba(99, 102, 241, 0.2);
-      border-color: rgba(99, 102, 241, 0.4);
+    .project-card:hover .card-tags,
+    .project-card:hover .card-title,
+    .project-card:hover .card-desc {
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .card-tags,
+    .card-title,
+    .card-desc {
+      transition: opacity 0.2s ease;
     }
 
     .card-title {
