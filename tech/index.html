@@ -811,24 +811,25 @@
     const canvas = document.getElementById('heroCanvas');
     const ctx = canvas.getContext('2d');
 
-    let stars = [];
-    let nebulaCanvas = null;
+    // Static layer: thousands of faint background stars (painted once via ImageData)
+    let bgCanvas = null;
+    // Animated layer: visible stars that twinkle
+    let visibleStars = [];
     let time = 0;
 
-    // Spectral classes — weighted toward realistic distribution
-    // O/B (blue), A (white), F (yellow-white), G (yellow), K (orange), M (red)
+    // Spectral color by temperature (weighted toward real distribution)
     const SPECTRAL = [
-      { color: [155, 175, 255], weight: 0.03 },  // O/B blue — rare
-      { color: [170, 190, 255], weight: 0.05 },   // B blue-white
-      { color: [200, 215, 255], weight: 0.10 },   // A white-blue
-      { color: [255, 255, 255], weight: 0.15 },   // A/F white
-      { color: [255, 245, 230], weight: 0.20 },   // F yellow-white
-      { color: [255, 230, 180], weight: 0.22 },   // G yellow (sun-like)
-      { color: [255, 200, 140], weight: 0.15 },   // K orange
-      { color: [255, 170, 120], weight: 0.10 },   // M red — dim
+      { color: [155, 175, 255], weight: 0.02 },   // O — very rare, hot blue
+      { color: [175, 195, 255], weight: 0.04 },   // B — blue-white
+      { color: [210, 220, 255], weight: 0.08 },   // A — white-blue
+      { color: [245, 245, 255], weight: 0.14 },   // F — white
+      { color: [255, 245, 235], weight: 0.22 },   // G — sun-like
+      { color: [255, 225, 180], weight: 0.25 },   // K — orange
+      { color: [255, 190, 140], weight: 0.18 },   // M — cool red-orange
+      { color: [255, 165, 110], weight: 0.07 },   // M (late) — deep orange
     ];
 
-    function pickSpectralColor() {
+    function pickColor() {
       let r = Math.random();
       for (const s of SPECTRAL) {
         r -= s.weight;
@@ -837,144 +838,186 @@
       return SPECTRAL[3].color;
     }
 
-    // Generate static nebula background (painted once)
-    function createNebula() {
-      nebulaCanvas = document.createElement('canvas');
-      nebulaCanvas.width = canvas.width;
-      nebulaCanvas.height = canvas.height;
-      const nctx = nebulaCanvas.getContext('2d');
+    // Milky Way density — a broad bright band across the canvas
+    function milkyWayDensity(x, y, w, h) {
+      // Diagonal band from upper-left to lower-right
+      const nx = x / w, ny = y / h;
+      const bandDist = Math.abs((ny - nx) * 0.7 + 0.15);
+      const density = Math.exp(-bandDist * bandDist * 8);
+      return density;
+    }
 
-      // A few soft color washes
-      const patches = [
-        { x: canvas.width * 0.7, y: canvas.height * 0.3, r: 300, color: [60, 40, 90] },
-        { x: canvas.width * 0.2, y: canvas.height * 0.7, r: 250, color: [30, 50, 80] },
-        { x: canvas.width * 0.5, y: canvas.height * 0.5, r: 400, color: [40, 30, 60] },
-      ];
+    function createBackground() {
+      bgCanvas = document.createElement('canvas');
+      bgCanvas.width = canvas.width;
+      bgCanvas.height = canvas.height;
+      const bctx = bgCanvas.getContext('2d');
+      const imgData = bctx.createImageData(canvas.width, canvas.height);
+      const data = imgData.data;
+      const w = canvas.width, h = canvas.height;
 
-      for (const p of patches) {
-        const g = nctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
-        g.addColorStop(0, `rgba(${p.color[0]}, ${p.color[1]}, ${p.color[2]}, 0.08)`);
-        g.addColorStop(0.6, `rgba(${p.color[0]}, ${p.color[1]}, ${p.color[2]}, 0.03)`);
+      // Faint nebula glow along milky way
+      const nebulaPatches = [];
+      for (let i = 0; i < 8; i++) {
+        const t = Math.random();
+        // Place nebula patches along the milky way band
+        const px = t * w;
+        const py = t * h + (Math.random() - 0.5) * h * 0.2;
+        nebulaPatches.push({
+          x: px, y: py,
+          r: Math.random() * 200 + 100,
+          color: [
+            [30, 20, 50],
+            [20, 30, 55],
+            [40, 25, 45],
+            [25, 35, 50],
+          ][Math.floor(Math.random() * 4)],
+          intensity: Math.random() * 0.04 + 0.02,
+        });
+      }
+
+      // Paint nebula
+      for (const p of nebulaPatches) {
+        const g = bctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+        g.addColorStop(0, `rgba(${p.color[0]}, ${p.color[1]}, ${p.color[2]}, ${p.intensity})`);
+        g.addColorStop(0.5, `rgba(${p.color[0]}, ${p.color[1]}, ${p.color[2]}, ${p.intensity * 0.4})`);
         g.addColorStop(1, 'rgba(0,0,0,0)');
-        nctx.fillStyle = g;
-        nctx.fillRect(0, 0, canvas.width, canvas.height);
+        bctx.fillStyle = g;
+        bctx.fillRect(0, 0, w, h);
+      }
+
+      // Re-read pixel data after nebula painted
+      const nebulaData = bctx.getImageData(0, 0, w, h);
+      for (let i = 0; i < data.length; i++) data[i] = nebulaData.data[i];
+
+      // Thousands of faint background stars via pixel manipulation
+      const bgStarCount = Math.floor((w * h) / 300);
+      for (let i = 0; i < bgStarCount; i++) {
+        const sx = Math.random() * w;
+        const sy = Math.random() * h;
+
+        // Higher chance of placing star in milky way band
+        const mwDensity = milkyWayDensity(sx, sy, w, h);
+        if (Math.random() > 0.15 + mwDensity * 0.85) continue;
+
+        const col = pickColor();
+        const brightness = Math.pow(Math.random(), 4) * 0.35 + 0.02;
+
+        const px = (Math.floor(sy) * w + Math.floor(sx)) * 4;
+        if (px >= 0 && px < data.length - 3) {
+          data[px]     = Math.min(255, data[px]     + col[0] * brightness);
+          data[px + 1] = Math.min(255, data[px + 1] + col[1] * brightness);
+          data[px + 2] = Math.min(255, data[px + 2] + col[2] * brightness);
+          data[px + 3] = Math.min(255, data[px + 3] + brightness * 255);
+        }
+      }
+
+      bctx.putImageData(imgData, 0, 0);
+
+      // Soften the background with a very slight blur
+      bctx.filter = 'blur(0.4px)';
+      bctx.drawImage(bgCanvas, 0, 0);
+      bctx.filter = 'none';
+    }
+
+    function createVisibleStars() {
+      const w = canvas.width, h = canvas.height;
+      visibleStars = [];
+
+      // ~200 visible stars (ones bright enough to have shape and twinkle)
+      const count = Math.floor(Math.sqrt(w * h) / 4);
+
+      for (let i = 0; i < count; i++) {
+        let x = Math.random() * w;
+        let y = Math.random() * h;
+
+        // Bias toward milky way band
+        if (Math.random() < 0.4) {
+          const t = Math.random();
+          x = t * w + (Math.random() - 0.5) * w * 0.3;
+          y = t * h + (Math.random() - 0.5) * h * 0.3;
+          x = Math.max(0, Math.min(w, x));
+          y = Math.max(0, Math.min(h, y));
+        }
+
+        const mag = Math.pow(Math.random(), 2.5);
+        const isBright = mag > 0.92;
+        const isMedium = mag > 0.6;
+
+        const color = pickColor();
+
+        const radius = isBright ? (Math.random() * 1.4 + 1.0) :
+                       isMedium ? (Math.random() * 0.7 + 0.4) :
+                                  (Math.random() * 0.35 + 0.2);
+
+        const baseOpacity = isBright ? (Math.random() * 0.15 + 0.85) :
+                            isMedium ? (Math.random() * 0.3 + 0.3) :
+                                       (Math.random() * 0.2 + 0.1);
+
+        // Scintillation: 3 overlapping frequencies
+        visibleStars.push({
+          x, y, radius, baseOpacity, color,
+          f1: Math.random() * 0.012 + 0.002,
+          f2: Math.random() * 0.007 + 0.001,
+          f3: Math.random() * 0.019 + 0.004,
+          p1: Math.random() * Math.PI * 2,
+          p2: Math.random() * Math.PI * 2,
+          p3: Math.random() * Math.PI * 2,
+          // Bright stars twinkle more
+          twinkleAmount: isBright ? 0.3 : isMedium ? 0.15 : 0.08,
+          hasGlow: isBright || (isMedium && Math.random() > 0.7),
+          isBright,
+        });
       }
     }
 
     function resize() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      createNebula();
-      createStars();
-    }
-
-    function createStars() {
-      const area = canvas.width * canvas.height;
-      const count = Math.floor(area / 1400);
-      stars = [];
-
-      for (let i = 0; i < count; i++) {
-        // Realistic magnitude distribution — exponentially more dim stars
-        const mag = Math.pow(Math.random(), 3); // cubic falloff → mostly faint
-        const isBright = mag > 0.95;
-        const isMedium = mag > 0.7;
-
-        const color = pickSpectralColor();
-
-        // Dim stars are smaller and more uniform, bright stars vary more
-        const radius = isBright ? (Math.random() * 1.2 + 1.0) :
-                       isMedium ? (Math.random() * 0.6 + 0.4) :
-                                  (Math.random() * 0.4 + 0.15);
-
-        const baseOpacity = isBright ? (Math.random() * 0.2 + 0.8) :
-                            isMedium ? (Math.random() * 0.25 + 0.25) :
-                                       (Math.random() * 0.15 + 0.03);
-
-        stars.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          radius,
-          baseOpacity,
-          color,
-          // Scintillation — brighter stars twinkle more noticeably
-          twinkleSpeed: Math.random() * 0.015 + 0.003,
-          twinkleOffset: Math.random() * Math.PI * 2,
-          twinkleAmount: isBright ? 0.35 : isMedium ? 0.2 : 0.1,
-          // Second frequency for more organic flicker
-          twinkleSpeed2: Math.random() * 0.008 + 0.002,
-          twinkleOffset2: Math.random() * Math.PI * 2,
-          // Very slow drift
-          vx: (Math.random() - 0.5) * 0.008,
-          vy: (Math.random() - 0.5) * 0.008,
-          hasGlow: isBright,
-          hasSpikes: isBright && Math.random() > 0.4,
-        });
-      }
-    }
-
-    function drawStar(star) {
-      // Two-frequency twinkle for organic scintillation
-      const t1 = Math.sin(time * star.twinkleSpeed + star.twinkleOffset);
-      const t2 = Math.sin(time * star.twinkleSpeed2 + star.twinkleOffset2);
-      const twinkle = t1 * 0.7 + t2 * 0.3;
-      const opacity = star.baseOpacity + twinkle * star.twinkleAmount * star.baseOpacity;
-      if (opacity <= 0.01) return;
-      const clampedOpacity = Math.min(opacity, 1);
-
-      const [r, g, b] = star.color;
-
-      // Soft glow halo
-      if (star.hasGlow) {
-        const glowRadius = star.radius * 8;
-        const glow = ctx.createRadialGradient(star.x, star.y, 0, star.x, star.y, glowRadius);
-        glow.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${clampedOpacity * 0.12})`);
-        glow.addColorStop(0.3, `rgba(${r}, ${g}, ${b}, ${clampedOpacity * 0.05})`);
-        glow.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
-        ctx.fillStyle = glow;
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, glowRadius, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // Diffraction spikes on brightest stars
-      if (star.hasSpikes) {
-        const spikeLen = star.radius * 5 * clampedOpacity;
-        ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${clampedOpacity * 0.25})`;
-        ctx.lineWidth = 0.5;
-        ctx.beginPath();
-        ctx.moveTo(star.x - spikeLen, star.y);
-        ctx.lineTo(star.x + spikeLen, star.y);
-        ctx.moveTo(star.x, star.y - spikeLen);
-        ctx.lineTo(star.x, star.y + spikeLen);
-        ctx.stroke();
-      }
-
-      // Core
-      ctx.beginPath();
-      ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${clampedOpacity})`;
-      ctx.fill();
+      createBackground();
+      createVisibleStars();
     }
 
     function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw nebula background
-      if (nebulaCanvas) {
-        ctx.drawImage(nebulaCanvas, 0, 0);
-      }
-
+      // Draw static background (faint stars + nebula)
+      ctx.drawImage(bgCanvas, 0, 0);
       time++;
 
-      for (let i = 0; i < stars.length; i++) {
-        const s = stars[i];
-        s.x += s.vx;
-        s.y += s.vy;
-        if (s.x < -5) s.x = canvas.width + 5;
-        if (s.x > canvas.width + 5) s.x = -5;
-        if (s.y < -5) s.y = canvas.height + 5;
-        if (s.y > canvas.height + 5) s.y = -5;
-        drawStar(s);
+      for (const s of visibleStars) {
+        // Three-frequency scintillation
+        const t1 = Math.sin(time * s.f1 + s.p1);
+        const t2 = Math.sin(time * s.f2 + s.p2);
+        const t3 = Math.sin(time * s.f3 + s.p3);
+        const twinkle = t1 * 0.5 + t2 * 0.3 + t3 * 0.2;
+        const opacity = s.baseOpacity + twinkle * s.twinkleAmount * s.baseOpacity;
+        if (opacity < 0.02) continue;
+        const a = Math.min(opacity, 1);
+
+        const [r, g, b] = s.color;
+
+        // Glow halo
+        if (s.hasGlow) {
+          const gr = s.radius * (s.isBright ? 10 : 6);
+          const glow = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, gr);
+          glow.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${a * 0.1})`);
+          glow.addColorStop(0.25, `rgba(${r}, ${g}, ${b}, ${a * 0.04})`);
+          glow.addColorStop(0.6, `rgba(${r}, ${g}, ${b}, ${a * 0.01})`);
+          glow.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+          ctx.fillStyle = glow;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, gr, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Core with soft edge
+        const coreGrad = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.radius);
+        coreGrad.addColorStop(0, `rgba(${Math.min(255, r + 40)}, ${Math.min(255, g + 40)}, ${Math.min(255, b + 40)}, ${a})`);
+        coreGrad.addColorStop(0.4, `rgba(${r}, ${g}, ${b}, ${a * 0.9})`);
+        coreGrad.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+        ctx.fillStyle = coreGrad;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.radius * 1.5, 0, Math.PI * 2);
+        ctx.fill();
       }
 
       requestAnimationFrame(animate);
