@@ -262,74 +262,46 @@
 
     /* Educational path — constellation layout */
     .project-path {
-      max-width: 700px;
+      position: relative;
+      max-width: 950px;
       margin: 0 auto;
       padding: 0 3rem 6rem;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      gap: 2.5rem;
     }
 
     .project-path .project-card {
-      width: 100%;
-      max-width: 600px;
-    }
-
-    /* Stagger cards left/right */
-    .project-path .project-card:nth-child(odd) {
-      align-self: flex-start;
-    }
-
-    .project-path .project-card:nth-child(even) {
-      align-self: flex-end;
-    }
-
-    /* Star connector between cards */
-    .star-connector {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0;
-      padding: 0.75rem 0;
+      width: 52%;
+      max-width: 460px;
       position: relative;
-      height: 4.5rem;
-      width: 100%;
+      z-index: 2;
+      transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
     }
 
-    .star-connector-line {
-      width: 1px;
-      flex: 1;
-      background: linear-gradient(to bottom, rgba(255,255,255,0.08), rgba(255,255,255,0.15), rgba(255,255,255,0.08));
+    .project-path .project-card.revealed:hover {
+      transform: scale(1.05);
+      border-color: rgba(255,255,255,0.18);
+      box-shadow: 0 0 40px rgba(255,255,255,0.06), 0 20px 50px rgba(0,0,0,0.4);
+      z-index: 3;
     }
 
-    .star-connector-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.5);
-      box-shadow: 0 0 8px rgba(255,255,255,0.2), 0 0 20px rgba(255,255,255,0.05);
-      flex-shrink: 0;
-    }
+    /* Constellation positioning — zigzag pattern */
+    .project-path .project-card:nth-of-type(1) { align-self: flex-start; margin-left: 3%; }
+    .project-path .project-card:nth-of-type(2) { align-self: flex-end; margin-right: 5%; }
+    .project-path .project-card:nth-of-type(3) { align-self: flex-start; margin-left: 10%; }
+    .project-path .project-card:nth-of-type(4) { align-self: flex-end; margin-right: 0%; }
 
-    .star-connector-dot--bright {
-      width: 8px;
-      height: 8px;
-      background: rgba(255,255,255,0.7);
-      box-shadow: 0 0 10px rgba(255,255,255,0.3), 0 0 25px rgba(255,255,255,0.1);
-    }
-
-    /* Difficulty label on connector */
-    .star-connector-label {
+    /* SVG constellation overlay */
+    .constellation-svg {
       position: absolute;
-      right: -4rem;
-      top: 50%;
-      transform: translateY(-50%);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.55rem;
-      color: rgba(255,255,255,0.15);
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      white-space: nowrap;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      overflow: visible;
     }
 
     /* Project Cards */
@@ -647,21 +619,22 @@
 
       .project-path {
         padding: 0 1.5rem 4rem;
+        gap: 1.5rem;
       }
 
       .project-path .project-card,
-      .project-path .project-card:nth-child(odd),
-      .project-path .project-card:nth-child(even) {
-        align-self: center;
+      .project-path .project-card:nth-of-type(1),
+      .project-path .project-card:nth-of-type(2),
+      .project-path .project-card:nth-of-type(3),
+      .project-path .project-card:nth-of-type(4) {
+        width: 100%;
         max-width: 100%;
+        align-self: center;
+        margin-left: 0;
+        margin-right: 0;
       }
 
-      .star-connector {
-        height: 3rem;
-        padding: 0.5rem 0;
-      }
-
-      .star-connector-label {
+      .constellation-svg {
         display: none;
       }
 
@@ -738,12 +711,6 @@
       </div>
     </a>
 
-    <div class="star-connector">
-      <div class="star-connector-line"></div>
-      <div class="star-connector-dot"></div>
-      <div class="star-connector-line"></div>
-    </div>
-
     <a href="projects/interactive-learning/hermite-splines/index.html" class="project-card">
       <div class="card-visual">
         <span class="card-badge">Interactive</span>
@@ -769,12 +736,6 @@
       </div>
     </a>
 
-    <div class="star-connector">
-      <div class="star-connector-line"></div>
-      <div class="star-connector-dot star-connector-dot--bright"></div>
-      <div class="star-connector-line"></div>
-    </div>
-
     <a href="projects/interactive-learning/raytracer/index.html" class="project-card">
       <div class="card-visual">
         <span class="card-badge">Interactive</span>
@@ -799,14 +760,6 @@
         </div>
       </div>
     </a>
-
-    <div class="star-connector">
-      <div class="star-connector-line"></div>
-      <div class="star-connector-dot"></div>
-      <div class="star-connector-line"></div>
-      <div class="star-connector-dot star-connector-dot--bright"></div>
-      <div class="star-connector-line"></div>
-    </div>
 
     <a href="../projects/IK/index.html" class="project-card">
       <div class="card-visual">
@@ -1188,6 +1141,165 @@
     document.querySelectorAll('.project-grid, .project-path').forEach(grid => {
       cardObserver.observe(grid);
     });
+
+    // --- Constellation lines between educational cards ---
+    (function() {
+      const path = document.querySelector('.project-path');
+      if (!path) return;
+
+      const svgNS = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(svgNS, 'svg');
+      svg.classList.add('constellation-svg');
+      path.insertBefore(svg, path.firstChild);
+
+      // Scatter star data (fixed random positions as fractions of container)
+      const scatterStars = [
+        { x: 0.08, y: 0.05, r: 1.2 }, { x: 0.92, y: 0.08, r: 0.8 },
+        { x: 0.45, y: 0.03, r: 1.0 }, { x: 0.78, y: 0.18, r: 0.7 },
+        { x: 0.15, y: 0.22, r: 0.9 }, { x: 0.62, y: 0.35, r: 1.1 },
+        { x: 0.03, y: 0.42, r: 0.6 }, { x: 0.88, y: 0.45, r: 0.8 },
+        { x: 0.35, y: 0.55, r: 1.0 }, { x: 0.95, y: 0.58, r: 0.7 },
+        { x: 0.22, y: 0.68, r: 0.9 }, { x: 0.72, y: 0.72, r: 0.6 },
+        { x: 0.50, y: 0.82, r: 1.1 }, { x: 0.10, y: 0.88, r: 0.8 },
+        { x: 0.82, y: 0.92, r: 0.7 }, { x: 0.42, y: 0.95, r: 0.9 },
+        { x: 0.68, y: 0.12, r: 0.5 }, { x: 0.30, y: 0.38, r: 0.6 },
+        { x: 0.55, y: 0.62, r: 0.5 }, { x: 0.18, y: 0.78, r: 0.7 },
+      ];
+
+      function drawConstellation() {
+        const cards = path.querySelectorAll('.project-card');
+        if (cards.length < 2) return;
+
+        const pathRect = path.getBoundingClientRect();
+        const w = pathRect.width;
+        const h = pathRect.height;
+
+        // Clear SVG
+        while (svg.firstChild) svg.removeChild(svg.firstChild);
+        svg.setAttribute('width', w);
+        svg.setAttribute('height', h);
+        svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+
+        // Defs for glow filter
+        const defs = document.createElementNS(svgNS, 'defs');
+        const filter = document.createElementNS(svgNS, 'filter');
+        filter.setAttribute('id', 'starGlow');
+        filter.setAttribute('x', '-50%');
+        filter.setAttribute('y', '-50%');
+        filter.setAttribute('width', '200%');
+        filter.setAttribute('height', '200%');
+        const blur = document.createElementNS(svgNS, 'feGaussianBlur');
+        blur.setAttribute('stdDeviation', '3');
+        blur.setAttribute('result', 'glow');
+        const merge = document.createElementNS(svgNS, 'feMerge');
+        const m1 = document.createElementNS(svgNS, 'feMergeNode');
+        m1.setAttribute('in', 'glow');
+        const m2 = document.createElementNS(svgNS, 'feMergeNode');
+        m2.setAttribute('in', 'SourceGraphic');
+        merge.appendChild(m1);
+        merge.appendChild(m2);
+        filter.appendChild(blur);
+        filter.appendChild(merge);
+        defs.appendChild(filter);
+        svg.appendChild(defs);
+
+        // Collect card anchor points (bottom-center → top-center of next)
+        const anchors = [];
+        cards.forEach((card) => {
+          const r = card.getBoundingClientRect();
+          anchors.push({
+            topX:    r.left + r.width / 2 - pathRect.left,
+            topY:    r.top - pathRect.top,
+            bottomX: r.left + r.width / 2 - pathRect.left,
+            bottomY: r.top + r.height - pathRect.top,
+          });
+        });
+
+        // Draw constellation lines + waypoint stars between adjacent cards
+        for (let i = 0; i < anchors.length - 1; i++) {
+          const from = anchors[i];
+          const to = anchors[i + 1];
+
+          const x1 = from.bottomX;
+          const y1 = from.bottomY + 8;
+          const x2 = to.topX;
+          const y2 = to.topY - 8;
+
+          // Midpoint with slight offset for organic feel
+          const mx = (x1 + x2) / 2 + (i % 2 === 0 ? 30 : -30);
+          const my = (y1 + y2) / 2;
+
+          // Line from card bottom to midpoint star
+          const line1 = document.createElementNS(svgNS, 'line');
+          line1.setAttribute('x1', x1); line1.setAttribute('y1', y1);
+          line1.setAttribute('x2', mx); line1.setAttribute('y2', my);
+          line1.setAttribute('stroke', 'rgba(255,255,255,0.1)');
+          line1.setAttribute('stroke-width', '1');
+          svg.appendChild(line1);
+
+          // Line from midpoint star to next card top
+          const line2 = document.createElementNS(svgNS, 'line');
+          line2.setAttribute('x1', mx); line2.setAttribute('y1', my);
+          line2.setAttribute('x2', x2); line2.setAttribute('y2', y2);
+          line2.setAttribute('stroke', 'rgba(255,255,255,0.1)');
+          line2.setAttribute('stroke-width', '1');
+          svg.appendChild(line2);
+
+          // Waypoint star at midpoint
+          const star = document.createElementNS(svgNS, 'circle');
+          star.setAttribute('cx', mx);
+          star.setAttribute('cy', my);
+          star.setAttribute('r', '3.5');
+          star.setAttribute('fill', 'rgba(255,255,255,0.6)');
+          star.setAttribute('filter', 'url(#starGlow)');
+          svg.appendChild(star);
+
+          // Node stars at card edges
+          [{ x: x1, y: y1 }, { x: x2, y: y2 }].forEach(pt => {
+            const dot = document.createElementNS(svgNS, 'circle');
+            dot.setAttribute('cx', pt.x);
+            dot.setAttribute('cy', pt.y);
+            dot.setAttribute('r', '2.5');
+            dot.setAttribute('fill', 'rgba(255,255,255,0.45)');
+            dot.setAttribute('filter', 'url(#starGlow)');
+            svg.appendChild(dot);
+          });
+        }
+
+        // Scatter ambient stars
+        scatterStars.forEach(s => {
+          const dot = document.createElementNS(svgNS, 'circle');
+          dot.setAttribute('cx', s.x * w);
+          dot.setAttribute('cy', s.y * h);
+          dot.setAttribute('r', s.r);
+          dot.setAttribute('fill', `rgba(255,255,255,${0.15 + s.r * 0.1})`);
+          svg.appendChild(dot);
+        });
+      }
+
+      // Draw after cards are revealed (give layout time to settle)
+      let drawn = false;
+      const constellationObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !drawn) {
+            drawn = true;
+            // Wait for card reveal animations to finish
+            setTimeout(drawConstellation, 800);
+            constellationObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.05 });
+      constellationObserver.observe(path);
+
+      // Redraw on resize
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          if (drawn) drawConstellation();
+        }, 200);
+      });
+    })();
   </script>
 
 </body>
