@@ -263,17 +263,17 @@
     /* Lyra constellation layout */
     .constellation {
       position: relative;
-      max-width: 1000px;
-      height: 82vh;
-      min-height: 620px;
-      max-height: 860px;
+      max-width: 1100px;
+      height: 88vh;
+      min-height: 680px;
+      max-height: 950px;
       margin: 0 auto;
       padding: 0 2rem;
     }
 
     .constellation .project-card {
       position: absolute;
-      width: 200px;
+      width: 220px;
       transform: translate(-50%, -50%) scale(0.8);
       opacity: 0;
       z-index: 2;
@@ -298,10 +298,10 @@
     }
 
     /* Lyra star positions */
-    .constellation .project-card:nth-of-type(1) { left: 50%; top: 10%; }
-    .constellation .project-card:nth-of-type(2) { left: 24%; top: 45%; }
-    .constellation .project-card:nth-of-type(3) { left: 76%; top: 45%; }
-    .constellation .project-card:nth-of-type(4) { left: 50%; top: 83%; }
+    .constellation .project-card:nth-of-type(1) { left: 50%; top: 8%; }
+    .constellation .project-card:nth-of-type(2) { left: 20%; top: 44%; }
+    .constellation .project-card:nth-of-type(3) { left: 80%; top: 44%; }
+    .constellation .project-card:nth-of-type(4) { left: 50%; top: 80%; }
 
     /* Compact card styling */
     .constellation .card-content { padding: 0.6rem 0.75rem; }
@@ -360,21 +360,21 @@
     .constellation-label-name {
       display: block;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.5rem;
-      letter-spacing: 0.35em;
-      color: rgba(255,255,255,0.1);
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      color: rgba(255,255,255,0.22);
       text-transform: uppercase;
     }
 
     .constellation-label-note {
       display: block;
       font-family: 'Inter', sans-serif;
-      font-size: 0.48rem;
-      color: rgba(255,255,255,0.07);
+      font-size: 0.58rem;
+      color: rgba(255,255,255,0.14);
       font-style: italic;
-      margin-top: 0.3rem;
+      margin-top: 0.35rem;
       letter-spacing: 0.02em;
-      max-width: 220px;
+      max-width: 260px;
       line-height: 1.5;
     }
 
@@ -386,12 +386,12 @@
     .constellation .project-card::after {
       content: attr(data-step);
       position: absolute;
-      top: -1.4rem;
+      top: -1.6rem;
       left: 50%;
       transform: translateX(-50%);
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.5rem;
-      color: rgba(255,255,255,0.18);
+      font-size: 0.6rem;
+      color: rgba(255,255,255,0.4);
       letter-spacing: 0.1em;
       white-space: nowrap;
     }
@@ -941,7 +941,7 @@
     </a>
 
     <span class="constellation-label">
-      <span class="constellation-label-name">Lyra</span>
+      <span class="constellation-label-name">Lyra (constellation)</span>
       <span class="constellation-label-note">Orpheus's lyre — where Pythagoras first heard mathematics in music</span>
     </span>
   </div>
@@ -1321,18 +1321,18 @@
 
       // Decorative stars (ε Lyrae double-double + scattered)
       const decorStars = [
-        { x: 0.44, y: 0.045, r: 2.0, a: 0.35 },  // ε¹ Lyrae
-        { x: 0.46, y: 0.03,  r: 1.6, a: 0.25 },  // ε² Lyrae
-        { x: 0.10, y: 0.12,  r: 1.0, a: 0.12 },
-        { x: 0.90, y: 0.08,  r: 0.8, a: 0.10 },
-        { x: 0.06, y: 0.55,  r: 0.9, a: 0.10 },
-        { x: 0.94, y: 0.62,  r: 0.7, a: 0.08 },
-        { x: 0.35, y: 0.70,  r: 0.8, a: 0.10 },
-        { x: 0.68, y: 0.25,  r: 0.7, a: 0.09 },
-        { x: 0.15, y: 0.88,  r: 0.6, a: 0.08 },
-        { x: 0.85, y: 0.90,  r: 0.7, a: 0.08 },
-        { x: 0.55, y: 0.58,  r: 0.5, a: 0.07 },
-        { x: 0.30, y: 0.20,  r: 0.6, a: 0.08 },
+        { x: 0.44, y: 0.035, r: 2.5, a: 0.40 },  // ε¹ Lyrae
+        { x: 0.46, y: 0.02,  r: 2.0, a: 0.30 },  // ε² Lyrae
+        { x: 0.10, y: 0.12,  r: 1.3, a: 0.15 },
+        { x: 0.90, y: 0.08,  r: 1.0, a: 0.12 },
+        { x: 0.06, y: 0.55,  r: 1.1, a: 0.12 },
+        { x: 0.94, y: 0.62,  r: 0.9, a: 0.10 },
+        { x: 0.35, y: 0.70,  r: 1.0, a: 0.12 },
+        { x: 0.68, y: 0.25,  r: 0.9, a: 0.11 },
+        { x: 0.15, y: 0.88,  r: 0.8, a: 0.10 },
+        { x: 0.85, y: 0.90,  r: 0.9, a: 0.10 },
+        { x: 0.55, y: 0.58,  r: 0.7, a: 0.09 },
+        { x: 0.30, y: 0.20,  r: 0.8, a: 0.10 },
       ];
 
       function isMobile() {
@@ -1391,15 +1391,15 @@
           line.setAttribute('y1', centers[a].y);
           line.setAttribute('x2', centers[b].x);
           line.setAttribute('y2', centers[b].y);
-          line.setAttribute('stroke', 'rgba(255,255,255,0.09)');
-          line.setAttribute('stroke-width', '1');
+          line.setAttribute('stroke', 'rgba(255,255,255,0.13)');
+          line.setAttribute('stroke-width', '1.5');
           svg.appendChild(line);
         });
 
         // Node stars at card centers
         centers.forEach((c, i) => {
-          const r = i === 0 ? 4 : 3; // Vega is brightest
-          const a = i === 0 ? 0.6 : 0.4;
+          const r = i === 0 ? 5 : 3.5; // Vega is brightest
+          const a = i === 0 ? 0.65 : 0.45;
           const dot = document.createElementNS(svgNS, 'circle');
           dot.setAttribute('cx', c.x);
           dot.setAttribute('cy', c.y);
