@@ -250,17 +250,7 @@
       line-height: 1.8;
     }
 
-    /* Project Grid — default 2-col for expressive */
-    .project-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 2.5rem;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 3rem 6rem;
-    }
-
-    /* Lyra constellation layout */
+    /* Constellation layout (shared) */
     .constellation {
       position: relative;
       max-width: 1100px;
@@ -269,6 +259,13 @@
       max-height: 950px;
       margin: 0 auto;
       padding: 0 2rem;
+    }
+
+    /* Expressive constellation is more compact (fewer cards) */
+    #exp-grid.constellation {
+      height: 72vh;
+      min-height: 540px;
+      max-height: 780px;
     }
 
     .constellation .project-card {
@@ -297,11 +294,17 @@
       background: rgba(8,8,14,0.97);
     }
 
-    /* Lyra star positions */
-    .constellation .project-card:nth-of-type(1) { left: 50%; top: 20%; }
-    .constellation .project-card:nth-of-type(2) { left: 20%; top: 52%; }
-    .constellation .project-card:nth-of-type(3) { left: 80%; top: 52%; }
-    .constellation .project-card:nth-of-type(4) { left: 50%; top: 86%; }
+    /* Delphinus star positions (educational) — diamond + tail */
+    #edu-grid .project-card:nth-of-type(1) { left: 34%; top: 16%; }
+    #edu-grid .project-card:nth-of-type(2) { left: 68%; top: 18%; }
+    #edu-grid .project-card:nth-of-type(3) { left: 28%; top: 52%; }
+    #edu-grid .project-card:nth-of-type(4) { left: 72%; top: 54%; }
+    #edu-grid .project-card:nth-of-type(5) { left: 58%; top: 84%; }
+
+    /* Lyra star positions (expressive) — Vega + triangle */
+    #exp-grid .project-card:nth-of-type(1) { left: 50%; top: 16%; }
+    #exp-grid .project-card:nth-of-type(2) { left: 24%; top: 62%; }
+    #exp-grid .project-card:nth-of-type(3) { left: 76%; top: 62%; }
 
     /* Compact card styling */
     .constellation .card-content { padding: 0.6rem 0.75rem; }
@@ -333,6 +336,17 @@
     .constellation#edu-grid .project-card:hover .card-title,
     .constellation#edu-grid .project-card:hover .card-desc {
       opacity: 1;
+    }
+
+    /* Coming-soon in constellation */
+    .constellation .coming-soon-card.revealed {
+      opacity: 0.45;
+    }
+    .constellation .coming-soon-card.revealed:hover {
+      transform: translate(-50%, -50%) scale(1.1);
+      box-shadow: none;
+      border-color: rgba(255,255,255,0.08);
+      background: rgba(8,8,14,0.9);
     }
 
     /* SVG constellation lines */
@@ -421,14 +435,9 @@
       opacity: 1;
     }
 
-    /* Dot Product (1): prereqs top-right, aligned with thumbnail */
-    .constellation .project-card:nth-of-type(1) .card-prereq {
-      top: -0.5rem;
-      transform: none;
-    }
-
-    /* Hermite (2): show prereqs on the left */
-    .constellation .project-card:nth-of-type(2) .card-prereq {
+    /* Right-side cards: show prereqs on the left */
+    #edu-grid .project-card:nth-of-type(2) .card-prereq,
+    #edu-grid .project-card:nth-of-type(4) .card-prereq {
       left: auto;
       right: calc(100% + 0.8rem);
     }
@@ -714,11 +723,6 @@
 
     /* Responsive */
     @media (max-width: 900px) {
-      .project-grid {
-        grid-template-columns: 1fr;
-        padding: 0 1.5rem 4rem;
-      }
-
       .category {
         padding: 5rem 1.5rem 2rem;
       }
@@ -775,7 +779,8 @@
       .constellation .project-card:nth-of-type(1),
       .constellation .project-card:nth-of-type(2),
       .constellation .project-card:nth-of-type(3),
-      .constellation .project-card:nth-of-type(4) {
+      .constellation .project-card:nth-of-type(4),
+      .constellation .project-card:nth-of-type(5) {
         position: static;
         width: 100%;
         max-width: 100%;
@@ -959,9 +964,24 @@
       </div>
     </a>
 
+    <div class="project-card coming-soon-card" data-step="5">
+      <div class="card-visual">
+        <span class="card-badge coming-soon">Coming Soon</span>
+        <div class="card-visual-placeholder">Graphics</div>
+      </div>
+      <div class="card-content">
+        <div class="card-tags">
+          <span class="card-tag">Graphics</span>
+          <span class="card-tag">Rendering</span>
+        </div>
+        <h3 class="card-title">Graphics</h3>
+        <p class="card-desc">More interactive explorations coming soon.</p>
+      </div>
+    </div>
+
     <span class="constellation-label">
-      <span class="constellation-label-name">Lyra (constellation)</span>
-      <span class="constellation-label-note">Orpheus's lyre — where Pythagoras first heard mathematics in music</span>
+      <span class="constellation-label-name">Delphinus (constellation)</span>
+      <span class="constellation-label-note">The dolphin — symbol of intelligence and playful discovery</span>
     </span>
   </div>
 
@@ -976,8 +996,8 @@
     </div>
   </section>
 
-  <div class="project-grid" id="exp-grid">
-    <a href="../projects/webGL/animation/project.html" class="project-card">
+  <div class="constellation" id="exp-grid">
+    <a href="../projects/webGL/animation/project.html" class="project-card" data-step="1">
       <div class="card-visual">
         <img src="../projects/webGL/animation/snapshot.png" alt="WebGL animation">
       </div>
@@ -996,7 +1016,7 @@
       </div>
     </a>
 
-    <a href="../projects/Vulkan/vulkan.html" class="project-card">
+    <a href="../projects/Vulkan/vulkan.html" class="project-card" data-step="2">
       <div class="card-visual">
         <span class="card-badge">Interactive</span>
         <img src="../assets/images/art/chaos.webp" alt="Particle system">
@@ -1016,7 +1036,7 @@
       </div>
     </a>
 
-    <div class="project-card coming-soon-card">
+    <div class="project-card coming-soon-card" data-step="3">
       <div class="card-visual">
         <span class="card-badge coming-soon">Coming Soon</span>
         <img src="../assets/images/tech/arduino-thumbnail.svg" alt="Arduino project">
@@ -1030,6 +1050,11 @@
         <p class="card-desc">Physical computing and interactive installations. Code meets the real world.</p>
       </div>
     </div>
+
+    <span class="constellation-label">
+      <span class="constellation-label-name">Lyra (constellation)</span>
+      <span class="constellation-label-note">Orpheus's lyre — where Pythagoras first heard mathematics in music</span>
+    </span>
   </div>
 
   <!-- Footer -->
@@ -1315,147 +1340,178 @@
       });
     }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
 
-    document.querySelectorAll('.project-grid, .constellation').forEach(grid => {
+    document.querySelectorAll('.constellation').forEach(grid => {
       cardObserver.observe(grid);
     });
 
-    // --- Lyra constellation lines ---
+    // --- Constellation lines (Delphinus + Lyra) ---
     (function() {
-      const constellation = document.querySelector('.constellation');
-      if (!constellation) return;
-
       const svgNS = 'http://www.w3.org/2000/svg';
-      const svg = document.createElementNS(svgNS, 'svg');
-      svg.classList.add('constellation-svg');
-      constellation.insertBefore(svg, constellation.firstChild);
 
-      // Lyra connection pattern (indices): diamond + crossbar
-      const connections = [
-        [0, 1], // Vega → left (Hermite)
-        [0, 2], // Vega → right (Ray Tracer)
-        [1, 2], // left → right (crossbar)
-        [1, 3], // left → bottom (IK)
-        [2, 3], // right → bottom (IK)
+      const constellations = [
+        {
+          el: document.getElementById('edu-grid'),
+          filterId: 'delGlow',
+          // Delphinus: diamond (0-1-3-2) + tail to 4
+          connections: [
+            [0, 1], // top-left ↔ top-right
+            [0, 2], // top-left ↔ bottom-left
+            [1, 3], // top-right ↔ bottom-right
+            [2, 3], // bottom-left ↔ bottom-right
+            [3, 4], // bottom-right → tail
+          ],
+          brightStar: null, // no single brightest
+          decorStars: [
+            { x: 0.08, y: 0.10,  r: 1.2, a: 0.13 },
+            { x: 0.92, y: 0.07,  r: 1.0, a: 0.11 },
+            { x: 0.05, y: 0.45,  r: 0.9, a: 0.10 },
+            { x: 0.95, y: 0.40,  r: 0.8, a: 0.09 },
+            { x: 0.48, y: 0.36,  r: 1.4, a: 0.15 }, // center of diamond
+            { x: 0.15, y: 0.75,  r: 0.8, a: 0.10 },
+            { x: 0.88, y: 0.72,  r: 0.9, a: 0.10 },
+            { x: 0.42, y: 0.92,  r: 0.7, a: 0.08 },
+            { x: 0.78, y: 0.92,  r: 0.6, a: 0.08 },
+            { x: 0.18, y: 0.25,  r: 0.7, a: 0.09 },
+          ],
+        },
+        {
+          el: document.getElementById('exp-grid'),
+          filterId: 'lyraGlow',
+          // Lyra: Vega (0) triangle to 1 and 2, crossbar 1-2
+          connections: [
+            [0, 1], // Vega → left
+            [0, 2], // Vega → right
+            [1, 2], // crossbar
+          ],
+          brightStar: 0, // Vega
+          decorStars: [
+            { x: 0.44, y: 0.08,  r: 2.2, a: 0.35 },  // ε¹ Lyrae
+            { x: 0.46, y: 0.05,  r: 1.8, a: 0.25 },  // ε² Lyrae
+            { x: 0.10, y: 0.18,  r: 1.1, a: 0.12 },
+            { x: 0.90, y: 0.14,  r: 0.9, a: 0.10 },
+            { x: 0.35, y: 0.82,  r: 1.0, a: 0.12 },  // hint at parallelogram
+            { x: 0.65, y: 0.85,  r: 1.0, a: 0.12 },
+            { x: 0.06, y: 0.65,  r: 0.8, a: 0.09 },
+            { x: 0.94, y: 0.55,  r: 0.7, a: 0.08 },
+            { x: 0.50, y: 0.42,  r: 0.6, a: 0.07 },
+          ],
+        },
       ];
 
-      // Decorative stars (ε Lyrae double-double + scattered)
-      const decorStars = [
-        { x: 0.44, y: 0.035, r: 2.5, a: 0.40 },  // ε¹ Lyrae
-        { x: 0.46, y: 0.02,  r: 2.0, a: 0.30 },  // ε² Lyrae
-        { x: 0.10, y: 0.12,  r: 1.3, a: 0.15 },
-        { x: 0.90, y: 0.08,  r: 1.0, a: 0.12 },
-        { x: 0.06, y: 0.55,  r: 1.1, a: 0.12 },
-        { x: 0.94, y: 0.62,  r: 0.9, a: 0.10 },
-        { x: 0.35, y: 0.70,  r: 1.0, a: 0.12 },
-        { x: 0.68, y: 0.25,  r: 0.9, a: 0.11 },
-        { x: 0.15, y: 0.88,  r: 0.8, a: 0.10 },
-        { x: 0.85, y: 0.90,  r: 0.9, a: 0.10 },
-        { x: 0.55, y: 0.58,  r: 0.7, a: 0.09 },
-        { x: 0.30, y: 0.20,  r: 0.8, a: 0.10 },
-      ];
+      function isMobile() { return window.innerWidth <= 900; }
 
-      function isMobile() {
-        return window.innerWidth <= 900;
-      }
+      constellations.forEach(cfg => {
+        if (!cfg.el) return;
 
-      function drawLyra() {
-        if (isMobile()) { svg.style.display = 'none'; return; }
-        svg.style.display = '';
+        const svg = document.createElementNS(svgNS, 'svg');
+        svg.classList.add('constellation-svg');
+        cfg.el.insertBefore(svg, cfg.el.firstChild);
+        cfg.svg = svg;
+        cfg.drawn = false;
 
-        const cards = constellation.querySelectorAll('.project-card');
-        if (cards.length < 4) return;
+        function draw() {
+          if (isMobile()) { svg.style.display = 'none'; return; }
+          svg.style.display = '';
 
-        const rect = constellation.getBoundingClientRect();
-        const w = rect.width;
-        const h = rect.height;
+          const cards = cfg.el.querySelectorAll('.project-card');
+          if (cards.length < 2) return;
 
-        while (svg.firstChild) svg.removeChild(svg.firstChild);
-        svg.setAttribute('width', w);
-        svg.setAttribute('height', h);
-        svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+          const rect = cfg.el.getBoundingClientRect();
+          const w = rect.width, h = rect.height;
 
-        // Glow filter
-        const defs = document.createElementNS(svgNS, 'defs');
-        const filter = document.createElementNS(svgNS, 'filter');
-        filter.setAttribute('id', 'lyraGlow');
-        filter.setAttribute('x', '-100%'); filter.setAttribute('y', '-100%');
-        filter.setAttribute('width', '300%'); filter.setAttribute('height', '300%');
-        const blur = document.createElementNS(svgNS, 'feGaussianBlur');
-        blur.setAttribute('stdDeviation', '4');
-        blur.setAttribute('result', 'g');
-        const merge = document.createElementNS(svgNS, 'feMerge');
-        ['g', 'SourceGraphic'].forEach(inp => {
-          const mn = document.createElementNS(svgNS, 'feMergeNode');
-          mn.setAttribute('in', inp);
-          merge.appendChild(mn);
-        });
-        filter.appendChild(blur); filter.appendChild(merge);
-        defs.appendChild(filter);
-        svg.appendChild(defs);
+          while (svg.firstChild) svg.removeChild(svg.firstChild);
+          svg.setAttribute('width', w);
+          svg.setAttribute('height', h);
+          svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
 
-        // Get card center points
-        const centers = [];
-        cards.forEach(card => {
-          const cr = card.getBoundingClientRect();
-          centers.push({
-            x: cr.left + cr.width / 2 - rect.left,
-            y: cr.top + cr.height / 2 - rect.top,
+          // Glow filter
+          const defs = document.createElementNS(svgNS, 'defs');
+          const filter = document.createElementNS(svgNS, 'filter');
+          filter.setAttribute('id', cfg.filterId);
+          filter.setAttribute('x', '-100%'); filter.setAttribute('y', '-100%');
+          filter.setAttribute('width', '300%'); filter.setAttribute('height', '300%');
+          const blur = document.createElementNS(svgNS, 'feGaussianBlur');
+          blur.setAttribute('stdDeviation', '4');
+          blur.setAttribute('result', 'g');
+          const merge = document.createElementNS(svgNS, 'feMerge');
+          ['g', 'SourceGraphic'].forEach(inp => {
+            const mn = document.createElementNS(svgNS, 'feMergeNode');
+            mn.setAttribute('in', inp);
+            merge.appendChild(mn);
           });
-        });
+          filter.appendChild(blur); filter.appendChild(merge);
+          defs.appendChild(filter);
+          svg.appendChild(defs);
 
-        // Draw constellation lines
-        connections.forEach(([a, b]) => {
-          const line = document.createElementNS(svgNS, 'line');
-          line.setAttribute('x1', centers[a].x);
-          line.setAttribute('y1', centers[a].y);
-          line.setAttribute('x2', centers[b].x);
-          line.setAttribute('y2', centers[b].y);
-          line.setAttribute('stroke', 'rgba(255,255,255,0.13)');
-          line.setAttribute('stroke-width', '1.5');
-          svg.appendChild(line);
-        });
+          // Card centers
+          const centers = [];
+          cards.forEach(card => {
+            const cr = card.getBoundingClientRect();
+            centers.push({
+              x: cr.left + cr.width / 2 - rect.left,
+              y: cr.top + cr.height / 2 - rect.top,
+            });
+          });
 
-        // Node stars at card centers
-        centers.forEach((c, i) => {
-          const r = i === 0 ? 5 : 3.5; // Vega is brightest
-          const a = i === 0 ? 0.65 : 0.45;
-          const dot = document.createElementNS(svgNS, 'circle');
-          dot.setAttribute('cx', c.x);
-          dot.setAttribute('cy', c.y);
-          dot.setAttribute('r', r);
-          dot.setAttribute('fill', `rgba(255,255,255,${a})`);
-          dot.setAttribute('filter', 'url(#lyraGlow)');
-          svg.appendChild(dot);
-        });
+          // Lines
+          cfg.connections.forEach(([a, b]) => {
+            if (a >= centers.length || b >= centers.length) return;
+            const line = document.createElementNS(svgNS, 'line');
+            line.setAttribute('x1', centers[a].x);
+            line.setAttribute('y1', centers[a].y);
+            line.setAttribute('x2', centers[b].x);
+            line.setAttribute('y2', centers[b].y);
+            line.setAttribute('stroke', 'rgba(255,255,255,0.13)');
+            line.setAttribute('stroke-width', '1.5');
+            svg.appendChild(line);
+          });
 
-        // Decorative scatter stars
-        decorStars.forEach(s => {
-          const dot = document.createElementNS(svgNS, 'circle');
-          dot.setAttribute('cx', s.x * w);
-          dot.setAttribute('cy', s.y * h);
-          dot.setAttribute('r', s.r);
-          dot.setAttribute('fill', `rgba(255,255,255,${s.a})`);
-          svg.appendChild(dot);
-        });
-      }
+          // Node stars
+          centers.forEach((c, i) => {
+            const r = (cfg.brightStar === i) ? 5 : 3.5;
+            const a = (cfg.brightStar === i) ? 0.65 : 0.45;
+            const dot = document.createElementNS(svgNS, 'circle');
+            dot.setAttribute('cx', c.x);
+            dot.setAttribute('cy', c.y);
+            dot.setAttribute('r', r);
+            dot.setAttribute('fill', `rgba(255,255,255,${a})`);
+            dot.setAttribute('filter', `url(#${cfg.filterId})`);
+            svg.appendChild(dot);
+          });
 
-      // Draw after reveal animations settle
-      let drawn = false;
-      const lyraObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting && !drawn) {
-            drawn = true;
-            setTimeout(drawLyra, 900);
-            lyraObserver.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.05 });
-      lyraObserver.observe(constellation);
+          // Decorative stars
+          cfg.decorStars.forEach(s => {
+            const dot = document.createElementNS(svgNS, 'circle');
+            dot.setAttribute('cx', s.x * w);
+            dot.setAttribute('cy', s.y * h);
+            dot.setAttribute('r', s.r);
+            dot.setAttribute('fill', `rgba(255,255,255,${s.a})`);
+            svg.appendChild(dot);
+          });
+        }
 
+        cfg.draw = draw;
+
+        // Observe for visibility
+        const obs = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting && !cfg.drawn) {
+              cfg.drawn = true;
+              setTimeout(draw, 900);
+              obs.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.05 });
+        obs.observe(cfg.el);
+      });
+
+      // Redraw all on resize
       let resizeTimer;
       window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => { if (drawn) drawLyra(); }, 200);
+        resizeTimer = setTimeout(() => {
+          constellations.forEach(cfg => { if (cfg.drawn && cfg.draw) cfg.draw(); });
+        }, 200);
       });
     })();
   </script>
