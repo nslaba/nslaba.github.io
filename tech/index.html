@@ -261,11 +261,11 @@
       padding: 0 2rem;
     }
 
-    /* Expressive constellation is more compact (fewer cards) */
+    /* Expressive constellation — same height, 4th star is decorative */
     #exp-grid.constellation {
-      height: 72vh;
-      min-height: 540px;
-      max-height: 780px;
+      height: 85vh;
+      min-height: 660px;
+      max-height: 900px;
     }
 
     .constellation .project-card {
@@ -306,15 +306,16 @@
     #edu-grid .project-card:nth-of-type(3) { left: 26%; top: 52%; }
     #edu-grid .project-card:nth-of-type(4) { left: 70%; top: 54%; }
 
-    /* Lyra star positions (expressive) — Vega at apex
+    /* Lyra star positions (expressive) — kite shape
           Vega(1)
          /      \
        (2) ---- (3)
-       decorative δ,ζ dots below
+         \      /
+           ★ δ (decorative, drawn in JS)
     */
-    #exp-grid .project-card:nth-of-type(1) { left: 50%; top: 14%; }
-    #exp-grid .project-card:nth-of-type(2) { left: 28%; top: 60%; }
-    #exp-grid .project-card:nth-of-type(3) { left: 72%; top: 60%; }
+    #exp-grid .project-card:nth-of-type(1) { left: 50%; top: 10%; }
+    #exp-grid .project-card:nth-of-type(2) { left: 24%; top: 46%; }
+    #exp-grid .project-card:nth-of-type(3) { left: 76%; top: 46%; }
 
     /* Compact card styling */
     .constellation .card-content { padding: 0.6rem 0.75rem; }
@@ -964,7 +965,7 @@
 
     <span class="constellation-label">
       <span class="constellation-label-name">Delphinus (constellation)</span>
-      <span class="constellation-label-note">The dolphin — symbol of intelligence and playful discovery</span>
+      <span class="constellation-label-note">The dolphin — tying play and learning together since antiquity</span>
     </span>
   </div>
 
@@ -1345,7 +1346,7 @@
           ],
           brightStar: null,
           // ε Delphini tail: extends down-left from γ (card index 2)
-          tailStar: { fromCard: 2, x: 0.16, y: 0.80 },
+          tailStar: { x: 0.16, y: 0.80, connectTo: [2] },
           decorStars: [
             { x: 0.08, y: 0.08,  r: 1.1, a: 0.12 },
             { x: 0.92, y: 0.06,  r: 0.9, a: 0.10 },
@@ -1368,7 +1369,7 @@
             [1, 2], // crossbar
           ],
           brightStar: 0, // Vega is brightest
-          tailStar: null,
+          tailStar: { x: 0.50, y: 0.82, connectTo: [1, 2] },
           decorStars: [
             { x: 0.44, y: 0.06,  r: 2.0, a: 0.30 },  // ε¹ Lyrae
             { x: 0.46, y: 0.04,  r: 1.6, a: 0.22 },  // ε² Lyrae
@@ -1464,24 +1465,26 @@
             svg.appendChild(dot);
           });
 
-          // Tail star (ε Delphini) — decorative glowing star, not a card
-          if (cfg.tailStar && cfg.tailStar.fromCard < centers.length) {
+          // Decorative tail star — glowing star connected to card(s)
+          if (cfg.tailStar) {
             const tx = cfg.tailStar.x * w;
             const ty = cfg.tailStar.y * h;
-            const from = centers[cfg.tailStar.fromCard];
 
-            // Line from card to tail star
-            const tLine = document.createElementNS(svgNS, 'line');
-            tLine.setAttribute('x1', from.x);
-            tLine.setAttribute('y1', from.y);
-            tLine.setAttribute('x2', tx);
-            tLine.setAttribute('y2', ty);
-            tLine.setAttribute('stroke', 'rgba(255,255,255,0.13)');
-            tLine.setAttribute('stroke-width', '1.5');
-            svg.appendChild(tLine);
+            // Lines from each connected card to the tail star
+            cfg.tailStar.connectTo.forEach(ci => {
+              if (ci >= centers.length) return;
+              const from = centers[ci];
+              const tLine = document.createElementNS(svgNS, 'line');
+              tLine.setAttribute('x1', from.x);
+              tLine.setAttribute('y1', from.y);
+              tLine.setAttribute('x2', tx);
+              tLine.setAttribute('y2', ty);
+              tLine.setAttribute('stroke', 'rgba(255,255,255,0.13)');
+              tLine.setAttribute('stroke-width', '1.5');
+              svg.appendChild(tLine);
+            });
 
             // Multi-layered glowing star
-            // Outer halo
             const halo = document.createElementNS(svgNS, 'circle');
             halo.setAttribute('cx', tx); halo.setAttribute('cy', ty);
             halo.setAttribute('r', '18');
@@ -1489,7 +1492,6 @@
             halo.setAttribute('filter', `url(#${cfg.filterId})`);
             svg.appendChild(halo);
 
-            // Mid glow
             const mid = document.createElementNS(svgNS, 'circle');
             mid.setAttribute('cx', tx); mid.setAttribute('cy', ty);
             mid.setAttribute('r', '8');
@@ -1497,7 +1499,6 @@
             mid.setAttribute('filter', `url(#${cfg.filterId})`);
             svg.appendChild(mid);
 
-            // Core
             const core = document.createElementNS(svgNS, 'circle');
             core.setAttribute('cx', tx); core.setAttribute('cy', ty);
             core.setAttribute('r', '3.5');
@@ -1505,7 +1506,7 @@
             core.setAttribute('filter', `url(#${cfg.filterId})`);
             svg.appendChild(core);
 
-            // Cross spikes
+            // Subtle cross spikes
             [[0,1],[1,0]].forEach(([dx,dy]) => {
               const spike = document.createElementNS(svgNS, 'line');
               spike.setAttribute('x1', tx - dx * 12 - dy * 12);
