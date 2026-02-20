@@ -348,13 +348,12 @@
       overflow: visible;
     }
 
-    /* Lyra label */
+    /* Lyra label — bottom left */
     .constellation-label {
       position: absolute;
-      bottom: 1.2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
+      bottom: 1.5rem;
+      left: 2.5rem;
+      text-align: left;
       z-index: 1;
     }
 
@@ -370,11 +369,64 @@
     .constellation-label-note {
       display: block;
       font-family: 'Inter', sans-serif;
-      font-size: 0.5rem;
+      font-size: 0.48rem;
       color: rgba(255,255,255,0.07);
       font-style: italic;
-      margin-top: 0.25rem;
+      margin-top: 0.3rem;
       letter-spacing: 0.02em;
+      max-width: 220px;
+      line-height: 1.5;
+    }
+
+    /* Step indicators */
+    .constellation .project-card {
+      overflow: visible;
+    }
+
+    .constellation .project-card::after {
+      content: attr(data-step);
+      position: absolute;
+      top: -1.4rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5rem;
+      color: rgba(255,255,255,0.18);
+      letter-spacing: 0.1em;
+      white-space: nowrap;
+    }
+
+    /* Prereqs — inline on hover */
+    .constellation .card-prereq {
+      position: static;
+      inset: auto;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      padding: 0;
+      margin-top: 0;
+      justify-content: flex-start;
+      gap: 0.25rem;
+      z-index: auto;
+      transition: opacity 0.3s ease, max-height 0.3s ease, margin 0.3s ease;
+    }
+
+    .constellation .project-card:hover .card-prereq {
+      opacity: 1;
+      max-height: 50px;
+      margin-top: 0.35rem;
+    }
+
+    .constellation .card-prereq-label {
+      font-size: 0.38rem;
+      width: auto;
+      text-align: left;
+      margin-bottom: 0;
+    }
+
+    .constellation .card-prereq-item {
+      font-size: 0.4rem;
+      padding: 0.1rem 0.35rem;
     }
 
     /* Project Cards */
@@ -789,7 +841,7 @@
 
   <div class="constellation" id="edu-grid">
 
-    <a href="projects/interactive-learning/dot-product/index.html" class="project-card">
+    <a href="projects/interactive-learning/dot-product/index.html" class="project-card" data-step="1">
       <div class="card-visual">
         <span class="card-badge">Interactive</span>
         <img src="../assets/images/tech/dot-product-thumbnail.svg" alt="Dot Product visualization">
@@ -813,7 +865,7 @@
       </div>
     </a>
 
-    <a href="projects/interactive-learning/hermite-splines/index.html" class="project-card">
+    <a href="projects/interactive-learning/hermite-splines/index.html" class="project-card" data-step="2">
       <div class="card-visual">
         <span class="card-badge">Interactive</span>
         <img src="../projects/OpenGL/HermiteSpline/hermiteSpline.gif" alt="Hermite Spline animation">
@@ -838,7 +890,7 @@
       </div>
     </a>
 
-    <a href="projects/interactive-learning/raytracer/index.html" class="project-card">
+    <a href="projects/interactive-learning/raytracer/index.html" class="project-card" data-step="3">
       <div class="card-visual">
         <span class="card-badge">Interactive</span>
         <img src="../projects/Raytracer/snapshot.png" alt="Ray traced scene">
@@ -863,7 +915,7 @@
       </div>
     </a>
 
-    <a href="../projects/IK/index.html" class="project-card">
+    <a href="../projects/IK/index.html" class="project-card" data-step="4">
       <div class="card-visual">
         <span class="card-badge">Interactive</span>
         <img src="../assets/images/tech/ik-thumbnail.svg" alt="Inverse Kinematics visualization">
