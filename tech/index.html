@@ -260,39 +260,83 @@
       padding: 0 3rem 6rem;
     }
 
-    /* Educational path — constellation layout */
-    .project-path {
+    /* Lyra constellation layout */
+    .constellation {
       position: relative;
-      max-width: 950px;
+      max-width: 1000px;
+      height: 82vh;
+      min-height: 620px;
+      max-height: 860px;
       margin: 0 auto;
-      padding: 0 3rem 6rem;
-      display: flex;
-      flex-direction: column;
-      gap: 2.5rem;
+      padding: 0 2rem;
     }
 
-    .project-path .project-card {
-      width: 52%;
-      max-width: 460px;
-      position: relative;
+    .constellation .project-card {
+      position: absolute;
+      width: 200px;
+      transform: translate(-50%, -50%) scale(0.8);
+      opacity: 0;
       z-index: 2;
-      transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.6s ease,
+                  box-shadow 0.5s ease,
+                  border-color 0.3s ease,
+                  background 0.3s ease;
     }
 
-    .project-path .project-card.revealed:hover {
-      transform: scale(1.05);
-      border-color: rgba(255,255,255,0.18);
-      box-shadow: 0 0 40px rgba(255,255,255,0.06), 0 20px 50px rgba(0,0,0,0.4);
-      z-index: 3;
+    .constellation .project-card.revealed {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
     }
 
-    /* Constellation positioning — zigzag pattern */
-    .project-path .project-card:nth-of-type(1) { align-self: flex-start; margin-left: 3%; }
-    .project-path .project-card:nth-of-type(2) { align-self: flex-end; margin-right: 5%; }
-    .project-path .project-card:nth-of-type(3) { align-self: flex-start; margin-left: 10%; }
-    .project-path .project-card:nth-of-type(4) { align-self: flex-end; margin-right: 0%; }
+    .constellation .project-card.revealed:hover {
+      transform: translate(-50%, -50%) scale(1.55);
+      z-index: 10;
+      box-shadow: 0 0 60px rgba(255,255,255,0.07), 0 8px 40px rgba(0,0,0,0.6);
+      border-color: rgba(255,255,255,0.2);
+      background: rgba(8,8,14,0.97);
+    }
 
-    /* SVG constellation overlay */
+    /* Lyra star positions */
+    .constellation .project-card:nth-of-type(1) { left: 50%; top: 10%; }
+    .constellation .project-card:nth-of-type(2) { left: 24%; top: 45%; }
+    .constellation .project-card:nth-of-type(3) { left: 76%; top: 45%; }
+    .constellation .project-card:nth-of-type(4) { left: 50%; top: 83%; }
+
+    /* Compact card styling */
+    .constellation .card-content { padding: 0.6rem 0.75rem; }
+    .constellation .card-title { font-size: 0.75rem; margin-bottom: 0.25rem; }
+    .constellation .card-desc {
+      font-size: 0.55rem;
+      line-height: 1.4;
+      color: rgba(255,255,255,0.35);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .constellation .project-card:hover .card-desc {
+      -webkit-line-clamp: unset;
+    }
+    .constellation .card-tags { margin-bottom: 0.4rem; gap: 0.25rem; }
+    .constellation .card-tag { font-size: 0.42rem; padding: 0.1rem 0.3rem; }
+    .constellation .card-badge { display: none; }
+    .constellation .card-prereq { display: none; }
+    .constellation .card-arrow { display: none; }
+    .constellation .project-card:hover .card-arrow {
+      display: flex;
+      width: 24px; height: 24px;
+      bottom: 0.5rem; right: 0.5rem;
+    }
+
+    /* Override #edu-grid prereq overlay in constellation */
+    .constellation#edu-grid .project-card:hover .card-tags,
+    .constellation#edu-grid .project-card:hover .card-title,
+    .constellation#edu-grid .project-card:hover .card-desc {
+      opacity: 1;
+    }
+
+    /* SVG constellation lines */
     .constellation-svg {
       position: absolute;
       top: 0;
@@ -302,6 +346,20 @@
       pointer-events: none;
       z-index: 1;
       overflow: visible;
+    }
+
+    /* Lyra label */
+    .constellation-label {
+      position: absolute;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5rem;
+      letter-spacing: 0.35em;
+      color: rgba(255,255,255,0.08);
+      text-transform: uppercase;
+      z-index: 1;
     }
 
     /* Project Cards */
@@ -617,24 +675,53 @@
         padding: 0.25rem 0;
       }
 
-      .project-path {
+      .constellation {
+        height: auto;
+        min-height: 0;
+        max-height: none;
         padding: 0 1.5rem 4rem;
+        display: flex;
+        flex-direction: column;
         gap: 1.5rem;
       }
 
-      .project-path .project-card,
-      .project-path .project-card:nth-of-type(1),
-      .project-path .project-card:nth-of-type(2),
-      .project-path .project-card:nth-of-type(3),
-      .project-path .project-card:nth-of-type(4) {
+      .constellation .project-card,
+      .constellation .project-card:nth-of-type(1),
+      .constellation .project-card:nth-of-type(2),
+      .constellation .project-card:nth-of-type(3),
+      .constellation .project-card:nth-of-type(4) {
+        position: static;
         width: 100%;
         max-width: 100%;
-        align-self: center;
-        margin-left: 0;
-        margin-right: 0;
+        transform: none;
+        left: auto;
+        top: auto;
       }
 
-      .constellation-svg {
+      .constellation .project-card.revealed {
+        transform: none;
+      }
+
+      .constellation .project-card.revealed:hover {
+        transform: scale(1.02);
+      }
+
+      .constellation .card-content { padding: 1.75rem; }
+      .constellation .card-title { font-size: 1.3rem; margin-bottom: 0.75rem; }
+      .constellation .card-desc {
+        font-size: 0.85rem;
+        line-height: 1.6;
+        color: rgba(255,255,255,0.5);
+        -webkit-line-clamp: unset;
+        display: block;
+      }
+      .constellation .card-tags { margin-bottom: 1rem; gap: 0.5rem; }
+      .constellation .card-tag { font-size: 0.6rem; padding: 0.25rem 0.5rem; }
+      .constellation .card-badge { display: block; }
+      .constellation .card-arrow { display: flex; width: 32px; height: 32px; bottom: 1rem; right: 1rem; }
+
+      .constellation-svg,
+      .constellation-label {
         display: none;
       }
 
@@ -685,7 +772,7 @@
     </div>
   </section>
 
-  <div class="project-path" id="edu-grid">
+  <div class="constellation" id="edu-grid">
 
     <a href="projects/interactive-learning/dot-product/index.html" class="project-card">
       <div class="card-visual">
@@ -786,6 +873,7 @@
       </div>
     </a>
 
+    <span class="constellation-label">Lyra</span>
   </div>
 
   <div class="divider"></div>
@@ -1138,166 +1226,147 @@
       });
     }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
 
-    document.querySelectorAll('.project-grid, .project-path').forEach(grid => {
+    document.querySelectorAll('.project-grid, .constellation').forEach(grid => {
       cardObserver.observe(grid);
     });
 
-    // --- Constellation lines between educational cards ---
+    // --- Lyra constellation lines ---
     (function() {
-      const path = document.querySelector('.project-path');
-      if (!path) return;
+      const constellation = document.querySelector('.constellation');
+      if (!constellation) return;
 
       const svgNS = 'http://www.w3.org/2000/svg';
       const svg = document.createElementNS(svgNS, 'svg');
       svg.classList.add('constellation-svg');
-      path.insertBefore(svg, path.firstChild);
+      constellation.insertBefore(svg, constellation.firstChild);
 
-      // Scatter star data (fixed random positions as fractions of container)
-      const scatterStars = [
-        { x: 0.08, y: 0.05, r: 1.2 }, { x: 0.92, y: 0.08, r: 0.8 },
-        { x: 0.45, y: 0.03, r: 1.0 }, { x: 0.78, y: 0.18, r: 0.7 },
-        { x: 0.15, y: 0.22, r: 0.9 }, { x: 0.62, y: 0.35, r: 1.1 },
-        { x: 0.03, y: 0.42, r: 0.6 }, { x: 0.88, y: 0.45, r: 0.8 },
-        { x: 0.35, y: 0.55, r: 1.0 }, { x: 0.95, y: 0.58, r: 0.7 },
-        { x: 0.22, y: 0.68, r: 0.9 }, { x: 0.72, y: 0.72, r: 0.6 },
-        { x: 0.50, y: 0.82, r: 1.1 }, { x: 0.10, y: 0.88, r: 0.8 },
-        { x: 0.82, y: 0.92, r: 0.7 }, { x: 0.42, y: 0.95, r: 0.9 },
-        { x: 0.68, y: 0.12, r: 0.5 }, { x: 0.30, y: 0.38, r: 0.6 },
-        { x: 0.55, y: 0.62, r: 0.5 }, { x: 0.18, y: 0.78, r: 0.7 },
+      // Lyra connection pattern (indices): diamond + crossbar
+      const connections = [
+        [0, 1], // Vega → left (Hermite)
+        [0, 2], // Vega → right (Ray Tracer)
+        [1, 2], // left → right (crossbar)
+        [1, 3], // left → bottom (IK)
+        [2, 3], // right → bottom (IK)
       ];
 
-      function drawConstellation() {
-        const cards = path.querySelectorAll('.project-card');
-        if (cards.length < 2) return;
+      // Decorative stars (ε Lyrae double-double + scattered)
+      const decorStars = [
+        { x: 0.44, y: 0.045, r: 2.0, a: 0.35 },  // ε¹ Lyrae
+        { x: 0.46, y: 0.03,  r: 1.6, a: 0.25 },  // ε² Lyrae
+        { x: 0.10, y: 0.12,  r: 1.0, a: 0.12 },
+        { x: 0.90, y: 0.08,  r: 0.8, a: 0.10 },
+        { x: 0.06, y: 0.55,  r: 0.9, a: 0.10 },
+        { x: 0.94, y: 0.62,  r: 0.7, a: 0.08 },
+        { x: 0.35, y: 0.70,  r: 0.8, a: 0.10 },
+        { x: 0.68, y: 0.25,  r: 0.7, a: 0.09 },
+        { x: 0.15, y: 0.88,  r: 0.6, a: 0.08 },
+        { x: 0.85, y: 0.90,  r: 0.7, a: 0.08 },
+        { x: 0.55, y: 0.58,  r: 0.5, a: 0.07 },
+        { x: 0.30, y: 0.20,  r: 0.6, a: 0.08 },
+      ];
 
-        const pathRect = path.getBoundingClientRect();
-        const w = pathRect.width;
-        const h = pathRect.height;
+      function isMobile() {
+        return window.innerWidth <= 900;
+      }
 
-        // Clear SVG
+      function drawLyra() {
+        if (isMobile()) { svg.style.display = 'none'; return; }
+        svg.style.display = '';
+
+        const cards = constellation.querySelectorAll('.project-card');
+        if (cards.length < 4) return;
+
+        const rect = constellation.getBoundingClientRect();
+        const w = rect.width;
+        const h = rect.height;
+
         while (svg.firstChild) svg.removeChild(svg.firstChild);
         svg.setAttribute('width', w);
         svg.setAttribute('height', h);
         svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
 
-        // Defs for glow filter
+        // Glow filter
         const defs = document.createElementNS(svgNS, 'defs');
         const filter = document.createElementNS(svgNS, 'filter');
-        filter.setAttribute('id', 'starGlow');
-        filter.setAttribute('x', '-50%');
-        filter.setAttribute('y', '-50%');
-        filter.setAttribute('width', '200%');
-        filter.setAttribute('height', '200%');
+        filter.setAttribute('id', 'lyraGlow');
+        filter.setAttribute('x', '-100%'); filter.setAttribute('y', '-100%');
+        filter.setAttribute('width', '300%'); filter.setAttribute('height', '300%');
         const blur = document.createElementNS(svgNS, 'feGaussianBlur');
-        blur.setAttribute('stdDeviation', '3');
-        blur.setAttribute('result', 'glow');
+        blur.setAttribute('stdDeviation', '4');
+        blur.setAttribute('result', 'g');
         const merge = document.createElementNS(svgNS, 'feMerge');
-        const m1 = document.createElementNS(svgNS, 'feMergeNode');
-        m1.setAttribute('in', 'glow');
-        const m2 = document.createElementNS(svgNS, 'feMergeNode');
-        m2.setAttribute('in', 'SourceGraphic');
-        merge.appendChild(m1);
-        merge.appendChild(m2);
-        filter.appendChild(blur);
-        filter.appendChild(merge);
+        ['g', 'SourceGraphic'].forEach(inp => {
+          const mn = document.createElementNS(svgNS, 'feMergeNode');
+          mn.setAttribute('in', inp);
+          merge.appendChild(mn);
+        });
+        filter.appendChild(blur); filter.appendChild(merge);
         defs.appendChild(filter);
         svg.appendChild(defs);
 
-        // Collect card anchor points (bottom-center → top-center of next)
-        const anchors = [];
-        cards.forEach((card) => {
-          const r = card.getBoundingClientRect();
-          anchors.push({
-            topX:    r.left + r.width / 2 - pathRect.left,
-            topY:    r.top - pathRect.top,
-            bottomX: r.left + r.width / 2 - pathRect.left,
-            bottomY: r.top + r.height - pathRect.top,
+        // Get card center points
+        const centers = [];
+        cards.forEach(card => {
+          const cr = card.getBoundingClientRect();
+          centers.push({
+            x: cr.left + cr.width / 2 - rect.left,
+            y: cr.top + cr.height / 2 - rect.top,
           });
         });
 
-        // Draw constellation lines + waypoint stars between adjacent cards
-        for (let i = 0; i < anchors.length - 1; i++) {
-          const from = anchors[i];
-          const to = anchors[i + 1];
+        // Draw constellation lines
+        connections.forEach(([a, b]) => {
+          const line = document.createElementNS(svgNS, 'line');
+          line.setAttribute('x1', centers[a].x);
+          line.setAttribute('y1', centers[a].y);
+          line.setAttribute('x2', centers[b].x);
+          line.setAttribute('y2', centers[b].y);
+          line.setAttribute('stroke', 'rgba(255,255,255,0.09)');
+          line.setAttribute('stroke-width', '1');
+          svg.appendChild(line);
+        });
 
-          const x1 = from.bottomX;
-          const y1 = from.bottomY + 8;
-          const x2 = to.topX;
-          const y2 = to.topY - 8;
+        // Node stars at card centers
+        centers.forEach((c, i) => {
+          const r = i === 0 ? 4 : 3; // Vega is brightest
+          const a = i === 0 ? 0.6 : 0.4;
+          const dot = document.createElementNS(svgNS, 'circle');
+          dot.setAttribute('cx', c.x);
+          dot.setAttribute('cy', c.y);
+          dot.setAttribute('r', r);
+          dot.setAttribute('fill', `rgba(255,255,255,${a})`);
+          dot.setAttribute('filter', 'url(#lyraGlow)');
+          svg.appendChild(dot);
+        });
 
-          // Midpoint with slight offset for organic feel
-          const mx = (x1 + x2) / 2 + (i % 2 === 0 ? 30 : -30);
-          const my = (y1 + y2) / 2;
-
-          // Line from card bottom to midpoint star
-          const line1 = document.createElementNS(svgNS, 'line');
-          line1.setAttribute('x1', x1); line1.setAttribute('y1', y1);
-          line1.setAttribute('x2', mx); line1.setAttribute('y2', my);
-          line1.setAttribute('stroke', 'rgba(255,255,255,0.1)');
-          line1.setAttribute('stroke-width', '1');
-          svg.appendChild(line1);
-
-          // Line from midpoint star to next card top
-          const line2 = document.createElementNS(svgNS, 'line');
-          line2.setAttribute('x1', mx); line2.setAttribute('y1', my);
-          line2.setAttribute('x2', x2); line2.setAttribute('y2', y2);
-          line2.setAttribute('stroke', 'rgba(255,255,255,0.1)');
-          line2.setAttribute('stroke-width', '1');
-          svg.appendChild(line2);
-
-          // Waypoint star at midpoint
-          const star = document.createElementNS(svgNS, 'circle');
-          star.setAttribute('cx', mx);
-          star.setAttribute('cy', my);
-          star.setAttribute('r', '3.5');
-          star.setAttribute('fill', 'rgba(255,255,255,0.6)');
-          star.setAttribute('filter', 'url(#starGlow)');
-          svg.appendChild(star);
-
-          // Node stars at card edges
-          [{ x: x1, y: y1 }, { x: x2, y: y2 }].forEach(pt => {
-            const dot = document.createElementNS(svgNS, 'circle');
-            dot.setAttribute('cx', pt.x);
-            dot.setAttribute('cy', pt.y);
-            dot.setAttribute('r', '2.5');
-            dot.setAttribute('fill', 'rgba(255,255,255,0.45)');
-            dot.setAttribute('filter', 'url(#starGlow)');
-            svg.appendChild(dot);
-          });
-        }
-
-        // Scatter ambient stars
-        scatterStars.forEach(s => {
+        // Decorative scatter stars
+        decorStars.forEach(s => {
           const dot = document.createElementNS(svgNS, 'circle');
           dot.setAttribute('cx', s.x * w);
           dot.setAttribute('cy', s.y * h);
           dot.setAttribute('r', s.r);
-          dot.setAttribute('fill', `rgba(255,255,255,${0.15 + s.r * 0.1})`);
+          dot.setAttribute('fill', `rgba(255,255,255,${s.a})`);
           svg.appendChild(dot);
         });
       }
 
-      // Draw after cards are revealed (give layout time to settle)
+      // Draw after reveal animations settle
       let drawn = false;
-      const constellationObserver = new IntersectionObserver((entries) => {
+      const lyraObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting && !drawn) {
             drawn = true;
-            // Wait for card reveal animations to finish
-            setTimeout(drawConstellation, 800);
-            constellationObserver.unobserve(entry.target);
+            setTimeout(drawLyra, 900);
+            lyraObserver.unobserve(entry.target);
           }
         });
       }, { threshold: 0.05 });
-      constellationObserver.observe(path);
+      lyraObserver.observe(constellation);
 
-      // Redraw on resize
       let resizeTimer;
       window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-          if (drawn) drawConstellation();
-        }, 200);
+        resizeTimer = setTimeout(() => { if (drawn) drawLyra(); }, 200);
       });
     })();
   </script>
