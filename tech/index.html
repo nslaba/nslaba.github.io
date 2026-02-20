@@ -257,8 +257,8 @@
       height: 92vh;
       min-height: 740px;
       max-height: 1020px;
-      margin: 0 auto 2rem;
-      padding: 0 2rem 4rem;
+      margin: 0 auto 0;
+      padding: 0 2rem 1.5rem;
     }
 
     /* Expressive constellation — same height, 4th star is decorative */
@@ -361,13 +361,13 @@
       overflow: visible;
     }
 
-    /* Lyra label — bottom left */
+    /* Constellation label — sits below the grid in normal flow */
     .constellation-label {
-      position: absolute;
-      bottom: 0;
-      left: 2.5rem;
+      display: block;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0.5rem 0 2rem 2.5rem;
       text-align: left;
-      z-index: 1;
     }
 
     .constellation-label-name {
@@ -963,11 +963,12 @@
       </div>
     </a>
 
-    <span class="constellation-label">
-      <span class="constellation-label-name">Delphinus (constellation)</span>
-      <span class="constellation-label-note">In Greek myth, a dolphin's cleverness won a favor from Poseidon — placed among the stars as a symbol of ingenuity at play</span>
-    </span>
   </div>
+
+  <span class="constellation-label">
+    <span class="constellation-label-name">Delphinus (constellation)</span>
+    <span class="constellation-label-note">In Greek myth, a dolphin's cleverness won a favor from Poseidon — placed among the stars as a symbol of ingenuity at play</span>
+  </span>
 
   <div class="divider"></div>
 
@@ -1035,11 +1036,12 @@
       </div>
     </a>
 
-    <span class="constellation-label">
-      <span class="constellation-label-name">Lyra (constellation)</span>
-      <span class="constellation-label-note">Orpheus's lyre — where Pythagoras first heard mathematics in music</span>
-    </span>
   </div>
+
+  <span class="constellation-label">
+    <span class="constellation-label-name">Lyra (constellation)</span>
+    <span class="constellation-label-note">Orpheus's lyre — where Pythagoras first heard mathematics in music</span>
+  </span>
 
   <!-- Footer -->
   <footer class="footer">
@@ -1346,7 +1348,7 @@
           ],
           brightStar: null,
           // ε Delphini tail: extends down-left from γ (card index 2)
-          tailStar: { x: 0.14, y: 0.97, connectTo: [2] },
+          tailStar: { x: 0.13, y: 0.985, connectTo: [2] },
           decorStars: [
             { x: 0.08, y: 0.08,  r: 1.1, a: 0.12 },
             { x: 0.92, y: 0.06,  r: 0.9, a: 0.10 },
