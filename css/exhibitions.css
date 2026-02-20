@@ -227,21 +227,16 @@
 .story-photos {
   display: flex;
   gap: 0.75rem;
-  overflow-x: auto;
   margin-top: 1.25rem;
   padding-bottom: 1rem;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) transparent;
 }
 
 .story-photos img {
-  height: 200px;
-  width: auto;
-  flex-shrink: 0;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 220px;
+  object-fit: cover;
   border-radius: 3px;
-  scroll-snap-align: start;
 }
 
 /* Exhibit list */
