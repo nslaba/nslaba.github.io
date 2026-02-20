@@ -18,6 +18,9 @@
 </head>
 <body class="art-page">
 
+  <!-- Tree ring background -->
+  <canvas id="tree-rings"></canvas>
+
   <!-- Navigation -->
   <nav class="art-nav">
     <a href="../index.html" class="logo">Home</a>
@@ -969,6 +972,84 @@
       });
 
     });
+  </script>
+
+  <!-- Tree ring background renderer -->
+  <script>
+    (function () {
+      var canvas = document.getElementById('tree-rings');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+
+      // Warm raw umber
+      var R = 112, G = 80, B = 48;
+
+      function rand(a, b) { return a + Math.random() * (b - a); }
+
+      function drawRing(cx, cy, baseR, squeeze, phases, opacity, lw) {
+        var steps = 240;
+        ctx.beginPath();
+        for (var i = 0; i <= steps; i++) {
+          var t = (i / steps) * Math.PI * 2;
+          var w = 0;
+          for (var p = 0; p < phases.length; p++) {
+            w += phases[p].a * Math.sin(phases[p].f * t + phases[p].o);
+          }
+          var r = baseR * (1 + w);
+          var x = cx + r * Math.cos(t);
+          var y = cy + r * squeeze * Math.sin(t);
+          if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.strokeStyle = 'rgba(' + R + ',' + G + ',' + B + ',' + opacity.toFixed(3) + ')';
+        ctx.lineWidth = lw;
+        ctx.stroke();
+      }
+
+      function drawTree(w, h) {
+        // Centers can bleed off-screen for partial arcs
+        var cx = rand(-w * 0.2, w * 1.2);
+        var cy = rand(-h * 0.15, h * 1.15);
+        var numRings = Math.round(rand(8, 18));
+        var squeeze = rand(0.78, 1.22);   // ellipse squish
+        var baseGap = rand(10, 30);       // base ring spacing
+
+        // Two wobble frequencies — low for broad undulation, high for texture
+        var phases = [
+          { f: rand(2, 5),  a: rand(0.007, 0.022), o: rand(0, Math.PI * 2) },
+          { f: rand(6, 12), a: rand(0.003, 0.009),  o: rand(0, Math.PI * 2) }
+        ];
+
+        var r = rand(15, 55); // innermost ring radius
+        for (var i = 0; i < numRings; i++) {
+          // Vary gap to mimic dry/wet growth years
+          r += baseGap * rand(0.55, 1.5);
+          var frac = i / numRings;
+          // Outer rings fade slightly
+          var opacity = rand(0.030, 0.062) * (1 - frac * 0.28);
+          var lw = rand(0.4, 1.1);
+          drawRing(cx, cy, r, squeeze, phases, opacity, lw);
+        }
+      }
+
+      function draw() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        var w = canvas.width, h = canvas.height;
+        var count = Math.round(rand(5, 8));
+        for (var i = 0; i < count; i++) drawTree(w, h);
+      }
+
+      draw();
+
+      var timer;
+      window.addEventListener('resize', function () {
+        clearTimeout(timer);
+        timer = setTimeout(draw, 250);
+      });
+    }());
   </script>
 
 </body>

@@ -3,10 +3,10 @@
    Clean, minimal, gallery-inspired
    ========================================================================== */
 
-/* Art-specific variables - pure white, black text */
+/* Art-specific variables - warm white, black text */
 .art-page {
-  --bg-primary: #ffffff;
-  --bg-surface: #ffffff;
+  --bg-primary: #faf8f5;
+  --bg-surface: #faf8f5;
   --text-primary: #000000;
   --text-secondary: #333333;
   --text-muted: #666666;
@@ -20,6 +20,16 @@
   background: var(--bg-primary);
   color: var(--text-primary);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Tree ring background canvas — fixed behind all content */
+#tree-rings {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
 }
 
 /* Navigation */
@@ -111,6 +121,9 @@
   align-items: center;
   padding: 8rem 2rem 4rem;
   text-align: center;
+  position: relative;
+  z-index: 1;
+  background: var(--bg-primary); /* masks the canvas in the hero area */
 }
 
 .art-hero-content {
@@ -203,6 +216,8 @@
 /* Gallery Section */
 .art-gallery {
   padding: 4rem 2rem;
+  position: relative;
+  z-index: 1;
 }
 
 .art-gallery h2 {
@@ -362,6 +377,8 @@
 /* Thoughts & Experiments */
 .art-thoughts {
   padding: 4rem 2rem;
+  position: relative;
+  z-index: 1;
 }
 
 .art-thoughts h2 {
@@ -399,6 +416,8 @@
   padding: 4rem 2rem;
   border-top: 1px solid var(--border);
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 .shop-teaser h2 {
@@ -463,6 +482,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
+  z-index: 1;
 }
 
 .art-footer-nav {
