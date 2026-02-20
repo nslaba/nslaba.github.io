@@ -178,7 +178,7 @@
   font-size: clamp(2rem, 5vw, 3rem);
   font-weight: 300;
   letter-spacing: 0.15em;
-  text-transform: lowercase;
+  text-transform: capitalize;
   color: var(--text-primary);
 }
 
@@ -193,14 +193,15 @@
 
 .story-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.3fr 0.7fr; /* text wider, image narrower */
   gap: 3rem;
   align-items: center;
-  margin-bottom: 3rem;
+  margin-bottom: 1.5rem;
 }
 
 .story-row--reverse {
   direction: rtl;
+  grid-template-columns: 0.7fr 1.3fr; /* with rtl: 0.7fr lands on right = image */
 }
 
 .story-row--reverse > * {
