@@ -18,6 +18,9 @@
 </head>
 <body class="art-page">
 
+  <!-- Tree ring background -->
+  <canvas id="tree-rings"></canvas>
+
   <!-- Navigation -->
   <nav class="art-nav">
     <a href="../index.html" class="logo">Gallery</a>
@@ -175,6 +178,55 @@
         if (e.key === 'ArrowRight') showNext();
       });
     });
+  </script>
+
+  <!-- Tree ring background renderer -->
+  <script>
+    (function () {
+      var canvas = document.getElementById('tree-rings');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      function rand(a, b) { return a + Math.random() * (b - a); }
+      var img = new Image();
+      img.src = '../../assets/images/art/tree-cross-section.png';
+      function draw() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (!img.complete || img.naturalWidth === 0) return;
+        var w = canvas.width, h = canvas.height;
+        var placed = [];
+        var target = Math.round(rand(16, 22));
+        for (var i = 0; i < target; i++) {
+          var size = rand(100, 380), r = size / 2;
+          var cx, cy, ok, tries = 0;
+          do {
+            cx = rand(-r * 0.3, w + r * 0.3);
+            cy = rand(-r * 0.3, h + r * 0.3);
+            ok = true;
+            for (var j = 0; j < placed.length; j++) {
+              var dx = cx - placed[j].cx, dy = cy - placed[j].cy;
+              if (dx * dx + dy * dy < Math.pow(r + placed[j].r, 2)) { ok = false; break; }
+            }
+            tries++;
+          } while (!ok && tries < 60);
+          if (!ok) continue;
+          placed.push({ cx: cx, cy: cy, r: r });
+          ctx.save();
+          ctx.globalAlpha = rand(0.07, 0.15);
+          ctx.translate(cx, cy);
+          ctx.rotate(rand(0, Math.PI * 2));
+          ctx.drawImage(img, -r, -r, size, size);
+          ctx.restore();
+        }
+      }
+      img.onload = draw;
+      var timer;
+      window.addEventListener('resize', function () {
+        clearTimeout(timer);
+        timer = setTimeout(draw, 250);
+      });
+    }());
   </script>
 
 </body>
