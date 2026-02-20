@@ -974,93 +974,54 @@
     });
   </script>
 
-  <!-- Tree ring background renderer -->
+  <!-- Tree cross-section background renderer -->
   <script>
     (function () {
       var canvas = document.getElementById('tree-rings');
       if (!canvas) return;
       var ctx = canvas.getContext('2d');
 
-      // Warm raw umber
-      var R = 112, G = 80, B = 48;
-
       function rand(a, b) { return a + Math.random() * (b - a); }
 
-      function drawRing(cx, cy, baseR, squeeze, phases, opacity, lw) {
-        var steps = 240;
-        ctx.beginPath();
-        for (var i = 0; i <= steps; i++) {
-          var t = (i / steps) * Math.PI * 2;
-          var w = 0;
-          for (var p = 0; p < phases.length; p++) {
-            w += phases[p].a * Math.sin(phases[p].f * t + phases[p].o);
-          }
-          var r = baseR * (1 + w);
-          var x = cx + r * Math.cos(t);
-          var y = cy + r * squeeze * Math.sin(t);
-          if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-        }
-        ctx.closePath();
-        ctx.strokeStyle = 'rgba(' + R + ',' + G + ',' + B + ',' + opacity.toFixed(3) + ')';
-        ctx.lineWidth = lw;
-        ctx.stroke();
-      }
-
-      // All rings in a cross-section share the same phase functions,
-      // so the wobble multiplier is identical at every angle — rings
-      // can never cross each other within the same tree.
-      function drawTree(cx, cy) {
-        var numRings = Math.round(rand(7, 13));
-        var squeeze = rand(0.80, 1.20);
-        var baseGap = rand(18, 32); // larger base ensures clear space between rings
-
-        // Reduced wobble amplitude keeps rings from looking tangled
-        var phases = [
-          { f: rand(2, 4),  a: rand(0.005, 0.013), o: rand(0, Math.PI * 2) },
-          { f: rand(6, 10), a: rand(0.002, 0.006),  o: rand(0, Math.PI * 2) }
-        ];
-
-        var r = rand(20, 60);
-        for (var i = 0; i < numRings; i++) {
-          // Min multiplier 0.85 guarantees rings never crowd each other visually
-          r += baseGap * rand(0.85, 1.5);
-          var frac = i / numRings;
-          var opacity = rand(0.068, 0.130) * (1 - frac * 0.25);
-          var lw = rand(0.5, 1.2);
-          drawRing(cx, cy, r, squeeze, phases, opacity, lw);
-        }
-      }
+      var img = new Image();
+      img.src = '../assets/images/art/tree-cross-section.png';
 
       function draw() {
-        canvas.width = window.innerWidth;
+        canvas.width  = window.innerWidth;
         canvas.height = window.innerHeight;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+        if (!img.complete || img.naturalWidth === 0) return;
+
         var w = canvas.width, h = canvas.height;
-        var count = Math.round(rand(4, 7));
-        var centers = [];
-        // Enforce minimum separation so cross-sections don't interleave
-        var minDist = Math.min(w, h) * 0.38;
+
+        // 7–10 stamps scattered across the full canvas
+        var count = Math.round(rand(7, 10));
 
         for (var i = 0; i < count; i++) {
-          var cx, cy, ok, attempts = 0;
-          do {
-            cx = rand(-w * 0.15, w * 1.15);
-            cy = rand(-h * 0.1,  h * 1.1);
-            ok = true;
-            for (var j = 0; j < centers.length; j++) {
-              var dx = cx - centers[j].x, dy = cy - centers[j].y;
-              if (dx * dx + dy * dy < minDist * minDist) { ok = false; break; }
-            }
-            attempts++;
-          } while (!ok && attempts < 30);
+          // Vary size: some small, some large, a few huge (partial bleed off edge)
+          var size = rand(120, 520);
 
-          centers.push({ x: cx, y: cy });
-          drawTree(cx, cy);
+          // Allow centres to sit partially off-screen for natural edge bleeds
+          var cx = rand(-size * 0.3, w + size * 0.3);
+          var cy = rand(-size * 0.3, h + size * 0.3);
+
+          // Random rotation — any angle
+          var angle = rand(0, Math.PI * 2);
+
+          // Very faint — each stamp between 6 % and 14 % opacity
+          var alpha = rand(0.06, 0.14);
+
+          ctx.save();
+          ctx.globalAlpha = alpha;
+          ctx.translate(cx, cy);
+          ctx.rotate(angle);
+          ctx.drawImage(img, -size / 2, -size / 2, size, size);
+          ctx.restore();
         }
       }
 
-      draw();
+      img.onload = draw;
 
       var timer;
       window.addEventListener('resize', function () {
