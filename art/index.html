@@ -995,28 +995,37 @@
 
         var w = canvas.width, h = canvas.height;
 
-        // 7–10 stamps scattered across the full canvas
-        var count = Math.round(rand(7, 10));
+        var placed = [];   // { cx, cy, r } — treat each stamp as a circle for collision
+        var target = Math.round(rand(16, 22));
 
-        for (var i = 0; i < count; i++) {
-          // Vary size: some small, some large, a few huge (partial bleed off edge)
-          var size = rand(120, 520);
+        for (var i = 0; i < target; i++) {
+          var size  = rand(100, 380);
+          var r     = size / 2;
+          var cx, cy, ok, tries = 0;
 
-          // Allow centres to sit partially off-screen for natural edge bleeds
-          var cx = rand(-size * 0.3, w + size * 0.3);
-          var cy = rand(-size * 0.3, h + size * 0.3);
+          // Rejection sampling: keep trying until a non-overlapping spot is found
+          do {
+            cx = rand(-r * 0.3, w + r * 0.3);
+            cy = rand(-r * 0.3, h + r * 0.3);
+            ok = true;
+            for (var j = 0; j < placed.length; j++) {
+              var dx   = cx - placed[j].cx;
+              var dy   = cy - placed[j].cy;
+              var minD = r + placed[j].r;
+              if (dx * dx + dy * dy < minD * minD) { ok = false; break; }
+            }
+            tries++;
+          } while (!ok && tries < 60);
 
-          // Random rotation — any angle
-          var angle = rand(0, Math.PI * 2);
+          if (!ok) continue; // couldn't fit — skip this stamp
 
-          // Very faint — each stamp between 6 % and 14 % opacity
-          var alpha = rand(0.06, 0.14);
+          placed.push({ cx: cx, cy: cy, r: r });
 
           ctx.save();
-          ctx.globalAlpha = alpha;
+          ctx.globalAlpha = rand(0.07, 0.15);
           ctx.translate(cx, cy);
-          ctx.rotate(angle);
-          ctx.drawImage(img, -size / 2, -size / 2, size, size);
+          ctx.rotate(rand(0, Math.PI * 2));
+          ctx.drawImage(img, -r, -r, size, size);
           ctx.restore();
         }
       }
