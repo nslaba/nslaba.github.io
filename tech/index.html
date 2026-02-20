@@ -369,7 +369,7 @@
       display: block;
       font-family: 'Inter', sans-serif;
       font-size: 0.58rem;
-      color: rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.4);
       font-style: italic;
       margin-top: 0.35rem;
       letter-spacing: 0.02em;
@@ -395,37 +395,51 @@
       white-space: nowrap;
     }
 
-    /* Prereqs — inline on hover */
+    /* Prereqs — side tooltip on hover */
     .constellation .card-prereq {
-      position: static;
+      position: absolute;
       inset: auto;
+      top: 50%;
+      left: calc(100% + 0.8rem);
+      transform: translateY(-50%);
       opacity: 0;
-      max-height: 0;
-      overflow: hidden;
-      padding: 0;
-      margin-top: 0;
+      width: max-content;
+      max-width: 140px;
+      padding: 0.5rem 0.65rem;
+      background: rgba(10,10,18,0.92);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      backdrop-filter: blur(8px);
+      pointer-events: none;
       justify-content: flex-start;
-      gap: 0.25rem;
-      z-index: auto;
-      transition: opacity 0.3s ease, max-height 0.3s ease, margin 0.3s ease;
+      gap: 0.3rem;
+      z-index: 20;
+      transition: opacity 0.3s ease;
     }
 
     .constellation .project-card:hover .card-prereq {
       opacity: 1;
-      max-height: 50px;
-      margin-top: 0.35rem;
+    }
+
+    /* Right-side card (3): show prereqs on the left */
+    .constellation .project-card:nth-of-type(3) .card-prereq {
+      left: auto;
+      right: calc(100% + 0.8rem);
     }
 
     .constellation .card-prereq-label {
-      font-size: 0.38rem;
-      width: auto;
+      font-size: 0.45rem;
+      width: 100%;
       text-align: left;
-      margin-bottom: 0;
+      margin-bottom: 0.1rem;
+      color: rgba(255,255,255,0.35);
     }
 
     .constellation .card-prereq-item {
-      font-size: 0.4rem;
-      padding: 0.1rem 0.35rem;
+      font-size: 0.48rem;
+      padding: 0.15rem 0.4rem;
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.12);
     }
 
     /* Project Cards */
