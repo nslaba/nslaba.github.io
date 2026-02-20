@@ -10,7 +10,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Roboto+Slab:wght@300;400;500&display=swap" rel="stylesheet">
 
   <!-- Styles -->
   <link rel="stylesheet" href="../../css/main.css">
@@ -57,10 +57,10 @@
 
     <!-- Photo strip -->
     <div class="story-photos">
-      <img src="../../assets/images/art/exhibitions/DSCF0361.JPG" alt="Shadow performance" loading="lazy">
-      <img src="../../assets/images/art/exhibitions/Jesse.webp" alt="Live music at exhibit" loading="lazy">
-      <img src="../../assets/images/art/exhibitions/7.webp" alt="People at exhibit" loading="lazy">
-      <img src="../../assets/images/art/exhibitions/IMG_6500.jpeg" alt="Press coverage" loading="lazy">
+      <div class="story-photos-item"><img src="../../assets/images/art/exhibitions/DSCF0361.JPG" alt="Shadow performance" loading="lazy"></div>
+      <div class="story-photos-item"><img src="../../assets/images/art/exhibitions/Jesse.webp" alt="Live music at exhibit" loading="lazy"></div>
+      <div class="story-photos-item"><img src="../../assets/images/art/exhibitions/7.webp" alt="People at exhibit" loading="lazy"></div>
+      <div class="story-photos-item"><img src="../../assets/images/art/exhibitions/IMG_6500.jpeg" alt="Press coverage" loading="lazy"></div>
     </div>
   </section>
 
@@ -110,6 +110,19 @@
     </span>
   </footer>
 
+  <!-- Lightbox Modal -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-content">
+      <button class="lightbox-close" aria-label="Close">&times;</button>
+      <button class="lightbox-nav lightbox-prev" aria-label="Previous">&lsaquo;</button>
+      <img src="" alt="">
+      <button class="lightbox-nav lightbox-next" aria-label="Next">&rsaquo;</button>
+      <div class="lightbox-caption">
+        <div class="lightbox-title"></div>
+      </div>
+    </div>
+  </div>
+
   <script>
     const navToggle = document.querySelector('.art-nav-toggle');
     const navLinks = document.querySelector('.art-nav-links');
@@ -121,6 +134,68 @@
       link.addEventListener('click', () => {
         navToggle.classList.remove('open');
         navLinks.classList.remove('open');
+      });
+    });
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = lightbox.querySelector('.lightbox-content > img');
+      const lightboxTitle = lightbox.querySelector('.lightbox-title');
+      const closeBtn = lightbox.querySelector('.lightbox-close');
+      const prevBtn = lightbox.querySelector('.lightbox-prev');
+      const nextBtn = lightbox.querySelector('.lightbox-next');
+
+      const images = Array.from(document.querySelectorAll('.story-images img, .story-photos img'));
+      let currentIndex = 0;
+
+      function openLightbox(index) {
+        currentIndex = index;
+        updateLightbox();
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      function updateLightbox() {
+        const img = images[currentIndex];
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt;
+        lightboxTitle.textContent = '';
+      }
+
+      function showPrev() {
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        updateLightbox();
+      }
+
+      function showNext() {
+        currentIndex = (currentIndex + 1) % images.length;
+        updateLightbox();
+      }
+
+      images.forEach((img, index) => {
+        img.addEventListener('click', () => openLightbox(index));
+      });
+
+      closeBtn.addEventListener('click', closeLightbox);
+      prevBtn.addEventListener('click', showPrev);
+      nextBtn.addEventListener('click', showNext);
+
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) closeLightbox();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') showPrev();
+        if (e.key === 'ArrowRight') showNext();
       });
     });
   </script>

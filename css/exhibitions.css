@@ -18,7 +18,7 @@
   min-height: 100vh;
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Roboto Slab', 'Inter', -apple-system, BlinkMacSystemFont, serif;
 }
 
 /* Tree ring background canvas — fixed behind all content */
@@ -214,6 +214,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  overflow: hidden;
+  border-radius: 3px;
 }
 
 .story-images img {
@@ -221,6 +223,12 @@
   height: 280px;
   object-fit: cover;
   border-radius: 3px;
+  cursor: pointer;
+  transition: transform 0.35s ease;
+}
+
+.story-images img:hover {
+  transform: scale(1.04);
 }
 
 /* Photo strip */
@@ -231,12 +239,25 @@
   padding-bottom: 1rem;
 }
 
-.story-photos img {
+.story-photos-item {
   flex: 1 1 0;
   min-width: 0;
+  overflow: hidden;
+  border-radius: 3px;
+}
+
+.story-photos img {
+  width: 100%;
   height: 220px;
   object-fit: cover;
   border-radius: 3px;
+  cursor: pointer;
+  transition: transform 0.35s ease;
+  display: block;
+}
+
+.story-photos img:hover {
+  transform: scale(1.04);
 }
 
 /* Exhibit list */
