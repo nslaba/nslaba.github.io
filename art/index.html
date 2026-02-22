@@ -803,30 +803,25 @@
 
   <!-- Category filter and lightbox script -->
   <script>
-    // Hero image cycle on hover
-    (function () {
-      const heroHover = document.querySelector('.hero-hover');
-      if (!heroHover) return;
-      const peek = heroHover.querySelector('.hero-peek');
+    document.addEventListener('DOMContentLoaded', () => {
+      // Hero image cycle on hover
+      const heroContent = document.querySelector('.art-hero-content');
+      const peek = document.querySelector('.hero-peek');
       const peekImg = peek.querySelector('img');
       const images = [
         '../assets/images/art/NatalieSlaba_1.jpg',
         '../assets/images/art/mural_mcgill3.webp'
       ];
       let index = 0;
-      heroHover.addEventListener('mouseenter', () => {
+      heroContent.addEventListener('mouseenter', () => {
         peekImg.src = images[index];
         index = (index + 1) % images.length;
         peek.classList.add('visible');
       });
-      heroHover.addEventListener('mouseleave', () => {
+      heroContent.addEventListener('mouseleave', () => {
         peek.classList.remove('visible');
       });
-    }());
-  </script>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
       // Mobile nav toggle
       const navToggle = document.querySelector('.art-nav-toggle');
       const navLinks = document.querySelector('.art-nav-links');
