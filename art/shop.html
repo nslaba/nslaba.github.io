@@ -47,7 +47,7 @@
   <!-- Originals -->
   <section class="shop-section">
     <h2>originals</h2>
-    <p class="shop-section-desc">Original paintings and prints available. Reach out to purchase or inquire about a piece.</p>
+    <p class="shop-section-desc">The following original paintings are available. Reach out to purchase or inquire about a piece.</p>
     <div class="shop-grid">
       <div class="shop-item">
         <div class="shop-item-img">
@@ -196,6 +196,55 @@
       &copy; 2025 Natalie Slaba
     </span>
   </footer>
+
+  <!-- Lightbox -->
+  <div class="shop-lightbox" id="shop-lightbox">
+    <button class="shop-lightbox-close" aria-label="Close">&times;</button>
+    <button class="shop-lightbox-nav shop-lightbox-prev" aria-label="Previous">&lsaquo;</button>
+    <img src="" alt="" class="shop-lightbox-img">
+    <button class="shop-lightbox-nav shop-lightbox-next" aria-label="Next">&rsaquo;</button>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const lightbox = document.getElementById('shop-lightbox');
+      const lightboxImg = lightbox.querySelector('.shop-lightbox-img');
+      const closeBtn = lightbox.querySelector('.shop-lightbox-close');
+      const prevBtn = lightbox.querySelector('.shop-lightbox-prev');
+      const nextBtn = lightbox.querySelector('.shop-lightbox-next');
+
+      const images = Array.from(document.querySelectorAll('.merch-item img'));
+      let currentIndex = 0;
+
+      function open(index) {
+        currentIndex = index;
+        lightboxImg.src = images[currentIndex].src;
+        lightboxImg.alt = images[currentIndex].alt;
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function close() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      function prev() { currentIndex = (currentIndex - 1 + images.length) % images.length; lightboxImg.src = images[currentIndex].src; lightboxImg.alt = images[currentIndex].alt; }
+      function next() { currentIndex = (currentIndex + 1) % images.length; lightboxImg.src = images[currentIndex].src; lightboxImg.alt = images[currentIndex].alt; }
+
+      images.forEach((img, i) => img.addEventListener('click', () => open(i)));
+      closeBtn.addEventListener('click', close);
+      prevBtn.addEventListener('click', prev);
+      nextBtn.addEventListener('click', next);
+      lightbox.addEventListener('click', (e) => { if (e.target === lightbox) close(); });
+      document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        if (e.key === 'Escape') close();
+        if (e.key === 'ArrowLeft') prev();
+        if (e.key === 'ArrowRight') next();
+      });
+    });
+  </script>
 
   <!-- Mobile nav toggle -->
   <script>
