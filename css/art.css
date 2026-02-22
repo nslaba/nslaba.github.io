@@ -222,7 +222,7 @@
   transition: opacity 0.4s ease;
 }
 
-.art-hero-content:hover .statement {
+.art-hero:hover .statement {
   opacity: 0;
 }
 
