@@ -230,7 +230,8 @@
 .shop-hint {
   font-size: 0.8rem;
   color: var(--text-muted);
-  margin-top: 3rem;
+  margin-top: auto;
+  padding-top: 2rem;
   position: relative;
   z-index: 2;
 }
