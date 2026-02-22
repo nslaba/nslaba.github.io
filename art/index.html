@@ -814,13 +814,15 @@
         '../assets/images/art/exhibitions/expo-hero.jpg'
       ];
       let index = 0;
-      hero.addEventListener('mouseenter', () => {
+      peek.addEventListener('mouseenter', () => {
         peekImg.src = images[index];
         index = (index + 1) % images.length;
         peek.classList.add('visible');
+        hero.classList.add('peeking');
       });
-      hero.addEventListener('mouseleave', () => {
+      peek.addEventListener('mouseleave', () => {
         peek.classList.remove('visible');
+        hero.classList.remove('peeking');
       });
 
       // Mobile nav toggle
