@@ -45,22 +45,38 @@
   <!-- Intro — text woven with photos -->
   <section class="exhibitions-story">
 
-    <div class="story-content">
-      <div class="story-texts">
+    <div class="story-grid">
+
+      <!-- Row 1: image left, para 1 right -->
+      <div class="story-grid__img">
+        <img src="../../assets/images/art/exhibitions/MG_4442.webp" alt="Crowd at exhibition opening" loading="lazy">
+      </div>
+      <div class="story-grid__text">
         <p>When I first started showing my work, I had no real sense of what I wanted from it. The impulse to make art has always been about expression — trying to communicate something I can't quite grasp with words yet, and wanting that idea to be seen, to connect with the world around me.</p>
+      </div>
+
+      <!-- Strip 1 -->
+      <div class="story-grid__strip">
+        <div class="story-img-wrap"><img src="../../assets/images/art/exhibitions/Jesse.webp" alt="Live music at the opening" loading="lazy"></div>
+        <div class="story-img-wrap"><img src="../../assets/images/art/exhibitions/DSCF0361.JPG" alt="Shadow and light show" loading="lazy"></div>
+        <div class="story-img-wrap"><img src="../../assets/images/art/exhibitions/7.webp" alt="Friends at the gallery" loading="lazy"></div>
+      </div>
+
+      <!-- Row 3: para 2 left, image right — diagonal from row 1 -->
+      <div class="story-grid__text">
         <p>Early on I thought exhibiting was about putting yourself out there, standing alone in a spotlight. With time I realized it was less about me and more about the pure act of bringing people into the same room. Getting them to look, to talk, to be present together. Connection is the primary intention behind my art making — and sharing my art can have the potentiality of creating just that.</p>
       </div>
-      <div class="story-images">
-        <img src="../../assets/images/art/exhibitions/MG_4442.webp" alt="Crowd at exhibition" loading="lazy">
+      <div class="story-grid__img">
+        <img src="../../assets/images/art/exhibitions/karim&amp;I.webp" alt="Karim and Nat at the gallery" loading="lazy">
       </div>
-    </div>
 
-    <!-- Photo strip -->
-    <div class="story-photos">
-      <div class="story-photos-item"><img src="../../assets/images/art/exhibitions/DSCF0361.JPG" alt="Shadow performance" loading="lazy"></div>
-      <div class="story-photos-item"><img src="../../assets/images/art/exhibitions/Jesse.webp" alt="Live music at exhibit" loading="lazy"></div>
-      <div class="story-photos-item"><img src="../../assets/images/art/exhibitions/7.webp" alt="People at exhibit" loading="lazy"></div>
-      <div class="story-photos-item"><img src="../../assets/images/art/exhibitions/IMG_6500.jpeg" alt="Press coverage" loading="lazy"></div>
+      <!-- Strip 2 — framing the bottom -->
+      <div class="story-grid__strip">
+        <div class="story-img-wrap"><img src="../../assets/images/art/exhibitions/13.webp" alt="Gallery visitors" loading="lazy"></div>
+        <div class="story-img-wrap"><img src="../../assets/images/art/exhibitions/18.webp" alt="Gallery entrance" loading="lazy"></div>
+        <div class="story-img-wrap"><img src="../../assets/images/art/exhibitions/IMG_6500.jpeg" alt="Press coverage" loading="lazy"></div>
+      </div>
+
     </div>
   </section>
 
@@ -147,7 +163,7 @@
       const prevBtn = lightbox.querySelector('.lightbox-prev');
       const nextBtn = lightbox.querySelector('.lightbox-next');
 
-      const images = Array.from(document.querySelectorAll('.story-images img, .story-photos img'));
+      const images = Array.from(document.querySelectorAll('.story-grid img'));
       let currentIndex = 0;
 
       function openLightbox(index) {

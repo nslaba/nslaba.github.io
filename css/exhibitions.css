@@ -192,72 +192,66 @@
   z-index: 1;
 }
 
-.story-content {
+/* Story grid — diagonal text/image composition */
+.story-grid {
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 3rem;
-  align-items: start;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
 }
 
-.story-texts {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
+.story-grid__img {
+  overflow: hidden;
+  border-radius: 4px;
 }
 
-.story-texts p {
+.story-grid__img img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  display: block;
+  cursor: pointer;
+  transition: transform 0.35s ease;
+}
+
+.story-grid__img img:hover {
+  transform: scale(1.04);
+}
+
+.story-grid__text {
+  align-self: center;
+  padding: 0.5rem 0.5rem;
+}
+
+.story-grid__text p {
   font-size: 0.9rem;
   color: var(--text-secondary);
   line-height: 1.9;
 }
 
-.story-images {
+/* Full-width image strips */
+.story-grid__strip {
+  grid-column: 1 / -1;
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  overflow: hidden;
-  border-radius: 3px;
+  gap: 1.5rem;
 }
 
-.story-images img {
-  width: 100%;
-  height: 280px;
-  object-fit: cover;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: transform 0.35s ease;
-}
-
-.story-images img:hover {
-  transform: scale(1.04);
-}
-
-/* Photo strip */
-.story-photos {
-  display: flex;
-  gap: 0.75rem;
-  margin-top: 1.25rem;
-  padding-bottom: 1rem;
-}
-
-.story-photos-item {
+.story-img-wrap {
   flex: 1 1 0;
   min-width: 0;
   overflow: hidden;
-  border-radius: 3px;
+  border-radius: 4px;
 }
 
-.story-photos img {
+.story-img-wrap img {
   width: 100%;
-  height: 220px;
+  height: 200px;
   object-fit: cover;
-  border-radius: 3px;
+  display: block;
   cursor: pointer;
   transition: transform 0.35s ease;
-  display: block;
 }
 
-.story-photos img:hover {
+.story-img-wrap img:hover {
   transform: scale(1.04);
 }
 
@@ -683,18 +677,15 @@ a.exhibit-row:hover .exhibit-row-arrow {
     padding: 1rem 1.5rem 3rem;
   }
 
-  .story-row,
-  .story-row--reverse {
+  .story-grid {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
-    direction: ltr;
   }
 
-  .story-image img {
+  .story-grid__img img {
     height: 200px;
   }
 
-  .story-photos img {
+  .story-img-wrap img {
     height: 150px;
   }
 
