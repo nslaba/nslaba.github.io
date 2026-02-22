@@ -40,7 +40,12 @@
   <!-- Hero -->
   <section class="art-hero">
     <div class="art-hero-content">
-      <p class="statement">The point of art for me has always been to play around and try to find something more true.</p>
+      <div class="hero-hover">
+        <p class="statement">The point of art for me has always been to play around and try to find something more true.</p>
+        <div class="hero-peek">
+          <img src="../assets/images/art/NatalieSlaba_1.jpg" alt="">
+        </div>
+      </div>
     </div>
     <p class="shop-hint">Some of these pieces are available — <a href="shop.html">visit the shop</a></p>
   </section>
@@ -797,6 +802,29 @@
   </div>
 
   <!-- Category filter and lightbox script -->
+  <script>
+    // Hero image cycle on hover
+    (function () {
+      const heroHover = document.querySelector('.hero-hover');
+      if (!heroHover) return;
+      const peek = heroHover.querySelector('.hero-peek');
+      const peekImg = peek.querySelector('img');
+      const images = [
+        '../assets/images/art/NatalieSlaba_1.jpg',
+        '../assets/images/art/mural_mcgill3.webp'
+      ];
+      let index = 0;
+      heroHover.addEventListener('mouseenter', () => {
+        peekImg.src = images[index];
+        index = (index + 1) % images.length;
+        peek.classList.add('visible');
+      });
+      heroHover.addEventListener('mouseleave', () => {
+        peek.classList.remove('visible');
+      });
+    }());
+  </script>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // Mobile nav toggle
