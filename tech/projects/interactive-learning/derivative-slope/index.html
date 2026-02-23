@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Slope Problem | Natalie Slaba</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #0f0f1a;
+            --color-surface: #1a1a2e;
+            --color-primary: #6366f1;
+            --color-secondary: #818cf8;
+            --color-accent: #a5b4fc;
+            --color-success: #10b981;
+            --color-warn: #fbbf24;
+            --color-danger: #ef4444;
+            --color-white: #fafafa;
+            --color-gray-400: #a3a3a3;
+            --font-sans: 'Inter', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-sans); background: var(--color-bg); color: var(--color-white); overflow: hidden; }
+        #canvas { display: block; width: 100vw; height: 100vh; }
+
+        .ui-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 10;
+        }
+        .game-nav { position: absolute; top: 1.5rem; left: 1.5rem; pointer-events: auto; }
+        .back-link {
+            font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-gray-400);
+            text-decoration: none; display: flex; align-items: center; gap: 0.5rem; transition: color 0.2s;
+        }
+        .back-link:hover { color: var(--color-primary); }
+
+        .level-title {
+            position: absolute; top: 1.5rem; left: 50%; transform: translateX(-50%);
+            font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.1em;
+            text-transform: uppercase; color: var(--color-primary); white-space: nowrap;
+        }
+        .objective {
+            position: absolute; top: 3.5rem; left: 50%; transform: translateX(-50%);
+            font-size: 0.9rem; color: var(--color-gray-400); text-align: center;
+            max-width: 420px; line-height: 1.6; padding: 0 1rem;
+        }
+
+        .info-panel {
+            position: absolute; right: 2rem; top: 50%; transform: translateY(-50%);
+            background: rgba(26, 26, 46, 0.85); border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 8px; padding: 1.5rem; width: 190px;
+            display: flex; flex-direction: column; gap: 1.5rem;
+            pointer-events: auto;
+        }
+        .ctrl-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        .ctrl-label {
+            font-family: var(--font-mono); font-size: 0.65rem; color: var(--color-gray-400);
+            text-transform: uppercase; letter-spacing: 0.1em;
+        }
+        .val-display {
+            font-family: var(--font-mono); font-size: 1.6rem; font-weight: 600;
+            color: var(--color-white); line-height: 1;
+        }
+        .slope-display {
+            font-family: var(--font-mono); font-size: 1.6rem; font-weight: 600;
+            color: var(--color-white); line-height: 1; transition: color 0.2s;
+        }
+
+        /* Slope tilt indicator */
+        .slope-meter {
+            width: 100%; height: 38px; position: relative;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .slope-meter::before {
+            content: ''; position: absolute;
+            width: 100%; height: 1px; background: rgba(255,255,255,0.07);
+        }
+        .slope-meter-line {
+            width: 72%; height: 2px; border-radius: 1px;
+            background: var(--color-gray-400); transform-origin: center;
+            position: relative;
+        }
+        .slope-meter-line::before,
+        .slope-meter-line::after {
+            content: ''; position: absolute; top: 50%;
+            width: 5px; height: 5px; border-radius: 50%; background: inherit;
+        }
+        .slope-meter-line::before { left: 0; transform: translate(-50%, -50%); }
+        .slope-meter-line::after  { right: 0; transform: translate(50%, -50%); }
+
+        .instruction {
+            position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+            font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-gray-400);
+            background: rgba(255,255,255,0.03); padding: 0.75rem 1.5rem;
+            border-radius: 4px; border: 1px solid rgba(255,255,255,0.05); white-space: nowrap;
+        }
+
+        .modal {
+            position: absolute; top: 50%; left: 38%; transform: translate(-50%, -50%) scale(0.9);
+            background: var(--color-surface); padding: 2.5rem; border-radius: 8px; text-align: left;
+            opacity: 0; visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 1px solid rgba(99,102,241,0.3);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(99,102,241,0.15);
+            pointer-events: auto; width: min(480px, 90vw);
+        }
+        .modal.show { transform: translate(-50%, -50%) scale(1); opacity: 1; visibility: visible; }
+        .modal h2 {
+            font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.15em;
+            text-transform: uppercase; color: var(--color-success); margin-bottom: 1rem;
+        }
+        .modal-body {
+            font-size: 0.92rem; color: var(--color-gray-400); line-height: 1.75; margin-bottom: 0.75rem;
+        }
+        .modal-body strong { color: var(--color-white); }
+        .formula {
+            font-family: var(--font-mono); font-size: 0.95rem; color: var(--color-accent);
+            text-align: center; margin: 1.25rem 0; line-height: 1.8;
+            background: rgba(99,102,241,0.06); border-radius: 4px; padding: 0.75rem 1rem;
+        }
+        .next-btn {
+            font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.05em;
+            text-transform: uppercase; background: transparent; color: var(--color-primary);
+            border: 1px solid var(--color-primary); padding: 0.75rem 2rem;
+            border-radius: 4px; cursor: pointer; transition: all 0.2s; margin-top: 0.75rem;
+            display: block;
+        }
+        .next-btn:hover { background: var(--color-primary); color: white; }
+    </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+
+<div class="ui-overlay">
+    <nav class="game-nav">
+        <a href="../../../index.html" class="back-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Back to Projects
+        </a>
+    </nav>
+
+    <div class="level-title" id="levelTitle">Level 1</div>
+    <div class="objective" id="objective"></div>
+
+    <div class="info-panel">
+        <div class="ctrl-group">
+            <div class="ctrl-label">x</div>
+            <div class="val-display" id="xVal">—</div>
+        </div>
+        <div class="ctrl-group">
+            <div class="ctrl-label">f(x)</div>
+            <div class="val-display" id="fxVal">—</div>
+        </div>
+        <div class="ctrl-group">
+            <div class="ctrl-label">slope f′(x)</div>
+            <div class="slope-display" id="slopeVal">—</div>
+            <div class="slope-meter">
+                <div class="slope-meter-line" id="slopeLine"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="instruction" id="instruction">Drag the point · watch the line flatten · find slope = 0</div>
+
+    <div class="modal" id="modal">
+        <h2 id="modalTitle"></h2>
+        <div class="modal-body" id="modalMsg"></div>
+        <button class="next-btn" id="nextBtn"></button>
+    </div>
+</div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+const H = 0.0001;
+let level = 0, done = false, dragging = false;
+
+const levels = [
+    {
+        title: 'Level 1: The Moving Slope',
+        objective: 'Drag the point along the curve. The line shows how steep the curve is at that spot. Find where the slope equals zero.',
+        f: x => -(x - 2) * (x - 2) + 4,
+        a: 0, b: 4,
+        yMin: -0.3, yMax: 4.8,
+        startX: 0.4,
+        winThreshold: 0.3,
+        xTicks: [{ v: 0, label: '0' }, { v: 2, label: '2' }, { v: 4, label: '4' }],
+        yTicks: [{ v: 2, label: '2' }, { v: 4, label: '4' }],
+        successMsg: 'The slope is zero at the peak — the curve is momentarily flat. ' +
+            'On the way up, the slope was positive. On the way down, negative. ' +
+            'At the top, it\'s zero: the exact moment rising turns to falling.',
+    },
+    {
+        title: 'Level 2: Peaks and Valleys',
+        objective: 'This curve rises, falls, then rises again. Drag the point to find where the slope is zero.',
+        f: x => x * x * x - 6 * x * x + 9 * x + 1,
+        a: 0, b: 4,
+        yMin: -0.3, yMax: 6.0,
+        startX: 0.2,
+        winThreshold: 0.3,
+        xTicks: [{ v: 0, label: '0' }, { v: 1, label: '1' }, { v: 2, label: '2' }, { v: 3, label: '3' }, { v: 4, label: '4' }],
+        yTicks: [{ v: 2, label: '2' }, { v: 4, label: '4' }],
+        successMsg: 'You found a turning point — where the slope crosses zero. ' +
+            'This curve has two: a local maximum at x = 1 and a local minimum at x = 3. ' +
+            'At both, the tangent line goes flat.',
+    }
+];
+
+let pointX = levels[0].startX;
+let plotLeft, plotRight, plotTop, plotBottom, plotW, plotH;
+
+function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    plotLeft   = Math.max(60, canvas.width * 0.07);
+    plotRight  = Math.min(canvas.width - 240, canvas.width * 0.62);
+    plotTop    = canvas.height * 0.18;
+    plotBottom = canvas.height * 0.82;
+    plotW = plotRight - plotLeft;
+    plotH = plotBottom - plotTop;
+}
+resize();
+window.addEventListener('resize', resize);
+
+function cx(x) {
+    const lv = levels[level];
+    return plotLeft + (x - lv.a) / (lv.b - lv.a) * plotW;
+}
+function cy(y) {
+    const lv = levels[level];
+    return plotBottom - (y - lv.yMin) / (lv.yMax - lv.yMin) * plotH;
+}
+function pxToX(px) {
+    const lv = levels[level];
+    return lv.a + (px - plotLeft) / plotW * (lv.b - lv.a);
+}
+function clamp(val, lo, hi) { return Math.max(lo, Math.min(hi, val)); }
+
+function derivative(x) {
+    return (levels[level].f(x + H) - levels[level].f(x - H)) / (2 * H);
+}
+
+function slopeColor(s) {
+    if (Math.abs(s) < 0.5) return '#fbbf24';
+    return s > 0 ? '#10b981' : '#ef4444';
+}
+
+function draw() {
+    const lv = levels[level];
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#0f0f1a';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Background grid
+    ctx.strokeStyle = 'rgba(99,102,241,0.04)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < canvas.width; x += 50) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+    }
+    for (let y = 0; y < canvas.height; y += 50) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+    }
+
+    const slope = derivative(pointX);
+    const fx    = lv.f(pointX);
+    const col   = slopeColor(slope);
+
+    // --- Update HTML info panel ---
+    document.getElementById('xVal').textContent = pointX.toFixed(2);
+    document.getElementById('fxVal').textContent = fx.toFixed(2);
+    const slopeEl = document.getElementById('slopeVal');
+    slopeEl.textContent = (slope >= 0 ? '+' : '') + slope.toFixed(2);
+    slopeEl.style.color = col;
+
+    // Slope tilt indicator
+    const angle = Math.atan(slope * 0.28); // 0.28 = visual scale factor
+    const lineEl = document.getElementById('slopeLine');
+    lineEl.style.transform = `rotate(${-angle}rad)`;
+    lineEl.style.background = col;
+
+    // --- Axes ---
+    const axisY = cy(0);
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(plotLeft - 8, axisY); ctx.lineTo(plotRight + 8, axisY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(plotLeft, plotTop - 8); ctx.lineTo(plotLeft, axisY + 8); ctx.stroke();
+
+    // x tick labels
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    ctx.font = '12px JetBrains Mono, monospace';
+    ctx.textAlign = 'center';
+    lv.xTicks.forEach(t => {
+        ctx.fillText(t.label, cx(t.v), axisY + 18);
+        ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(cx(t.v), axisY - 3); ctx.lineTo(cx(t.v), axisY + 3); ctx.stroke();
+    });
+
+    // y tick labels
+    ctx.textAlign = 'right';
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.fillText('0', plotLeft - 8, axisY + 4);
+    lv.yTicks.forEach(t => {
+        ctx.fillText(t.label, plotLeft - 8, cy(t.v) + 4);
+        ctx.strokeStyle = 'rgba(255,255,255,0.1)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(plotLeft - 3, cy(t.v)); ctx.lineTo(plotLeft + 3, cy(t.v)); ctx.stroke();
+    });
+
+    // --- Curve ---
+    ctx.beginPath();
+    ctx.strokeStyle = '#a5b4fc';
+    ctx.lineWidth = 2.5;
+    ctx.lineJoin = 'round';
+    for (let i = 0; i <= 400; i++) {
+        const x = lv.a + (lv.b - lv.a) * i / 400;
+        const y = lv.f(x);
+        i === 0 ? ctx.moveTo(cx(x), cy(y)) : ctx.lineTo(cx(x), cy(y));
+    }
+    ctx.stroke();
+
+    // Vertical guide from point to x-axis
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(cx(pointX), cy(fx));
+    ctx.lineTo(cx(pointX), axisY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // --- Tangent line (clipped to plot area) ---
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(plotLeft - 1, plotTop - 1, plotW + 2, plotH + 2);
+    ctx.clip();
+
+    const extent = (lv.b - lv.a) * 0.35;
+    const t0 = pointX - extent;
+    const t1 = pointX + extent;
+    ctx.strokeStyle = col;
+    ctx.lineWidth = 2;
+    ctx.setLineDash([8, 5]);
+    ctx.beginPath();
+    ctx.moveTo(cx(t0), cy(fx + slope * (t0 - pointX)));
+    ctx.lineTo(cx(t1), cy(fx + slope * (t1 - pointX)));
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+
+    // --- Draggable point ---
+    const ptX = cx(pointX);
+    const ptY = cy(fx);
+
+    // Glow
+    const grd = ctx.createRadialGradient(ptX, ptY, 0, ptX, ptY, 22);
+    grd.addColorStop(0, col + '50');
+    grd.addColorStop(1, 'transparent');
+    ctx.fillStyle = grd;
+    ctx.beginPath();
+    ctx.arc(ptX, ptY, 22, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Circle
+    ctx.fillStyle = '#fff';
+    ctx.strokeStyle = col;
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.arc(ptX, ptY, 7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // "slope ≈ 0" hint near the zero
+    if (Math.abs(slope) < 0.5 && !done) {
+        ctx.fillStyle = '#fbbf24';
+        ctx.font = '11px JetBrains Mono, monospace';
+        ctx.textAlign = 'left';
+        ctx.fillText('slope ≈ 0', ptX + 12, ptY - 12);
+    }
+
+    // --- Win check ---
+    if (Math.abs(slope) < lv.winThreshold && !done) {
+        done = true;
+        setTimeout(() => showSuccess(slope), 700);
+    }
+}
+
+function showSuccess(slope) {
+    const lv = levels[level];
+    document.getElementById('modalTitle').textContent = 'slope = 0 — found it';
+    document.getElementById('modalMsg').textContent = lv.successMsg;
+
+    const btn = document.getElementById('nextBtn');
+    if (level < levels.length - 1) {
+        btn.textContent = 'Next Level';
+        btn.onclick = () => {
+            document.getElementById('modal').classList.remove('show');
+            level++;
+            pointX = levels[level].startX;
+            done = false;
+            loadLevel();
+        };
+    } else {
+        btn.textContent = 'See the big picture';
+        btn.onclick = () => {
+            document.getElementById('modal').classList.remove('show');
+            showReveal();
+        };
+    }
+    document.getElementById('modal').classList.add('show');
+}
+
+function showReveal() {
+    done = true;
+    document.getElementById('levelTitle').textContent = 'The Derivative';
+    document.getElementById('objective').textContent = '';
+    document.getElementById('instruction').style.visibility = 'hidden';
+
+    document.getElementById('modalTitle').textContent = 'You just discovered the derivative';
+    document.getElementById('modalMsg').innerHTML =
+        'Every time you dragged that point, you were measuring the <strong>instantaneous rate of change</strong> — ' +
+        'how fast the curve was rising or falling at a single moment. That\'s exactly what the derivative is.<br><br>' +
+        'It\'s defined as a limit — the slope of a line between two points as those points get infinitely close:' +
+        '<div class="formula">f′(x) &nbsp;=&nbsp; lim<sub>h→0</sub> &nbsp; [f(x + h) − f(x)] / h</div>' +
+        'At a maximum or minimum, the curve momentarily stops rising or falling — ' +
+        'so the slope must pass through zero: <strong>f′(x) = 0</strong>. ' +
+        'That\'s how calculus finds the peaks and valleys of any curve.';
+
+    const btn = document.getElementById('nextBtn');
+    btn.textContent = 'Play again';
+    btn.onclick = () => {
+        document.getElementById('modal').classList.remove('show');
+        document.getElementById('instruction').style.visibility = '';
+        level = 0; done = false;
+        pointX = levels[0].startX;
+        loadLevel();
+    };
+    document.getElementById('modal').classList.add('show');
+}
+
+function loadLevel() {
+    const lv = levels[level];
+    document.getElementById('levelTitle').textContent = lv.title;
+    document.getElementById('objective').textContent = lv.objective;
+}
+
+// --- Drag handling ---
+function getCanvasX(clientX) {
+    const rect = canvas.getBoundingClientRect();
+    return (clientX - rect.left) * (canvas.width / rect.width);
+}
+function getCanvasY(clientY) {
+    const rect = canvas.getBoundingClientRect();
+    return (clientY - rect.top) * (canvas.height / rect.height);
+}
+function inPlot(cx, cy) {
+    return cx >= plotLeft && cx <= plotRight && cy >= plotTop && cy <= plotBottom;
+}
+
+canvas.addEventListener('mousedown', e => {
+    const mx = getCanvasX(e.clientX);
+    const my = getCanvasY(e.clientY);
+    if (inPlot(mx, my)) {
+        dragging = true;
+        pointX = clamp(pxToX(mx), levels[level].a, levels[level].b);
+    }
+});
+
+canvas.addEventListener('mousemove', e => {
+    const mx = getCanvasX(e.clientX);
+    const my = getCanvasY(e.clientY);
+
+    if (inPlot(mx, my)) {
+        const ptPx = cx(pointX);
+        const ptPy = cy(levels[level].f(pointX));
+        const dist  = Math.hypot(mx - ptPx, my - ptPy);
+        canvas.style.cursor = (dragging || dist < 24) ? (dragging ? 'grabbing' : 'grab') : 'pointer';
+    } else {
+        canvas.style.cursor = 'default';
+    }
+
+    if (!dragging) return;
+    pointX = clamp(pxToX(mx), levels[level].a, levels[level].b);
+});
+
+canvas.addEventListener('mouseup',    () => { dragging = false; });
+canvas.addEventListener('mouseleave', () => { dragging = false; });
+
+canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    const t  = e.touches[0];
+    const mx = getCanvasX(t.clientX);
+    const my = getCanvasY(t.clientY);
+    if (inPlot(mx, my)) {
+        dragging = true;
+        pointX = clamp(pxToX(mx), levels[level].a, levels[level].b);
+    }
+}, { passive: false });
+
+canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    if (!dragging) return;
+    const t  = e.touches[0];
+    const mx = getCanvasX(t.clientX);
+    pointX = clamp(pxToX(mx), levels[level].a, levels[level].b);
+}, { passive: false });
+
+canvas.addEventListener('touchend', () => { dragging = false; });
+
+// --- Boot ---
+loadLevel();
+function loop() { draw(); requestAnimationFrame(loop); }
+loop();
+</script>
+</body>
+</html>
