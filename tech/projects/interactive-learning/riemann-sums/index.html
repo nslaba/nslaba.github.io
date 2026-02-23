@@ -909,22 +909,24 @@ function drawGraph(canvas, f, a, b, yMax, opts = {}) {
 // normSpeed   = 0–1, controls stride rate
 // ================================================================
 function drawRunner(ctx, sx, groundY, t, normSpeed) {
-  const dpr    = devicePixelRatio;
-  const stride = t * 5 * (0.35 + normSpeed * 0.85);
+  const dpr   = devicePixelRatio;
+  const phase = t * 4 * (0.4 + normSpeed * 0.6);
 
-  const headR = 4  * dpr;
-  const bodyH = 10 * dpr;
-  const legH  = 9  * dpr;
-  const armL  = 6  * dpr;
+  const headR   = 4  * dpr;
+  const bodyH   = 11 * dpr;
+  const thighL  = 7  * dpr;
+  const shinL   = 7  * dpr;
+  const armL    = 6  * dpr;
 
-  const headCY = groundY - legH - bodyH - headR;
-  const neckY  = headCY + headR;
-  const hipY   = neckY  + bodyH;
+  // Build figure bottom-up from ground
+  const hipY      = groundY - thighL - shinL;
+  const shoulderY = hipY    - bodyH;
+  const headCY    = shoulderY - headR;
 
   ctx.save();
   ctx.strokeStyle = '#c4b5fd';
   ctx.fillStyle   = '#c4b5fd';
-  ctx.lineWidth   = 1.8 * dpr;
+  ctx.lineWidth   = 2 * dpr;
   ctx.lineCap     = 'round';
   ctx.lineJoin    = 'round';
 
@@ -935,25 +937,34 @@ function drawRunner(ctx, sx, groundY, t, normSpeed) {
 
   // Body
   ctx.beginPath();
-  ctx.moveTo(sx, neckY);
+  ctx.moveTo(sx, shoulderY);
   ctx.lineTo(sx, hipY);
   ctx.stroke();
 
-  // Arms (swing opposite to legs)
-  const aw = Math.sin(stride) * armL;
-  ctx.beginPath(); ctx.moveTo(sx, neckY + 3*dpr); ctx.lineTo(sx + aw, neckY + 8*dpr); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(sx, neckY + 3*dpr); ctx.lineTo(sx - aw, neckY + 8*dpr); ctx.stroke();
+  // Arms — swing opposite to legs
+  const armSwing = Math.sin(phase) * armL;
+  ctx.beginPath(); ctx.moveTo(sx, shoulderY + 2*dpr); ctx.lineTo(sx + armSwing,  shoulderY + 7*dpr); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(sx, shoulderY + 2*dpr); ctx.lineTo(sx - armSwing,  shoulderY + 7*dpr); ctx.stroke();
 
-  // Legs (two-segment, alternating)
-  const sw   = legH * 0.55;
-  const leg1 =  Math.sin(stride);
-  const leg2 = -leg1;
-  const r1x = sx + leg1 * sw * 0.7, r1y = hipY + legH * 0.5;
-  ctx.beginPath(); ctx.moveTo(sx, hipY); ctx.lineTo(r1x, r1y);
-  ctx.lineTo(r1x + leg1 * sw * 0.4, r1y + legH * 0.5); ctx.stroke();
-  const l1x = sx + leg2 * sw * 0.7, l1y = hipY + legH * 0.5;
-  ctx.beginPath(); ctx.moveTo(sx, hipY); ctx.lineTo(l1x, l1y);
-  ctx.lineTo(l1x + leg2 * sw * 0.4, l1y + legH * 0.5); ctx.stroke();
+  // Legs — thigh swings ±25°, shin bends naturally at knee
+  const swing = Math.sin(phase) * 0.44; // radians
+
+  function drawLeg(thighAngle) {
+    const kx = sx + Math.sin(thighAngle) * thighL;
+    const ky = hipY + Math.cos(thighAngle) * thighL;
+    // Shin trails the thigh: bends back when leg swings forward
+    const shinAngle = thighAngle - Math.sin(thighAngle) * 0.5;
+    const fx = kx + Math.sin(shinAngle) * shinL;
+    const fy = ky + Math.cos(shinAngle) * shinL;
+    ctx.beginPath();
+    ctx.moveTo(sx, hipY);
+    ctx.lineTo(kx, ky);
+    ctx.lineTo(fx, fy);
+    ctx.stroke();
+  }
+
+  drawLeg( swing);   // right leg
+  drawLeg(-swing);   // left leg (opposite)
 
   ctx.restore();
 }
