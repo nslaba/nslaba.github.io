@@ -686,6 +686,16 @@
           Language isn't just communication. It's a lens. Every language you acquire
           gives you a slightly different version of yourself to inhabit.
         </p>
+        <p>
+          I dedicate this page to my grandpa, who like me loves learning languages.
+          In 1968 he left communist Czechoslovakia to practice medicine in Mexico for one year.
+          In 2018, I sat with him, my grandma, and my Colombian ex-boyfriend — over 50 years later —
+          in his home, while my grandpa still spoke fluent Spanish with us.
+        </p>
+        <p>
+          He speaks Russian, German, English, Spanish, and Czech.
+          I feel like he understands this part of me very closely.
+        </p>
       </div>
     </section>
 
@@ -961,13 +971,19 @@
       if (!video) return;
 
       wrap.addEventListener('mouseenter', () => {
-        video.play().catch(() => {});
+        video.muted = false;
+        video.play().catch(() => {
+          // If unmuted play fails, fall back to muted
+          video.muted = true;
+          video.play().catch(() => {});
+        });
         wrap.classList.add('playing');
       });
 
       wrap.addEventListener('mouseleave', () => {
         video.pause();
         video.currentTime = 0;
+        video.muted = true;
         wrap.classList.remove('playing');
         if (funFact) funFact.classList.remove('visible');
       });
