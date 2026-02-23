@@ -300,21 +300,21 @@
       background: rgba(8,8,14,0.97);
     }
 
-    /* Libra star positions (educational) — actual constellation
-         β (2)              ← brightest, upper center-right
-        / \
-      α(1)  γ(3)           ← α left-middle, γ far right
-      |  \ /  |
-      |   ι(6) |
-      |        |
-      σ(4)   θ(5)          ← lower left/right
+    /* Libra star positions (educational) — triangle + two tails
+              β(2)
+             /    \
+           α(1) — γ(3)
+           |          \
+          σ(4)        θ(5)   ← 1-star tail off γ
+           |
+          ι(6)               ← 2-star tail off α (σ then ι)
     */
-    #edu-grid .project-card:nth-of-type(1) { left: 16%; top: 46%; }  /* α Lib */
-    #edu-grid .project-card:nth-of-type(2) { left: 57%; top: 13%; }  /* β Lib — brightest */
-    #edu-grid .project-card:nth-of-type(3) { left: 83%; top: 40%; }  /* γ Lib */
-    #edu-grid .project-card:nth-of-type(4) { left: 36%; top: 71%; }  /* σ Lib */
-    #edu-grid .project-card:nth-of-type(5) { left: 76%; top: 82%; }  /* θ Lib */
-    #edu-grid .project-card:nth-of-type(6) { left: 48%; top: 57%; }  /* ι Lib */
+    #edu-grid .project-card:nth-of-type(1) { left: 26%; top: 46%; }  /* α Lib — left of triangle */
+    #edu-grid .project-card:nth-of-type(2) { left: 52%; top: 13%; }  /* β Lib — top of triangle, brightest */
+    #edu-grid .project-card:nth-of-type(3) { left: 76%; top: 44%; }  /* γ Lib — right of triangle */
+    #edu-grid .project-card:nth-of-type(4) { left: 17%; top: 67%; }  /* σ Lib — first star, 2-star tail */
+    #edu-grid .project-card:nth-of-type(5) { left: 82%; top: 70%; }  /* θ Lib — 1-star tail off γ */
+    #edu-grid .project-card:nth-of-type(6) { left: 10%; top: 85%; }  /* ι Lib — second star, 2-star tail */
 
     /* Lyra star positions (expressive) — kite shape
           Vega(1)
@@ -445,11 +445,12 @@
       opacity: 1;
     }
 
-    /* Left-side cards (α, σ): show prereqs on the right */
-    #edu-grid .project-card:nth-of-type(1) .card-prereq,
-    #edu-grid .project-card:nth-of-type(4) .card-prereq {
-      left: calc(100% + 0.8rem);
-      right: auto;
+    /* Right-side cards (β, γ, θ): show prereqs on the left */
+    #edu-grid .project-card:nth-of-type(2) .card-prereq,
+    #edu-grid .project-card:nth-of-type(3) .card-prereq,
+    #edu-grid .project-card:nth-of-type(5) .card-prereq {
+      left: auto;
+      right: calc(100% + 0.8rem);
     }
 
     .constellation .card-prereq-label {
@@ -876,7 +877,55 @@
 
   <div class="constellation" id="edu-grid">
 
-    <a href="projects/interactive-learning/dot-product/index.html" class="project-card" data-step="1">
+    <a href="projects/interactive-learning/derivative-slope/index.html" class="project-card" data-step="1">
+      <div class="card-visual" style="background:#0f0f1a;">
+        <span class="card-badge">Interactive</span>
+        <div class="card-visual-placeholder" style="font-size:2.2rem; color:rgba(99,102,241,0.45);">f′(x)</div>
+      </div>
+      <div class="card-content">
+        <div class="card-tags">
+          <span class="card-tag">Calculus</span>
+          <span class="card-tag">Derivatives</span>
+        </div>
+        <h3 class="card-title">Derivative as Slope</h3>
+        <div class="card-prereq">
+          <span class="card-prereq-label">prereqs:</span>
+          <span class="card-prereq-item">Curiosity</span>
+        </div>
+        <p class="card-desc">Drag a point along a curve and watch the tangent line follow. Find where the slope hits zero — before knowing what that means.</p>
+        <div class="card-arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </div>
+      </div>
+    </a>
+
+    <a href="projects/interactive-learning/riemann-sums/index.html" class="project-card" data-step="2">
+      <div class="card-visual" style="background:#0f0f1a;">
+        <span class="card-badge">Interactive</span>
+        <div class="card-visual-placeholder" style="font-size:2.2rem; color:rgba(99,102,241,0.45);">∫ f(x) dx</div>
+      </div>
+      <div class="card-content">
+        <div class="card-tags">
+          <span class="card-tag">Calculus</span>
+          <span class="card-tag">Area</span>
+        </div>
+        <h3 class="card-title">Riemann Sums</h3>
+        <div class="card-prereq">
+          <span class="card-prereq-label">prereqs:</span>
+          <span class="card-prereq-item">Curiosity</span>
+        </div>
+        <p class="card-desc">Slice a curve into rectangles. Drag the slider, switch methods, and discover why the sum converges to an exact area.</p>
+        <div class="card-arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </div>
+      </div>
+    </a>
+
+    <a href="projects/interactive-learning/dot-product/index.html" class="project-card" data-step="3">
       <div class="card-visual">
         <span class="card-badge">Interactive</span>
         <img src="../assets/images/tech/dot-product-thumbnail.svg" alt="Dot Product visualization">
@@ -900,32 +949,7 @@
       </div>
     </a>
 
-    <a href="projects/interactive-learning/hermite-splines/index.html" class="project-card" data-step="2">
-      <div class="card-visual">
-        <span class="card-badge">Interactive</span>
-        <img src="../projects/OpenGL/HermiteSpline/hermiteSpline.gif" alt="Hermite Spline animation">
-      </div>
-      <div class="card-content">
-        <div class="card-tags">
-          <span class="card-tag">Curves</span>
-          <span class="card-tag">Animation</span>
-        </div>
-        <h3 class="card-title">Hermite Splines</h3>
-        <div class="card-prereq">
-          <span class="card-prereq-label">prereqs:</span>
-          <span class="card-prereq-item">Vectors</span>
-          <span class="card-prereq-item">Integral Calculus</span>
-        </div>
-        <p class="card-desc">Drag control points, adjust tangents, and discover why arc-length parameterization requires approximation.</p>
-        <div class="card-arrow">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-          </svg>
-        </div>
-      </div>
-    </a>
-
-    <a href="projects/interactive-learning/raytracer/index.html" class="project-card" data-step="3">
+    <a href="projects/interactive-learning/raytracer/index.html" class="project-card" data-step="4">
       <div class="card-visual">
         <span class="card-badge">Interactive</span>
         <img src="../projects/Raytracer/snapshot.png" alt="Ray traced scene">
@@ -950,7 +974,32 @@
       </div>
     </a>
 
-    <a href="../projects/IK/index.html" class="project-card" data-step="4">
+    <a href="projects/interactive-learning/hermite-splines/index.html" class="project-card" data-step="5">
+      <div class="card-visual">
+        <span class="card-badge">Interactive</span>
+        <img src="../projects/OpenGL/HermiteSpline/hermiteSpline.gif" alt="Hermite Spline animation">
+      </div>
+      <div class="card-content">
+        <div class="card-tags">
+          <span class="card-tag">Curves</span>
+          <span class="card-tag">Animation</span>
+        </div>
+        <h3 class="card-title">Hermite Splines</h3>
+        <div class="card-prereq">
+          <span class="card-prereq-label">prereqs:</span>
+          <span class="card-prereq-item">Vectors</span>
+          <span class="card-prereq-item">Integral Calculus</span>
+        </div>
+        <p class="card-desc">Drag control points, adjust tangents, and discover why arc-length parameterization requires approximation.</p>
+        <div class="card-arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </div>
+      </div>
+    </a>
+
+    <a href="../projects/IK/index.html" class="project-card" data-step="6">
       <div class="card-visual">
         <span class="card-badge">Interactive</span>
         <img src="../assets/images/tech/ik-thumbnail.svg" alt="Inverse Kinematics visualization">
@@ -967,54 +1016,6 @@
           <span class="card-prereq-item">Mechanics</span>
         </div>
         <p class="card-desc">Drag a target, watch the arm follow. The Jacobian method for robotic arm control - from math to intuition.</p>
-        <div class="card-arrow">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-          </svg>
-        </div>
-      </div>
-    </a>
-
-    <a href="projects/interactive-learning/riemann-sums/index.html" class="project-card" data-step="5">
-      <div class="card-visual" style="background:#0f0f1a;">
-        <span class="card-badge">Interactive</span>
-        <div class="card-visual-placeholder" style="font-size:2.2rem; color:rgba(99,102,241,0.45);">∫ f(x) dx</div>
-      </div>
-      <div class="card-content">
-        <div class="card-tags">
-          <span class="card-tag">Calculus</span>
-          <span class="card-tag">Area</span>
-        </div>
-        <h3 class="card-title">Riemann Sums</h3>
-        <div class="card-prereq">
-          <span class="card-prereq-label">prereqs:</span>
-          <span class="card-prereq-item">Curiosity</span>
-        </div>
-        <p class="card-desc">Slice a curve into rectangles. Drag the slider, switch methods, and discover why the sum converges to an exact area.</p>
-        <div class="card-arrow">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-          </svg>
-        </div>
-      </div>
-    </a>
-
-    <a href="projects/interactive-learning/derivative-slope/index.html" class="project-card" data-step="6">
-      <div class="card-visual" style="background:#0f0f1a;">
-        <span class="card-badge">Interactive</span>
-        <div class="card-visual-placeholder" style="font-size:2.2rem; color:rgba(99,102,241,0.45);">f′(x)</div>
-      </div>
-      <div class="card-content">
-        <div class="card-tags">
-          <span class="card-tag">Calculus</span>
-          <span class="card-tag">Derivatives</span>
-        </div>
-        <h3 class="card-title">Derivative as Slope</h3>
-        <div class="card-prereq">
-          <span class="card-prereq-label">prereqs:</span>
-          <span class="card-prereq-item">Curiosity</span>
-        </div>
-        <p class="card-desc">Drag a point along a curve and watch the tangent line follow. Find where the slope hits zero — before knowing what that means.</p>
         <div class="card-arrow">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -1398,15 +1399,14 @@
         {
           el: document.getElementById('edu-grid'),
           filterId: 'libraGlow',
-          // Libra actual constellation: α(0) left-middle, β(1) upper-center-right,
-          // γ(2) far right, σ(3) lower-left, θ(4) lower-right, ι(5) center
+          // Libra: triangle α(0)-β(1)-γ(2), 2-star tail α→σ(3)→ι(5), 1-star tail γ→θ(4)
           connections: [
-            [3, 0], // σ → α
-            [0, 1], // α → β
-            [1, 2], // β → γ
-            [2, 4], // γ → θ
-            [0, 5], // α → ι
-            [5, 3], // ι → σ
+            [1, 0], // β → α  (triangle)
+            [0, 2], // α → γ  (triangle)
+            [1, 2], // β → γ  (triangle)
+            [0, 3], // α → σ  (2-star tail, first)
+            [3, 5], // σ → ι  (2-star tail, second)
+            [2, 4], // γ → θ  (1-star tail)
           ],
           brightStar: 1, // β Lib is brightest
           tailStar: null,
