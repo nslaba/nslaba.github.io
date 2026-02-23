@@ -558,7 +558,7 @@
   <section id="phase2" class="phase">
     <div class="graph-section reveal-on-scroll">
       <div class="graph-canvas-wrap">
-        <canvas id="constCanvas" height="300"></canvas>
+        <canvas id="constCanvas" height="300" data-h="300"></canvas>
       </div>
       <div class="graph-caption">
         <h2 class="graph-caption-title">A runner at constant speed</h2>
@@ -580,7 +580,7 @@
   <section id="phase3" class="phase">
     <div class="graph-section reveal-on-scroll">
       <div class="graph-canvas-wrap">
-        <canvas id="varCanvas" height="300"></canvas>
+        <canvas id="varCanvas" height="300" data-h="300"></canvas>
       </div>
       <div class="graph-caption">
         <h2 class="graph-caption-title">Now the runner changes speed</h2>
@@ -611,7 +611,7 @@
 
     <div class="puzzle-interactive reveal-on-scroll">
       <div class="puzzle-graph-wrap">
-        <canvas id="puzzleCanvas" height="320"></canvas>
+        <canvas id="puzzleCanvas" height="320" data-h="320"></canvas>
       </div>
 
       <div class="puzzle-hint">
@@ -693,7 +693,7 @@
     <div class="sandbox-inner">
       <div class="sandbox-graph reveal-on-scroll">
         <div class="sandbox-graph-wrap">
-          <canvas id="sandboxCanvas" height="320"></canvas>
+          <canvas id="sandboxCanvas" height="320" data-h="320"></canvas>
         </div>
       </div>
       <div class="sandbox-controls reveal-on-scroll">
@@ -798,9 +798,8 @@
 // ================================================================
 function drawGraph(canvas, f, a, b, yMax, opts = {}) {
   const ctx = canvas.getContext('2d');
-  // Cache the intended CSS height once so repeated renders don't compound dpr
-  if (!canvas._cssH) canvas._cssH = parseInt(canvas.getAttribute('height')) || 300;
-  const cssH = canvas._cssH;
+  // data-h is a static HTML attribute — never mutated by canvas operations
+  const cssH = parseInt(canvas.dataset.h) || 300;
   const W = canvas.width  = canvas.offsetWidth * devicePixelRatio;
   const H = canvas.height = cssH * devicePixelRatio;
   canvas.style.height = cssH + 'px';
