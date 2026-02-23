@@ -603,7 +603,7 @@
       <p class="puzzle-label">// The puzzle</p>
       <h2 class="puzzle-headline">What if we broke time<br>into smaller pieces?</h2>
       <p class="puzzle-desc">
-        Over a tiny slice of time… is the speed <em>almost</em> constant?<br>
+        Over a tiny slice of time… is the speed <em>almost</em> constant (ie graph is not curved)?<br>
         What if we pretended it was, just for that tiny moment?<br>
         Press the button and see what happens.
       </p>
@@ -798,9 +798,12 @@
 // ================================================================
 function drawGraph(canvas, f, a, b, yMax, opts = {}) {
   const ctx = canvas.getContext('2d');
+  // Cache the intended CSS height once so repeated renders don't compound dpr
+  if (!canvas._cssH) canvas._cssH = parseInt(canvas.getAttribute('height')) || 300;
+  const cssH = canvas._cssH;
   const W = canvas.width  = canvas.offsetWidth * devicePixelRatio;
-  const H = canvas.height = parseInt(canvas.getAttribute('height')) * devicePixelRatio;
-  canvas.style.height = canvas.getAttribute('height') + 'px';
+  const H = canvas.height = cssH * devicePixelRatio;
+  canvas.style.height = cssH + 'px';
 
   const PAD_L = 56 * devicePixelRatio;
   const PAD_R = 24 * devicePixelRatio;
@@ -901,49 +904,146 @@ function drawGraph(canvas, f, a, b, yMax, opts = {}) {
 }
 
 // ================================================================
-// PHASE 2 — Constant runner graph
+// Shared: draw a stick-figure runner
+// sx, groundY = canvas pixel coords of runner's feet
+// t           = animation time (seconds)
+// normSpeed   = 0–1, controls stride rate
+// ================================================================
+function drawRunner(ctx, sx, groundY, t, normSpeed) {
+  const dpr    = devicePixelRatio;
+  const stride = t * 5 * (0.35 + normSpeed * 0.85);
+
+  const headR = 4  * dpr;
+  const bodyH = 10 * dpr;
+  const legH  = 9  * dpr;
+  const armL  = 6  * dpr;
+
+  const headCY = groundY - legH - bodyH - headR;
+  const neckY  = headCY + headR;
+  const hipY   = neckY  + bodyH;
+
+  ctx.save();
+  ctx.strokeStyle = '#c4b5fd';
+  ctx.fillStyle   = '#c4b5fd';
+  ctx.lineWidth   = 1.8 * dpr;
+  ctx.lineCap     = 'round';
+  ctx.lineJoin    = 'round';
+
+  // Head
+  ctx.beginPath();
+  ctx.arc(sx, headCY, headR, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Body
+  ctx.beginPath();
+  ctx.moveTo(sx, neckY);
+  ctx.lineTo(sx, hipY);
+  ctx.stroke();
+
+  // Arms (swing opposite to legs)
+  const aw = Math.sin(stride) * armL;
+  ctx.beginPath(); ctx.moveTo(sx, neckY + 3*dpr); ctx.lineTo(sx + aw, neckY + 8*dpr); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(sx, neckY + 3*dpr); ctx.lineTo(sx - aw, neckY + 8*dpr); ctx.stroke();
+
+  // Legs (two-segment, alternating)
+  const sw   = legH * 0.55;
+  const leg1 =  Math.sin(stride);
+  const leg2 = -leg1;
+  const r1x = sx + leg1 * sw * 0.7, r1y = hipY + legH * 0.5;
+  ctx.beginPath(); ctx.moveTo(sx, hipY); ctx.lineTo(r1x, r1y);
+  ctx.lineTo(r1x + leg1 * sw * 0.4, r1y + legH * 0.5); ctx.stroke();
+  const l1x = sx + leg2 * sw * 0.7, l1y = hipY + legH * 0.5;
+  ctx.beginPath(); ctx.moveTo(sx, hipY); ctx.lineTo(l1x, l1y);
+  ctx.lineTo(l1x + leg2 * sw * 0.4, l1y + legH * 0.5); ctx.stroke();
+
+  ctx.restore();
+}
+
+// ================================================================
+// PHASE 2 — Constant runner (animated)
 // ================================================================
 (function() {
   const canvas = document.getElementById('constCanvas');
   const f = () => 10;
-  function render() {
-    drawGraph(canvas, f, 0, 1, 14, {
+  let runX = 0, lastT = null;
+
+  function frame(ts) {
+    const t  = ts * 0.001;
+    const dt = lastT === null ? 0 : t - lastT;
+    lastT = t;
+
+    runX = (runX + dt * 0.25) % 1; // one lap every 4 s
+
+    const { cx, cy } = drawGraph(canvas, f, 0, 1, 14, {
       xLabels: [[0,'0'], [0.5,'0.5 h'], [1,'1 h']],
       yLabels: [[0,'0'], [5,'5'], [10,'10 km/h']],
       areaLabel: '10 km',
     });
-    // Shade the rectangle distinctly
+
     const ctx = canvas.getContext('2d');
-    const W = canvas.width, H = canvas.height;
-    const dpr = devicePixelRatio;
-    const PAD_L = 56 * dpr, PAD_R = 24 * dpr, PAD_T = 24 * dpr, PAD_B = 36 * dpr;
-    const PW = W - PAD_L - PAD_R, PH = H - PAD_T - PAD_B;
-    function cx(x) { return PAD_L + x * PW; }
-    function cy(y) { return PAD_T + PH - y / 14 * PH; }
-    ctx.fillStyle = 'rgba(52,211,153,0.15)';
-    ctx.strokeStyle = 'rgba(52,211,153,0.6)';
-    ctx.lineWidth = 2;
-    ctx.fillRect(cx(0), cy(10), cx(1) - cx(0), cy(0) - cy(10));
+
+    // Green rectangle
+    ctx.fillStyle   = 'rgba(52,211,153,0.12)';
+    ctx.strokeStyle = 'rgba(52,211,153,0.5)';
+    ctx.lineWidth   = 1.5;
+    ctx.fillRect  (cx(0), cy(10), cx(1) - cx(0), cy(0) - cy(10));
     ctx.strokeRect(cx(0), cy(10), cx(1) - cx(0), cy(0) - cy(10));
+
+    // Runner sits on the speed line
+    drawRunner(ctx, cx(runX), cy(10), t, 0.8);
+
+    requestAnimationFrame(frame);
   }
-  render();
-  window.addEventListener('resize', render);
+  requestAnimationFrame(frame);
 })();
 
 // ================================================================
-// PHASE 3 — Variable runner graph
+// PHASE 3 — Variable runner (animated)
 // ================================================================
 (function() {
   const canvas = document.getElementById('varCanvas');
-  const f = x => 4 + 8 * x * (1 - x) + 3 * Math.sin(x * Math.PI * 2.5);
-  function render() {
-    drawGraph(canvas, f, 0, 1, 14, {
+  const f    = x => 4 + 8 * x * (1 - x) + 3 * Math.sin(x * Math.PI * 2.5);
+  const fMax = 12; // approx max of f on [0,1]
+  let runX = 0, lastT = null;
+
+  function frame(ts) {
+    const t  = ts * 0.001;
+    const dt = lastT === null ? 0 : t - lastT;
+    lastT = t;
+
+    // Speed proportional to f(runX) so runner visibly hurries on peaks
+    const normSpeed = Math.max(0.05, f(runX) / fMax);
+    runX = (runX + dt * normSpeed * 0.22) % 1;
+
+    const { cx, cy } = drawGraph(canvas, f, 0, 1, 14, {
       xLabels: [[0,'0'], [0.5,'0.5 h'], [1,'1 h']],
       yLabels: [[0,'0'], [5,'5'], [10,'10']],
     });
+
+    const ctx = canvas.getContext('2d');
+
+    // Dashed line from runner up to curve showing "current speed"
+    ctx.strokeStyle = 'rgba(165,180,252,0.3)';
+    ctx.lineWidth   = 1 * devicePixelRatio;
+    ctx.setLineDash([3 * devicePixelRatio, 4 * devicePixelRatio]);
+    ctx.beginPath();
+    ctx.moveTo(cx(runX), cy(0));
+    ctx.lineTo(cx(runX), cy(f(runX)));
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Dot on the curve at current position
+    ctx.fillStyle = '#a5b4fc';
+    ctx.beginPath();
+    ctx.arc(cx(runX), cy(f(runX)), 3.5 * devicePixelRatio, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Runner at ground level
+    drawRunner(ctx, cx(runX), cy(0), t, normSpeed);
+
+    requestAnimationFrame(frame);
   }
-  render();
-  window.addEventListener('resize', render);
+  requestAnimationFrame(frame);
 })();
 
 // ================================================================
