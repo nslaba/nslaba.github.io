@@ -132,6 +132,8 @@
     .hero-canvas {
       position: absolute;
       inset: 0;
+      width: 100%;
+      height: 100%;
       z-index: 0;
     }
 
@@ -782,16 +784,23 @@
         padding: 0.25rem 0;
       }
 
+      /* Mobile constellation: show overview, not a stacked list */
       .constellation {
-        height: auto;
-        min-height: 0;
-        max-height: none;
-        padding: 0 1.5rem 4rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
+        height: 60vh;
+        min-height: 420px;
+        max-height: 640px;
+        padding: 0;
+        display: block;
       }
 
+      /* edu-grid taller to fit 6 cards + tails */
+      #edu-grid.constellation {
+        height: 90vh;
+        min-height: 600px;
+        max-height: 860px;
+      }
+
+      /* Keep absolute positioning — just shrink cards */
       .constellation .project-card,
       .constellation .project-card:nth-of-type(1),
       .constellation .project-card:nth-of-type(2),
@@ -799,40 +808,47 @@
       .constellation .project-card:nth-of-type(4),
       .constellation .project-card:nth-of-type(5),
       .constellation .project-card:nth-of-type(6) {
-        position: static;
-        width: 100%;
-        max-width: 100%;
-        transform: none;
-        left: auto;
-        top: auto;
+        position: absolute;
+        width: 96px;
+        max-width: 96px;
       }
+
+      /* Mobile positions for edu-grid (Libra) */
+      #edu-grid .project-card:nth-of-type(1) { left: 50%; top: 10%; }
+      #edu-grid .project-card:nth-of-type(2) { left: 24%; top: 30%; }
+      #edu-grid .project-card:nth-of-type(3) { left: 76%; top: 30%; }
+      #edu-grid .project-card:nth-of-type(4) { left: 17%; top: 55%; }
+      #edu-grid .project-card:nth-of-type(5) { left: 81%; top: 60%; }
+      #edu-grid .project-card:nth-of-type(6) { left: 17%; top: 80%; }
+
+      /* Mobile positions for exp-grid (Lyra) */
+      #exp-grid .project-card:nth-of-type(1) { left: 50%; top:  8%; }
+      #exp-grid .project-card:nth-of-type(2) { left: 20%; top: 50%; }
+      #exp-grid .project-card:nth-of-type(3) { left: 80%; top: 50%; }
 
       .constellation .project-card.revealed {
-        transform: none;
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
       }
 
-      .constellation .project-card.revealed:hover {
-        transform: scale(1.02);
+      .constellation .project-card.revealed:active {
+        transform: translate(-50%, -50%) scale(1.35);
+        z-index: 10;
       }
 
-      .constellation .card-content { padding: 1.75rem; }
-      .constellation .card-title { font-size: 1.3rem; margin-bottom: 0.75rem; }
-      .constellation .card-desc {
-        font-size: 0.85rem;
-        line-height: 1.6;
-        color: rgba(255,255,255,0.5);
-        -webkit-line-clamp: unset;
-        display: block;
-      }
-      .constellation .card-tags { margin-bottom: 1rem; gap: 0.5rem; }
-      .constellation .card-tag { font-size: 0.6rem; padding: 0.25rem 0.5rem; }
-      .constellation .card-badge { display: block; }
-      .constellation .card-arrow { display: flex; width: 32px; height: 32px; bottom: 1rem; right: 1rem; }
+      /* Strip cards down to essentials */
+      .constellation .card-visual { display: none; }
+      .constellation .card-content { padding: 0.35rem 0.4rem; }
+      .constellation .card-title { font-size: 0.5rem; margin-bottom: 0; line-height: 1.3; }
+      .constellation .card-desc { display: none; }
+      .constellation .card-tags { display: none; }
+      .constellation .card-badge { display: none; }
+      .constellation .card-arrow { display: none; }
+      .constellation .card-prereq { display: none; }
 
-      .constellation-svg,
-      .constellation-label {
-        display: none;
-      }
+      /* Show SVG lines and constellation label */
+      .constellation-svg { display: block; }
+      .constellation-label { display: block; padding: 1.25rem 0 1.5rem 1.25rem; }
 
       .footer {
         flex-direction: column;
@@ -1453,7 +1469,7 @@
         },
       ];
 
-      function isMobile() { return window.innerWidth <= 900; }
+      function isMobile() { return false; }
 
       constellations.forEach(cfg => {
         if (!cfg.el) return;
