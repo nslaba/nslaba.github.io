@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Natalie Slaba — Polyglot. Six languages, one-on-one lessons, and a passion for how language shapes the way we think.">
+
+  <title>Languages | Natalie Slaba</title>
+
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #050508;
+      --surface: #0d0d14;
+      --accent: #a78bfa;
+      --accent-dim: rgba(167,139,250,0.15);
+      --text: #f5f5f5;
+      --text-dim: rgba(255,255,255,0.55);
+      --text-faint: rgba(255,255,255,0.25);
+      --border: rgba(255,255,255,0.07);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    /* ---- Nav ---- */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.5rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, var(--bg) 0%, transparent 100%);
+    }
+
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-logo:hover { color: var(--text); }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--text); }
+
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.25rem;
+      width: 28px; height: 20px;
+      position: relative;
+      z-index: 101;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 100%; height: 2px;
+      background: #fff;
+      position: absolute;
+      left: 0;
+      transition: all 0.3s ease;
+    }
+    .nav-toggle span:nth-child(1) { top: 0; }
+    .nav-toggle span:nth-child(2) { top: 9px; }
+    .nav-toggle span:nth-child(3) { top: 18px; }
+    .nav-toggle.open span:nth-child(1) { top: 9px; transform: rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { top: 9px; transform: rotate(-45deg); }
+
+    /* ---- Page layout ---- */
+    main {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 9rem 2rem 6rem;
+    }
+
+    /* ---- Hero ---- */
+    .hero {
+      margin-bottom: 6rem;
+    }
+
+    .hero-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 7vw, 5rem);
+      font-weight: 300;
+      line-height: 1.1;
+      margin-bottom: 2rem;
+    }
+
+    .hero-intro {
+      font-size: 1.05rem;
+      color: var(--text-dim);
+      max-width: 620px;
+      line-height: 1.9;
+    }
+
+    .hero-intro p + p {
+      margin-top: 1.2rem;
+    }
+
+    /* ---- Section header ---- */
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 2.5rem;
+    }
+
+    /* ---- Fun fact callout ---- */
+    .fun-fact {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.25rem;
+      padding: 1rem 1.25rem;
+      background: var(--accent-dim);
+      border-left: 2px solid var(--accent);
+      border-radius: 0 6px 6px 0;
+    }
+
+    .fun-fact-icon {
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      margin-top: 0.05rem;
+    }
+
+    .fun-fact p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+
+    /* ---- Language sections ---- */
+    .languages-section {
+      margin-bottom: 6rem;
+    }
+
+    .language-entry {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+      padding: 3rem 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .language-entry:last-child {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .lang-info {}
+
+    .lang-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4rem;
+      font-weight: 300;
+      line-height: 1;
+      margin-bottom: 0.4rem;
+    }
+
+    .lang-native-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .lang-desc {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      line-height: 1.8;
+    }
+
+    /* Video side */
+    .lang-video-wrap {
+      position: relative;
+      border-radius: 6px;
+      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      aspect-ratio: 9 / 16;
+      max-width: 280px;
+    }
+
+    .lang-video-wrap video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* No video placeholder */
+    .lang-video-placeholder {
+      aspect-ratio: 9 / 16;
+      max-width: 280px;
+      border-radius: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      color: var(--text-faint);
+    }
+
+    .lang-video-placeholder span {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Languages without video — no video col on desktop */
+    .language-entry.no-video {
+      grid-template-columns: 1fr;
+      max-width: 600px;
+    }
+
+    /* ---- General fun fact ---- */
+    .general-fact-section {
+      margin-bottom: 6rem;
+      padding: 2.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .general-fact-section .section-label {
+      margin-bottom: 1.25rem;
+    }
+
+    .general-fact-section blockquote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.15rem, 2.5vw, 1.5rem);
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.7;
+      border: none;
+      padding: 0;
+    }
+
+    /* ---- Lessons section ---- */
+    .lessons-section {
+      margin-bottom: 6rem;
+    }
+
+    .lessons-header {
+      margin-bottom: 2.5rem;
+    }
+
+    .lessons-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 300;
+      margin-bottom: 1rem;
+    }
+
+    .lessons-header p {
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      max-width: 560px;
+      line-height: 1.8;
+    }
+
+    .lessons-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .lesson-card {
+      background: var(--surface);
+      padding: 2rem;
+      transition: background 0.2s;
+    }
+
+    .lesson-card:hover {
+      background: rgba(255,255,255,0.03);
+    }
+
+    .lesson-lang {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 300;
+      margin-bottom: 0.5rem;
+    }
+
+    .lesson-desc {
+      font-size: 0.82rem;
+      color: var(--text-faint);
+      line-height: 1.7;
+    }
+
+    .lessons-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      text-decoration: none;
+      border: 1px solid rgba(167,139,250,0.3);
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+
+    .lessons-cta:hover {
+      background: var(--accent-dim);
+      border-color: var(--accent);
+    }
+
+    /* ---- Poll section ---- */
+    .poll-section {
+      margin-bottom: 6rem;
+      padding: 2.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .poll-section .section-label {
+      margin-bottom: 1.25rem;
+    }
+
+    .poll-section h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 300;
+      margin-bottom: 1rem;
+    }
+
+    .poll-section .poll-desc {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      max-width: 580px;
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+
+    .poll-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .poll-question {
+      font-size: 0.95rem;
+      color: var(--text);
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+    }
+
+    .poll-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .poll-option {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+    }
+
+    .poll-option input[type="radio"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 16px; height: 16px;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 50%;
+      flex-shrink: 0;
+      cursor: pointer;
+      position: relative;
+      transition: border-color 0.2s;
+    }
+
+    .poll-option input[type="radio"]:checked {
+      border-color: var(--accent);
+      background: var(--accent);
+    }
+
+    .poll-option input[type="radio"]:checked::after {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      background: var(--bg);
+    }
+
+    .poll-option label {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      cursor: pointer;
+    }
+
+    .poll-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .poll-field label {
+      font-size: 0.82rem;
+      color: var(--text-faint);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .poll-field input,
+    .poll-field textarea {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.65rem 0.9rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+      resize: vertical;
+    }
+
+    .poll-field input:focus,
+    .poll-field textarea:focus {
+      border-color: rgba(167,139,250,0.4);
+    }
+
+    .poll-submit {
+      align-self: flex-start;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid rgba(167,139,250,0.3);
+      padding: 0.75rem 2rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .poll-submit:hover {
+      background: var(--accent-dim);
+      border-color: var(--accent);
+    }
+
+    /* ---- Footer ---- */
+    footer {
+      padding: 3rem 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    footer a {
+      font-size: 0.8rem;
+      color: var(--text-faint);
+      text-decoration: none;
+      margin: 0 1rem;
+      transition: color 0.2s;
+    }
+
+    footer a:hover { color: var(--text); }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 768px) {
+      .nav {
+        padding: 1rem 1.5rem;
+        background: rgba(5,5,8,0.95);
+        backdrop-filter: blur(10px);
+      }
+
+      .nav-toggle { display: block; }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%; left: 0; right: 0;
+        background: rgba(5,5,8,0.98);
+        backdrop-filter: blur(10px);
+        flex-direction: column;
+        padding: 1rem 1.5rem 1.5rem;
+        gap: 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+      }
+
+      .nav-links.open { display: flex; }
+      .nav-links a { font-size: 1rem; padding: 0.25rem 0; }
+
+      main { padding: 7rem 1.5rem 4rem; }
+
+      .language-entry {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .lang-video-wrap,
+      .lang-video-placeholder {
+        max-width: 100%;
+        aspect-ratio: 16 / 9;
+      }
+
+      .lang-video-wrap video {
+        object-fit: cover;
+      }
+
+      .lessons-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .general-fact-section,
+      .poll-section {
+        padding: 1.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <a href="../index.html" class="nav-logo">Home</a>
+    <button class="nav-toggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="../tech/index.html">Tech</a></li>
+      <li><a href="../art/index.html">Art</a></li>
+      <li><a href="index.html" class="active">Languages</a></li>
+      <li><a href="../about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <!-- Hero -->
+    <section class="hero">
+      <p class="hero-label">Languages</p>
+      <h1>Six languages,<br>one mind.</h1>
+      <div class="hero-intro">
+        <p>
+          I grew up moving between countries, and languages came with the territory.
+          Czech at home, English at school, French by choice, Spanish almost by accident —
+          each one opened a different way of seeing the world.
+        </p>
+        <p>
+          Language isn't just communication. It's a lens. Every language you acquire
+          gives you a slightly different version of yourself to inhabit.
+        </p>
+      </div>
+    </section>
+
+    <!-- General fun fact -->
+    <section class="general-fact-section">
+      <p class="section-label">// On mixing languages</p>
+      <blockquote>
+        "People often ask whether I mix languages up. In my experience, languages blur most
+        when they haven't yet fully matured in your mind — when a language doesn't yet have
+        its own lived experience tied to it. But the more a language matures, the more
+        independent it becomes. Each one starts to have its own interior world."
+      </blockquote>
+    </section>
+
+    <!-- Language entries -->
+    <section class="languages-section">
+      <p class="section-label">// The languages</p>
+
+      <!-- Czech -->
+      <div class="language-entry">
+        <div class="lang-info">
+          <h2 class="lang-name">Czech</h2>
+          <p class="lang-native-label">Native</p>
+          <p class="lang-desc">My first language and the one closest to the bone. Czech is where I dream, where I count, and where I argue with myself.</p>
+        </div>
+        <div class="lang-video-wrap">
+          <video controls playsinline preload="metadata">
+            <source src="../assets/videos/languages/czech.mov" type="video/mp4">
+          </video>
+        </div>
+      </div>
+
+      <!-- English -->
+      <div class="language-entry no-video">
+        <div class="lang-info">
+          <h2 class="lang-name">English</h2>
+          <p class="lang-native-label">Native</p>
+          <p class="lang-desc">The language I think in now — the one I write code in, the one I use to build things. It arrived early enough to feel like home.</p>
+        </div>
+      </div>
+
+      <!-- French -->
+      <div class="language-entry">
+        <div class="lang-info">
+          <h2 class="lang-name">French</h2>
+          <p class="lang-native-label">Fluent</p>
+          <p class="lang-desc">I chose French deliberately and fell into it completely. Living in Montréal made it real — not textbook French, but the kind that gets you through an argument about hockey.</p>
+        </div>
+        <div class="lang-video-wrap">
+          <video controls playsinline preload="metadata">
+            <source src="../assets/videos/languages/french.mov" type="video/mp4">
+          </video>
+        </div>
+      </div>
+
+      <!-- Spanish -->
+      <div class="language-entry">
+        <div class="lang-info">
+          <h2 class="lang-name">Spanish</h2>
+          <p class="lang-native-label">Fluent</p>
+          <p class="lang-desc">Spanish arrived fast, riding on the back of French. The grammar was familiar, the sounds were warm, and the vocabulary was already half there.</p>
+          <div class="fun-fact">
+            <span class="fun-fact-icon">✦</span>
+            <p>Most of my Spanish came within a single month — because I already carried the vocabulary through French. The two languages share so much that one essentially unlocked the other.</p>
+          </div>
+        </div>
+        <div class="lang-video-wrap">
+          <video controls playsinline preload="metadata">
+            <source src="../assets/videos/languages/spanish.mov" type="video/mp4">
+          </video>
+        </div>
+      </div>
+
+      <!-- German -->
+      <div class="language-entry no-video">
+        <div class="lang-info">
+          <h2 class="lang-name">German</h2>
+          <p class="lang-native-label">Fluent</p>
+          <p class="lang-desc">German is the one that surprised me most — both in how fast it came and how stubbornly it stayed.</p>
+          <div class="fun-fact">
+            <span class="fun-fact-icon">✦</span>
+            <p>I went from zero to B2 in four months and earned the certificate. That was eight years ago. I haven't lived in a German-speaking country since — and somehow, the language is still there. Apparently some things you can't unlearn.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arabic -->
+      <div class="language-entry no-video">
+        <div class="lang-info">
+          <h2 class="lang-name">Arabic</h2>
+          <p class="lang-native-label">Fluent</p>
+          <p class="lang-desc">Arabic was the most humbling — and the most rewarding. A completely different script, a completely different logic. Learning it rewired something.</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- One-on-one lessons -->
+    <section class="lessons-section">
+      <div class="lessons-header">
+        <p class="section-label">// One-on-one lessons</p>
+        <h2>Learn with me</h2>
+        <p>
+          I offer private lessons in French, Spanish, Czech, and English. My approach is
+          conversation-first — grammar when it's useful, immersion when it works better.
+          Lessons are tailored to where you are and where you want to go.
+        </p>
+      </div>
+      <div class="lessons-grid">
+        <div class="lesson-card">
+          <p class="lesson-lang">French</p>
+          <p class="lesson-desc">From basics to fluency. Conversational, professional, or just for travel — whatever you need.</p>
+        </div>
+        <div class="lesson-card">
+          <p class="lesson-lang">Spanish</p>
+          <p class="lesson-desc">Fast-track if you already know French or Italian. Start from scratch if not — the vocabulary rewards you quickly.</p>
+        </div>
+        <div class="lesson-card">
+          <p class="lesson-lang">Czech</p>
+          <p class="lesson-desc">One of the harder Slavic languages, but incredibly rewarding. Great if you have family roots or just love a challenge.</p>
+        </div>
+        <div class="lesson-card">
+          <p class="lesson-lang">English</p>
+          <p class="lesson-desc">Accent reduction, business English, conversational confidence — or all three. Taught with patience and honesty.</p>
+        </div>
+      </div>
+      <a href="mailto:slaba.natalie@gmail.com?subject=Language%20Lesson%20Inquiry" class="lessons-cta">
+        Get in touch
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+        </svg>
+      </a>
+    </section>
+
+    <!-- Poll -->
+    <section class="poll-section">
+      <p class="section-label">// An idea I'm testing</p>
+      <h2>Bite-sized language lessons</h2>
+      <p class="poll-desc">
+        I've been thinking about creating short, daily language lessons — ten minutes a day,
+        but designed in a way that actually sticks. Not flashcards. Not grammar drills.
+        Something that fits into a real life and builds real fluency over time.
+        <br><br>
+        Before I build it: would you use it?
+      </p>
+
+      <form class="poll-form" action="https://formsubmit.co/slaba.natalie@gmail.com" method="POST">
+        <input type="hidden" name="_subject" value="Language Lessons Poll Response">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_template" value="table">
+
+        <div>
+          <p class="poll-question">Would you be interested in 10-minute daily language lessons?</p>
+          <div class="poll-options">
+            <label class="poll-option">
+              <input type="radio" name="interest" value="Yes, definitely" required>
+              <label>Yes, definitely — I'd use this.</label>
+            </label>
+            <label class="poll-option">
+              <input type="radio" name="interest" value="Maybe, depends on the language">
+              <label>Maybe — depends on which language.</label>
+            </label>
+            <label class="poll-option">
+              <input type="radio" name="interest" value="Curious but not sure">
+              <label>I'm curious but not sure yet.</label>
+            </label>
+            <label class="poll-option">
+              <input type="radio" name="interest" value="Not for me">
+              <label>Probably not for me.</label>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <p class="poll-question">Which language would you most want to learn?</p>
+          <div class="poll-options">
+            <label class="poll-option">
+              <input type="radio" name="language" value="French">
+              <label>French</label>
+            </label>
+            <label class="poll-option">
+              <input type="radio" name="language" value="Spanish">
+              <label>Spanish</label>
+            </label>
+            <label class="poll-option">
+              <input type="radio" name="language" value="Czech">
+              <label>Czech</label>
+            </label>
+            <label class="poll-option">
+              <input type="radio" name="language" value="English">
+              <label>English</label>
+            </label>
+            <label class="poll-option">
+              <input type="radio" name="language" value="Other">
+              <label>Something else</label>
+            </label>
+          </div>
+        </div>
+
+        <div class="poll-field">
+          <label for="poll-name">Your name (optional)</label>
+          <input type="text" id="poll-name" name="name" placeholder="—">
+        </div>
+
+        <div class="poll-field">
+          <label for="poll-email">Email — if you'd like to hear when it launches (optional)</label>
+          <input type="email" id="poll-email" name="email" placeholder="—">
+        </div>
+
+        <div class="poll-field">
+          <label for="poll-comment">Anything else you'd want from daily lessons?</label>
+          <textarea id="poll-comment" name="comment" rows="3" placeholder="—"></textarea>
+        </div>
+
+        <button type="submit" class="poll-submit">Submit</button>
+      </form>
+    </section>
+
+  </main>
+
+  <footer>
+    <a href="../index.html">Home</a>
+    <a href="../tech/index.html">Tech</a>
+    <a href="../art/index.html">Art</a>
+    <a href="index.html">Languages</a>
+    <a href="../about.html">About</a>
+  </footer>
+
+  <script>
+    const navToggle = document.querySelector('.nav-toggle');
+    const navLinks  = document.querySelector('.nav-links');
+    navToggle.addEventListener('click', () => {
+      navToggle.classList.toggle('open');
+      navLinks.classList.toggle('open');
+    });
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navToggle.classList.remove('open');
+        navLinks.classList.remove('open');
+      });
+    });
+  </script>
+
+</body>
+</html>
