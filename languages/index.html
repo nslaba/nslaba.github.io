@@ -234,6 +234,35 @@
       opacity: 0;
     }
 
+    /* Sound toggle button */
+    .sound-btn {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.6rem;
+      z-index: 5;
+      background: rgba(5,5,8,0.65);
+      border: none;
+      border-radius: 50%;
+      width: 28px; height: 28px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: rgba(255,255,255,0.7);
+      font-size: 0.75rem;
+      transition: background 0.2s, color 0.2s;
+      backdrop-filter: blur(4px);
+    }
+
+    .lang-card-video.playing .sound-btn {
+      display: flex;
+    }
+
+    .sound-btn:hover {
+      background: rgba(5,5,8,0.9);
+      color: #fff;
+    }
+
     /* Fun fact overlay — inside video area, slides up on play */
     .lang-card-video .fun-fact {
       position: absolute;
@@ -710,6 +739,7 @@
             <video muted playsinline preload="metadata">
               <source src="../assets/videos/languages/czech.mov" type="video/mp4">
             </video>
+            <button class="sound-btn" aria-label="Toggle sound">🔇</button>
           </div>
           <div class="lang-card-body">
             <h2 class="lang-name">Czech</h2>
@@ -735,6 +765,7 @@
             <video muted playsinline preload="metadata">
               <source src="../assets/videos/languages/french.mov" type="video/mp4">
             </video>
+            <button class="sound-btn" aria-label="Toggle sound">🔇</button>
           </div>
           <div class="lang-card-body">
             <h2 class="lang-name">French</h2>
@@ -749,6 +780,7 @@
             <video muted playsinline preload="metadata">
               <source src="../assets/videos/languages/spanish.mov" type="video/mp4">
             </video>
+            <button class="sound-btn" aria-label="Toggle sound">🔇</button>
             <div class="fun-fact">
               <span class="fun-fact-icon">✦</span>
               <p>Learned most of it in one month — French had already done half the work.</p>
@@ -955,19 +987,17 @@
       });
     });
 
-    // Hover-to-play videos + fun fact overlay
+    // Hover-to-play videos + sound toggle + fun fact overlay
     document.querySelectorAll('.lang-card-video').forEach(wrap => {
-      const video   = wrap.querySelector('video');
-      const funFact = wrap.querySelector('.fun-fact');
+      const video     = wrap.querySelector('video');
+      const funFact   = wrap.querySelector('.fun-fact');
+      const soundBtn  = wrap.querySelector('.sound-btn');
       if (!video) return;
 
+      // Hover: play muted (always works)
       wrap.addEventListener('mouseenter', () => {
-        video.muted = false;
-        video.play().catch(() => {
-          // If unmuted play fails, fall back to muted
-          video.muted = true;
-          video.play().catch(() => {});
-        });
+        video.muted = true;
+        video.play().catch(() => {});
         wrap.classList.add('playing');
       });
 
@@ -976,8 +1006,18 @@
         video.currentTime = 0;
         video.muted = true;
         wrap.classList.remove('playing');
-        if (funFact) funFact.classList.remove('visible');
+        if (soundBtn) soundBtn.textContent = '🔇';
+        if (funFact)  funFact.classList.remove('visible');
       });
+
+      // Click the sound button: toggle mute (click IS a user gesture → browsers allow it)
+      if (soundBtn) {
+        soundBtn.addEventListener('click', e => {
+          e.stopPropagation();
+          video.muted = !video.muted;
+          soundBtn.textContent = video.muted ? '🔇' : '🔊';
+        });
+      }
 
       if (funFact) {
         video.addEventListener('play',  () => funFact.classList.add('visible'));
