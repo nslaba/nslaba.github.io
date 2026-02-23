@@ -1,429 +1,1074 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Area Problem | Natalie Slaba</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --color-bg: #0f0f1a;
-            --color-surface: #1a1a2e;
-            --color-primary: #6366f1;
-            --color-secondary: #818cf8;
-            --color-accent: #a5b4fc;
-            --color-success: #10b981;
-            --color-warn: #fbbf24;
-            --color-white: #fafafa;
-            --color-gray-400: #a3a3a3;
-            --font-sans: 'Inter', -apple-system, sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: var(--font-sans); background: var(--color-bg); color: var(--color-white); overflow: hidden; }
-        #canvas { display: block; width: 100vw; height: 100vh; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Riemann Sums | Natalie Slaba</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        .ui-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 10;
-        }
-        .game-nav { position: absolute; top: 1.5rem; left: 1.5rem; pointer-events: auto; }
-        .back-link {
-            font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-gray-400);
-            text-decoration: none; display: flex; align-items: center; gap: 0.5rem; transition: color 0.2s;
-        }
-        .back-link:hover { color: var(--color-primary); }
+    :root {
+      --bg: #0b0b14;
+      --surface: #13131f;
+      --accent: #818cf8;
+      --accent-dim: rgba(129,140,248,0.12);
+      --accent-glow: rgba(129,140,248,0.25);
+      --text: #f0f0f5;
+      --text-dim: rgba(240,240,245,0.55);
+      --text-faint: rgba(240,240,245,0.25);
+      --border: rgba(255,255,255,0.07);
+      --green: #34d399;
+      --yellow: #fbbf24;
+    }
 
-        .level-title {
-            position: absolute; top: 1.5rem; left: 50%; transform: translateX(-50%);
-            font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.1em;
-            text-transform: uppercase; color: var(--color-primary);
-        }
-        .objective {
-            position: absolute; top: 3.5rem; left: 50%; transform: translateX(-50%);
-            font-size: 0.9rem; color: var(--color-gray-400); text-align: center;
-            max-width: 420px; line-height: 1.6; padding: 0 1rem;
-        }
+    html { scroll-behavior: smooth; }
 
-        .controls {
-            position: absolute; right: 2rem; top: 50%; transform: translateY(-50%);
-            background: rgba(26, 26, 46, 0.85); border: 1px solid rgba(99, 102, 241, 0.2);
-            border-radius: 8px; padding: 1.5rem; width: 190px;
-            display: flex; flex-direction: column; gap: 1.5rem;
-            pointer-events: auto;
-        }
-        .ctrl-group { display: flex; flex-direction: column; gap: 0.6rem; }
-        .ctrl-label {
-            font-family: var(--font-mono); font-size: 0.65rem; color: var(--color-gray-400);
-            text-transform: uppercase; letter-spacing: 0.1em;
-        }
-        .n-display {
-            font-family: var(--font-mono); font-size: 2.2rem; font-weight: 600;
-            color: var(--color-white); text-align: center; line-height: 1;
-        }
-        .n-slider {
-            -webkit-appearance: none; width: 100%; height: 4px;
-            background: rgba(255,255,255,0.1); border-radius: 2px; outline: none; cursor: pointer;
-        }
-        .n-slider::-webkit-slider-thumb {
-            -webkit-appearance: none; width: 16px; height: 16px;
-            border-radius: 50%; background: var(--color-primary); cursor: pointer;
-        }
-        .method-btns { display: flex; gap: 0.35rem; }
-        .method-btn {
-            flex: 1; padding: 0.4rem 0;
-            font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.05em;
-            text-transform: uppercase; background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1); color: var(--color-gray-400);
-            border-radius: 4px; cursor: pointer; transition: all 0.2s;
-        }
-        .method-btn.active { background: var(--color-primary); border-color: var(--color-primary); color: white; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
 
-        .precision-track {
-            width: 100%; height: 6px; background: rgba(255,255,255,0.1);
-            border-radius: 3px; overflow: hidden;
-        }
-        .precision-fill { height: 100%; border-radius: 3px; transition: width 0.25s ease, background 0.25s; }
-        .estimate-row {
-            font-family: var(--font-mono); font-size: 0.72rem; color: var(--color-gray-400);
-            display: flex; flex-direction: column; gap: 0.2rem;
-        }
-        .estimate-row span { color: var(--color-white); }
+    /* ---- Nav ---- */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.25rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(to bottom, var(--bg), transparent);
+      pointer-events: none;
+    }
+    .back-link {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem; color: var(--text-faint);
+      text-decoration: none;
+      display: flex; align-items: center; gap: 0.5rem;
+      transition: color 0.2s;
+      pointer-events: auto;
+    }
+    .back-link:hover { color: var(--accent); }
 
-        .instruction {
-            position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
-            font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-gray-400);
-            background: rgba(255,255,255,0.03); padding: 0.75rem 1.5rem;
-            border-radius: 4px; border: 1px solid rgba(255,255,255,0.05); white-space: nowrap;
-        }
+    /* ---- Phase wrapper ---- */
+    .phase {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 5rem 2rem;
+      position: relative;
+    }
 
-        .modal {
-            position: absolute; top: 50%; left: 38%; transform: translate(-50%, -50%) scale(0.9);
-            background: var(--color-surface); padding: 2.5rem; border-radius: 8px; text-align: left;
-            opacity: 0; visibility: hidden;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            border: 1px solid rgba(99,102,241,0.3);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(99,102,241,0.15);
-            pointer-events: auto; width: min(480px, 90vw);
-        }
-        .modal.show { transform: translate(-50%, -50%) scale(1); opacity: 1; visibility: visible; }
-        .modal h2 {
-            font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.15em;
-            text-transform: uppercase; color: var(--color-success); margin-bottom: 1rem;
-        }
-        .modal p {
-            font-size: 0.92rem; color: var(--color-gray-400); line-height: 1.75; margin-bottom: 0.75rem;
-        }
-        .modal strong { color: var(--color-white); }
-        .formula {
-            font-family: var(--font-mono); font-size: 1.1rem; color: var(--color-accent);
-            text-align: center; margin: 1.25rem 0; line-height: 1.6;
-        }
-        .next-btn {
-            font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.05em;
-            text-transform: uppercase; background: transparent; color: var(--color-primary);
-            border: 1px solid var(--color-primary); padding: 0.75rem 2rem;
-            border-radius: 4px; cursor: pointer; transition: all 0.2s; margin-top: 0.75rem;
-            display: block;
-        }
-        .next-btn:hover { background: var(--color-primary); color: white; }
-    </style>
+    /* ---- Phase 1: Motivation ---- */
+    #phase1 { overflow: hidden; }
+
+    #motionCanvas {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+    }
+
+    .motivation-text {
+      position: relative; z-index: 2;
+      text-align: center;
+      max-width: 680px;
+    }
+
+    .p1-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      opacity: 0;
+      margin-bottom: 1.5rem;
+      transition: opacity 0.8s ease;
+    }
+
+    .p1-headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 300;
+      line-height: 1.2;
+      opacity: 0;
+      transition: opacity 1s ease;
+      margin-bottom: 1.5rem;
+    }
+
+    .p1-sub {
+      font-size: 1rem; color: var(--text-dim);
+      max-width: 520px; margin: 0 auto;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      line-height: 1.9;
+    }
+
+    .p1-scroll-hint {
+      margin-top: 3rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+    }
+
+    .p1-scroll-hint svg {
+      animation: nudge 1.6s ease-in-out infinite;
+    }
+
+    @keyframes nudge {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+
+    /* ---- Graph section shared ---- */
+    .graph-section {
+      width: 100%; max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .graph-caption {
+      text-align: center;
+      margin-top: 1.75rem;
+    }
+
+    .graph-caption-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 300;
+      margin-bottom: 0.5rem;
+    }
+
+    .graph-caption-sub {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    .graph-canvas-wrap {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .graph-canvas-wrap canvas {
+      display: block;
+      width: 100%;
+    }
+
+    /* ---- Phase 2: Constant runner ---- */
+    #phase2 { background: var(--bg); }
+
+    /* ---- Phase 3: Variable runner ---- */
+    #phase3 { background: var(--bg); }
+
+    .ponder-box {
+      margin-top: 2rem;
+      padding: 1.5rem 2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      max-width: 560px;
+      text-align: center;
+    }
+
+    .ponder-box p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    /* ---- Phase 4: Puzzle ---- */
+    #phase4 { background: var(--bg); padding-top: 4rem; }
+
+    .puzzle-header {
+      max-width: 680px;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .puzzle-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .puzzle-headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 4vw, 2.8rem);
+      font-weight: 300;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .puzzle-desc {
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      line-height: 1.9;
+    }
+
+    /* Puzzle interactive */
+    .puzzle-interactive {
+      width: 100%; max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .puzzle-graph-wrap {
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .puzzle-graph-wrap canvas {
+      display: block; width: 100%;
+    }
+
+    .puzzle-hint {
+      text-align: center;
+      margin-top: 1.5rem;
+      min-height: 4rem;
+    }
+
+    .puzzle-hint-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem; font-weight: 300; font-style: italic;
+      color: var(--text-dim);
+      line-height: 1.7;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    .puzzle-hint-text.visible { opacity: 1; }
+
+    .puzzle-split-btn {
+      margin-top: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .split-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem; letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid rgba(129,140,248,0.35);
+      padding: 0.65rem 1.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .split-btn:hover { background: var(--accent-dim); border-color: var(--accent); }
+    .split-btn:disabled { opacity: 0.25; cursor: default; }
+
+    .n-readout {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-faint);
+      min-width: 120px;
+      text-align: center;
+    }
+
+    .error-bar-wrap {
+      margin-top: 1.75rem;
+      display: flex; align-items: center; gap: 1rem;
+      max-width: 500px; margin-left: auto; margin-right: auto;
+    }
+
+    .error-bar-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      white-space: nowrap;
+    }
+
+    .error-bar-track {
+      flex: 1; height: 5px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 3px; overflow: hidden;
+    }
+
+    .error-bar-fill {
+      height: 100%; border-radius: 3px;
+      background: #ef4444;
+      transition: width 0.4s ease, background 0.4s ease;
+      width: 100%;
+    }
+
+    .error-bar-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      min-width: 52px;
+      text-align: right;
+    }
+
+    /* ---- Phase 5: Formula reveal ---- */
+    #phase5 {
+      background: var(--bg);
+      padding-bottom: 8rem;
+    }
+
+    .reveal-header {
+      max-width: 680px;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .reveal-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 1rem;
+    }
+
+    .reveal-headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 300;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .reveal-body {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .reveal-body p {
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      line-height: 1.9;
+      margin-bottom: 1.25rem;
+    }
+
+    .formula-block {
+      margin: 2rem 0;
+      padding: 2rem;
+      background: var(--surface);
+      border: 1px solid rgba(129,140,248,0.2);
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .formula-block .formula-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 1.25rem;
+    }
+
+    .formula {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      color: var(--accent);
+      line-height: 2;
+    }
+
+    .formula sub, .formula sup {
+      font-size: 0.65em;
+    }
+
+    /* ---- Sandbox (old interactive, now at bottom) ---- */
+    #sandbox {
+      background: var(--bg);
+      padding: 4rem 2rem 8rem;
+    }
+
+    .sandbox-header {
+      max-width: 680px; margin: 0 auto 2.5rem;
+      text-align: center;
+    }
+
+    .sandbox-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .sandbox-headline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      font-weight: 300;
+    }
+
+    .sandbox-inner {
+      max-width: 900px; margin: 0 auto;
+      display: flex; gap: 2rem; align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .sandbox-graph { flex: 1; min-width: 280px; }
+
+    .sandbox-graph-wrap {
+      border-radius: 8px; overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .sandbox-graph-wrap canvas { display: block; width: 100%; }
+
+    .sandbox-controls {
+      width: 200px; flex-shrink: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      display: flex; flex-direction: column; gap: 1.5rem;
+    }
+
+    .ctrl-group { display: flex; flex-direction: column; gap: 0.6rem; }
+
+    .ctrl-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+    }
+
+    .n-display {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem; font-weight: 500;
+      color: var(--text); text-align: center;
+    }
+
+    .n-slider {
+      -webkit-appearance: none;
+      width: 100%; height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px; outline: none; cursor: pointer;
+    }
+    .n-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      background: var(--accent); cursor: pointer;
+    }
+
+    .method-btns { display: flex; gap: 0.35rem; }
+    .method-btn {
+      flex: 1; padding: 0.35rem 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem; letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      color: var(--text-faint);
+      border-radius: 3px; cursor: pointer;
+      transition: all 0.15s;
+    }
+    .method-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+    .estimate-row {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--text-faint);
+      display: flex; flex-direction: column; gap: 0.25rem;
+    }
+    .estimate-row span { color: var(--text-dim); }
+
+    /* ---- Footer ---- */
+    footer {
+      padding: 2.5rem;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    footer a {
+      font-size: 0.8rem; color: var(--text-faint);
+      text-decoration: none; margin: 0 1rem; transition: color 0.2s;
+    }
+    footer a:hover { color: var(--text); }
+
+    /* ---- Scroll reveal ---- */
+    .reveal-on-scroll {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal-on-scroll.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 640px) {
+      .sandbox-controls { width: 100%; }
+    }
+  </style>
 </head>
 <body>
-<canvas id="canvas"></canvas>
 
-<div class="ui-overlay">
-    <nav class="game-nav">
-        <a href="../../../index.html" class="back-link">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-            </svg>
-            Back to Projects
-        </a>
-    </nav>
+  <!-- Nav -->
+  <nav class="nav">
+    <a href="../../../index.html" class="back-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+      </svg>
+      Back
+    </a>
+  </nav>
 
-    <div class="level-title" id="levelTitle">Level 1</div>
-    <div class="objective" id="objective"></div>
+  <!-- ============================================================
+       PHASE 1 — MOTIVATION: Life in motion
+       ============================================================ -->
+  <section id="phase1" class="phase">
+    <canvas id="motionCanvas"></canvas>
+    <div class="motivation-text">
+      <p class="p1-label" id="p1label">Riemann Sums</p>
+      <h1 class="p1-headline" id="p1headline">Most of life is<br>constantly changing.</h1>
+      <p class="p1-sub" id="p1sub">
+        Speed. Temperature. Growth. Nothing stays perfectly constant —
+        yet we need ways to measure what accumulates over time.
+        How do we do that?
+      </p>
+      <div class="p1-scroll-hint" id="p1hint">
+        <span>scroll to explore</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+        </svg>
+      </div>
+    </div>
+  </section>
 
-    <div class="controls">
-        <div class="ctrl-group">
-            <div class="ctrl-label">rectangles (n)</div>
-            <div class="n-display" id="nDisplay">4</div>
-            <input type="range" class="n-slider" id="nSlider" min="1" max="50" value="4">
-        </div>
-        <div class="ctrl-group">
-            <div class="ctrl-label">method</div>
-            <div class="method-btns">
-                <button class="method-btn active" data-m="left">Left</button>
-                <button class="method-btn" data-m="mid">Mid</button>
-                <button class="method-btn" data-m="right">Right</button>
-            </div>
-        </div>
-        <div class="ctrl-group">
-            <div class="ctrl-label">precision</div>
-            <div class="precision-track">
-                <div class="precision-fill" id="precFill" style="width:0%;background:#ef4444"></div>
-            </div>
-            <div class="estimate-row">
-                <div>estimate: <span id="estVal">—</span></div>
-                <div>error: <span id="errVal">—</span></div>
-            </div>
-        </div>
+  <!-- ============================================================
+       PHASE 2 — Constant runner (easy case)
+       ============================================================ -->
+  <section id="phase2" class="phase">
+    <div class="graph-section reveal-on-scroll">
+      <div class="graph-canvas-wrap">
+        <canvas id="constCanvas" height="300"></canvas>
+      </div>
+      <div class="graph-caption">
+        <h2 class="graph-caption-title">A runner at constant speed</h2>
+        <p class="graph-caption-sub">
+          Say a runner holds exactly 10 km/h for one hour.
+          Total distance = 10 km. Simple — it's just the area of that rectangle.
+          <br><br>
+          <span style="font-family:'JetBrains Mono',monospace; font-size:0.82rem; color:var(--accent)">
+            distance = speed × time = 10 × 1 = 10 km
+          </span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PHASE 3 — Variable runner (the real problem)
+       ============================================================ -->
+  <section id="phase3" class="phase">
+    <div class="graph-section reveal-on-scroll">
+      <div class="graph-canvas-wrap">
+        <canvas id="varCanvas" height="300"></canvas>
+      </div>
+      <div class="graph-caption">
+        <h2 class="graph-caption-title">Now the runner changes speed</h2>
+        <p class="graph-caption-sub">
+          What if their speed varies continuously throughout the run?
+          The total distance is the area under this curve — but there's no simple formula for that.
+        </p>
+      </div>
+      <div class="ponder-box reveal-on-scroll" style="margin: 2rem auto 0;">
+        <p>Take a moment. If you can't get the exact area… what would you do?</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PHASE 4 — PUZZLE: guided discovery
+       ============================================================ -->
+  <section id="phase4" class="phase">
+    <div class="puzzle-header reveal-on-scroll">
+      <p class="puzzle-label">// The puzzle</p>
+      <h2 class="puzzle-headline">What if we broke time<br>into smaller pieces?</h2>
+      <p class="puzzle-desc">
+        Over a tiny slice of time… is the speed <em>almost</em> constant?<br>
+        What if we pretended it was, just for that tiny moment?<br>
+        Press the button and see what happens.
+      </p>
     </div>
 
-    <div class="instruction" id="instruction">Drag the slider · switch methods · get within 2% of the true area</div>
+    <div class="puzzle-interactive reveal-on-scroll">
+      <div class="puzzle-graph-wrap">
+        <canvas id="puzzleCanvas" height="320"></canvas>
+      </div>
 
-    <div class="modal" id="modal">
-        <h2 id="modalTitle"></h2>
-        <p id="modalMsg"></p>
-        <button class="next-btn" id="nextBtn"></button>
+      <div class="puzzle-hint">
+        <p class="puzzle-hint-text" id="puzzleHint"></p>
+      </div>
+
+      <div class="puzzle-split-btn">
+        <button class="split-btn" id="splitBtn">Split into more pieces</button>
+        <span class="n-readout" id="nReadout">1 rectangle</span>
+        <button class="split-btn" id="resetPuzzleBtn">Reset</button>
+      </div>
+
+      <div class="error-bar-wrap">
+        <span class="error-bar-label">error</span>
+        <div class="error-bar-track">
+          <div class="error-bar-fill" id="puzzleErrFill"></div>
+        </div>
+        <span class="error-bar-val" id="puzzleErrVal">—</span>
+      </div>
     </div>
-</div>
+  </section>
+
+  <!-- ============================================================
+       PHASE 5 — FORMULA REVEAL
+       ============================================================ -->
+  <section id="phase5" class="phase">
+    <div class="reveal-header reveal-on-scroll">
+      <p class="reveal-label">// You just discovered integration</p>
+      <h2 class="reveal-headline">The Riemann Sum</h2>
+    </div>
+    <div class="reveal-body reveal-on-scroll">
+      <p>
+        Each rectangle had a width — a tiny slice of time, Δx —
+        and a height equal to the speed at that moment, f(x).
+        Its area was <strong style="color:var(--text)">f(x) · Δx</strong>.
+      </p>
+      <p>
+        Adding all those slices together gave an approximation of the total distance.
+        The more slices, the better the approximation.
+      </p>
+      <p>
+        Now imagine taking that idea to its logical extreme — what if the slices
+        were <em>infinitely</em> thin? The sum converges to an exact value.
+        That limit has a name:
+      </p>
+
+      <div class="formula-block">
+        <p class="formula-label">The Riemann Sum</p>
+        <div class="formula">
+          A &nbsp;≈&nbsp; Σ f(x<sub>i</sub>) · Δx
+        </div>
+        <p style="font-size:0.75rem; color:var(--text-faint); margin-top:1rem; font-family:'JetBrains Mono',monospace; letter-spacing:0.05em;">
+          n rectangles, each of width Δx = (b−a)/n
+        </p>
+      </div>
+
+      <div class="formula-block" style="margin-top:1rem;">
+        <p class="formula-label">As n → ∞ : The Definite Integral</p>
+        <div class="formula">
+          ∫<sub>a</sub><sup>b</sup> f(x) dx &nbsp;=&nbsp; lim<sub>n→∞</sub> Σ f(x<sub>i</sub>) Δx
+        </div>
+      </div>
+
+      <p style="margin-top:1.5rem;">
+        The approximation you built in the puzzle <em>is</em> integration.
+        You were doing it before you knew the name.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SANDBOX — free exploration
+       ============================================================ -->
+  <section id="sandbox">
+    <div class="sandbox-header reveal-on-scroll">
+      <p class="sandbox-label">// Free play</p>
+      <h2 class="sandbox-headline">Explore it yourself</h2>
+    </div>
+    <div class="sandbox-inner">
+      <div class="sandbox-graph reveal-on-scroll">
+        <div class="sandbox-graph-wrap">
+          <canvas id="sandboxCanvas" height="320"></canvas>
+        </div>
+      </div>
+      <div class="sandbox-controls reveal-on-scroll">
+        <div class="ctrl-group">
+          <div class="ctrl-label">rectangles (n)</div>
+          <div class="n-display" id="sbNDisplay">4</div>
+          <input type="range" class="n-slider" id="sbSlider" min="1" max="80" value="4">
+        </div>
+        <div class="ctrl-group">
+          <div class="ctrl-label">sample point</div>
+          <div class="method-btns" id="sbMethodBtns">
+            <button class="method-btn active" data-m="left">Left</button>
+            <button class="method-btn" data-m="mid">Mid</button>
+            <button class="method-btn" data-m="right">Right</button>
+          </div>
+        </div>
+        <div class="ctrl-group">
+          <div class="estimate-row">
+            <div>estimate: <span id="sbEst">—</span></div>
+            <div>error: <span id="sbErr">—</span></div>
+            <div style="margin-top:0.25rem;">true area: <span id="sbTrue">—</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <a href="../../../index.html">Tech</a>
+    <a href="../../../../../index.html">Home</a>
+  </footer>
 
 <script>
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
+// ================================================================
+// PHASE 1 — Animated background: organic moving particles
+// ================================================================
+(function() {
+  const canvas = document.getElementById('motionCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
 
-let n = 4, method = 'left', level = 0, done = false;
+  function resize() {
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
 
-const levels = [
-    {
-        title: 'Level 1: The Curved Problem',
-        objective: 'A curve doesn\'t have neat edges — you can\'t measure its area with a ruler. Can you get within 2% of the true value?',
-        f: x => Math.sin(x) + 1,
-        a: 0,
-        b: Math.PI,
-        yMax: 2.3,
-        trueVal: Math.PI + 2,
-        xTicks: [{ v: 0, label: '0' }, { v: Math.PI / 2, label: 'π/2' }, { v: Math.PI, label: 'π' }],
-        successMsg: 'More rectangles, thinner slices — the estimate sharpened. Each rectangle is a width (Δx) times a height f(x). The total is a sum of those slices.',
-    },
-    {
-        title: 'Level 2: A Different Shape',
-        objective: 'Same idea, different curve. Try all three methods — which one converges fastest?',
-        f: x => -(x - 2) * (x - 2) / 4 + 2,
-        a: 0,
-        b: 4,
-        yMax: 2.4,
-        trueVal: 20 / 3,
-        xTicks: [{ v: 0, label: '0' }, { v: 2, label: '2' }, { v: 4, label: '4' }],
-        successMsg: 'The midpoint method tends to converge fastest — it cancels errors on each side of the sample point. Left and right methods consistently over- or under-estimate on monotone curves.',
+  class Dot {
+    constructor() { this.reset(true); }
+    reset(init) {
+      this.x  = Math.random() * W;
+      this.y  = init ? Math.random() * H : (Math.random() < 0.5 ? -10 : H + 10);
+      this.vy = (Math.random() * 0.4 + 0.1) * (Math.random() < 0.5 ? 1 : -1);
+      this.vx = (Math.random() - 0.5) * 0.3;
+      this.r  = Math.random() * 1.5 + 0.4;
+      this.alpha = Math.random() * 0.35 + 0.05;
+      this.phase = Math.random() * Math.PI * 2;
+      this.freq  = Math.random() * 0.4 + 0.2;
     }
-];
+    update(t) {
+      this.x += this.vx + Math.sin(t * this.freq + this.phase) * 0.25;
+      this.y += this.vy;
+      if (this.y < -20 || this.y > H + 20) this.reset(false);
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(129,140,248,${this.alpha})`;
+      ctx.fill();
+    }
+  }
 
-let plotLeft, plotRight, plotTop, plotBottom, plotW, plotH;
+  for (let i = 0; i < 120; i++) particles.push(new Dot());
 
-function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    plotLeft   = Math.max(60, canvas.width * 0.07);
-    plotRight  = Math.min(canvas.width - 240, canvas.width * 0.62);
-    plotTop    = canvas.height * 0.18;
-    plotBottom = canvas.height * 0.82;
-    plotW = plotRight - plotLeft;
-    plotH = plotBottom - plotTop;
+  let start = performance.now();
+  function loop() {
+    const t = (performance.now() - start) * 0.001;
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => { p.update(t); p.draw(); });
+    requestAnimationFrame(loop);
+  }
+  loop();
+
+  // Fade in text
+  setTimeout(() => {
+    document.getElementById('p1label').style.opacity = '1';
+  }, 400);
+  setTimeout(() => {
+    document.getElementById('p1headline').style.opacity = '1';
+  }, 900);
+  setTimeout(() => {
+    document.getElementById('p1sub').style.opacity = '1';
+  }, 1500);
+  setTimeout(() => {
+    document.getElementById('p1hint').style.opacity = '1';
+  }, 2200);
+})();
+
+// ================================================================
+// Shared graph helpers
+// ================================================================
+function drawGraph(canvas, f, a, b, yMax, opts = {}) {
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width  = canvas.offsetWidth * devicePixelRatio;
+  const H = canvas.height = parseInt(canvas.getAttribute('height')) * devicePixelRatio;
+  canvas.style.height = canvas.getAttribute('height') + 'px';
+
+  const PAD_L = 56 * devicePixelRatio;
+  const PAD_R = 24 * devicePixelRatio;
+  const PAD_T = 24 * devicePixelRatio;
+  const PAD_B = 36 * devicePixelRatio;
+  const PW = W - PAD_L - PAD_R;
+  const PH = H - PAD_T - PAD_B;
+
+  function cx(x) { return PAD_L + (x - a) / (b - a) * PW; }
+  function cy(y) { return PAD_T + PH - y / yMax * PH; }
+
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#13131f';
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(129,140,248,0.04)';
+  ctx.lineWidth = 1;
+  for (let gx = a; gx <= b; gx += (b - a) / 4) {
+    ctx.beginPath(); ctx.moveTo(cx(gx), PAD_T); ctx.lineTo(cx(gx), PAD_T + PH); ctx.stroke();
+  }
+  for (let gy = 0; gy <= yMax; gy += yMax / 4) {
+    ctx.beginPath(); ctx.moveTo(PAD_L, cy(gy)); ctx.lineTo(PAD_L + PW, cy(gy)); ctx.stroke();
+  }
+
+  // Rectangles
+  if (opts.n) {
+    const n   = opts.n;
+    const dx  = (b - a) / n;
+    const mtd = opts.method || 'left';
+    ctx.fillStyle = 'rgba(129,140,248,0.22)';
+    ctx.strokeStyle = 'rgba(163,163,255,0.55)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < n; i++) {
+      const xL = a + i * dx, xR = a + (i + 1) * dx;
+      const sx = mtd === 'left' ? xL : mtd === 'right' ? xR : (xL + xR) / 2;
+      const ht = f(sx);
+      ctx.fillRect(cx(xL), cy(ht), cx(xR) - cx(xL), cy(0) - cy(ht));
+      ctx.strokeRect(cx(xL), cy(ht), cx(xR) - cx(xL), cy(0) - cy(ht));
+    }
+  }
+
+  // True area fill
+  ctx.beginPath();
+  ctx.moveTo(cx(a), cy(0));
+  for (let i = 0; i <= 400; i++) {
+    const x = a + (b - a) * i / 400;
+    ctx.lineTo(cx(x), cy(f(x)));
+  }
+  ctx.lineTo(cx(b), cy(0));
+  ctx.closePath();
+  ctx.fillStyle = opts.n ? 'rgba(129,140,248,0.06)' : 'rgba(129,140,248,0.18)';
+  ctx.fill();
+
+  // Curve
+  ctx.beginPath();
+  ctx.strokeStyle = '#a5b4fc';
+  ctx.lineWidth = 2 * devicePixelRatio;
+  ctx.lineJoin = 'round';
+  for (let i = 0; i <= 400; i++) {
+    const x = a + (b - a) * i / 400;
+    i === 0 ? ctx.moveTo(cx(x), cy(f(x))) : ctx.lineTo(cx(x), cy(f(x)));
+  }
+  ctx.stroke();
+
+  // Axes
+  ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(PAD_L, cy(0)); ctx.lineTo(PAD_L + PW + 8, cy(0)); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(PAD_L, cy(0) + 6); ctx.lineTo(PAD_L, PAD_T - 8); ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle = 'rgba(255,255,255,0.3)';
+  ctx.font = `${11 * devicePixelRatio}px JetBrains Mono, monospace`;
+  ctx.textAlign = 'center';
+
+  if (opts.xLabels) {
+    opts.xLabels.forEach(([v, lbl]) => {
+      ctx.fillText(lbl, cx(v), cy(0) + 18 * devicePixelRatio);
+    });
+  }
+  if (opts.yLabels) {
+    ctx.textAlign = 'right';
+    opts.yLabels.forEach(([v, lbl]) => {
+      ctx.fillText(lbl, PAD_L - 6 * devicePixelRatio, cy(v) + 4 * devicePixelRatio);
+    });
+  }
+
+  // Area label
+  if (opts.areaLabel) {
+    ctx.fillStyle = 'rgba(165,180,252,0.45)';
+    ctx.font = `bold ${12 * devicePixelRatio}px JetBrains Mono, monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillText(opts.areaLabel, cx((a + b) / 2), cy(yMax * 0.35));
+  }
+
+  return { cx, cy };
 }
-resize();
-window.addEventListener('resize', resize);
 
-function cx(x) { const lv = levels[level]; return plotLeft + (x - lv.a) / (lv.b - lv.a) * plotW; }
-function cy(y) { const lv = levels[level]; return plotBottom - y / lv.yMax * plotH; }
+// ================================================================
+// PHASE 2 — Constant runner graph
+// ================================================================
+(function() {
+  const canvas = document.getElementById('constCanvas');
+  const f = () => 10;
+  function render() {
+    drawGraph(canvas, f, 0, 1, 14, {
+      xLabels: [[0,'0'], [0.5,'0.5 h'], [1,'1 h']],
+      yLabels: [[0,'0'], [5,'5'], [10,'10 km/h']],
+      areaLabel: '10 km',
+    });
+    // Shade the rectangle distinctly
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const dpr = devicePixelRatio;
+    const PAD_L = 56 * dpr, PAD_R = 24 * dpr, PAD_T = 24 * dpr, PAD_B = 36 * dpr;
+    const PW = W - PAD_L - PAD_R, PH = H - PAD_T - PAD_B;
+    function cx(x) { return PAD_L + x * PW; }
+    function cy(y) { return PAD_T + PH - y / 14 * PH; }
+    ctx.fillStyle = 'rgba(52,211,153,0.15)';
+    ctx.strokeStyle = 'rgba(52,211,153,0.6)';
+    ctx.lineWidth = 2;
+    ctx.fillRect(cx(0), cy(10), cx(1) - cx(0), cy(0) - cy(10));
+    ctx.strokeRect(cx(0), cy(10), cx(1) - cx(0), cy(0) - cy(10));
+  }
+  render();
+  window.addEventListener('resize', render);
+})();
 
-function riemann(n, method) {
-    const lv = levels[level];
-    const dx = (lv.b - lv.a) / n;
+// ================================================================
+// PHASE 3 — Variable runner graph
+// ================================================================
+(function() {
+  const canvas = document.getElementById('varCanvas');
+  const f = x => 4 + 8 * x * (1 - x) + 3 * Math.sin(x * Math.PI * 2.5);
+  function render() {
+    drawGraph(canvas, f, 0, 1, 14, {
+      xLabels: [[0,'0'], [0.5,'0.5 h'], [1,'1 h']],
+      yLabels: [[0,'0'], [5,'5'], [10,'10']],
+    });
+  }
+  render();
+  window.addEventListener('resize', render);
+})();
+
+// ================================================================
+// PHASE 4 — Puzzle: guided splitting
+// ================================================================
+(function() {
+  const canvas  = document.getElementById('puzzleCanvas');
+  const hintEl  = document.getElementById('puzzleHint');
+  const readout = document.getElementById('nReadout');
+  const errFill = document.getElementById('puzzleErrFill');
+  const errVal  = document.getElementById('puzzleErrVal');
+  const splitBtn = document.getElementById('splitBtn');
+  const resetBtn = document.getElementById('resetPuzzleBtn');
+
+  const f     = x => 4 + 8 * x * (1 - x) + 3 * Math.sin(x * Math.PI * 2.5);
+  const a = 0, b = 1, yMax = 14;
+  const TRUE_AREA = 5.715; // ∫₀¹ (4 + 8x(1-x) + 3sin(2.5πx)) dx ≈ 5.715
+
+  const nSteps = [1, 2, 4, 8, 16, 32];
+  let step = 0;
+
+  const hints = [
+    'One big rectangle. Does it fit the curve well?',
+    'Two pieces. A bit closer — but still rough.',
+    'Four pieces. You can start to see the shape.',
+    'Eight pieces. The gaps are shrinking.',
+    'Sixteen. The rectangles are starting to hug the curve.',
+    'Thirty-two. Nearly there — the slices are almost invisible.',
+  ];
+
+  function riemann(n) {
+    const dx = (b - a) / n;
+    let s = 0;
+    for (let i = 0; i < n; i++) s += f(a + (i + 0.5) * dx) * dx;
+    return s;
+  }
+
+  function render() {
+    const n   = nSteps[step];
+    const est = riemann(n);
+    const err = Math.abs(est - TRUE_AREA) / TRUE_AREA * 100;
+
+    drawGraph(canvas, f, a, b, yMax, {
+      n, method: 'mid',
+      xLabels: [[0,'0'], [0.5,'0.5 h'], [1,'1 h']],
+    });
+
+    readout.textContent = n + (n === 1 ? ' rectangle' : ' rectangles');
+
+    const pct = Math.max(0, 100 - err * 5);
+    errFill.style.width = (100 - pct) + '%';
+    errFill.style.background = pct > 85 ? '#34d399' : pct > 55 ? '#fbbf24' : '#ef4444';
+    errVal.textContent = err.toFixed(1) + '% error';
+
+    hintEl.textContent = hints[step];
+    hintEl.classList.add('visible');
+
+    splitBtn.disabled = step >= nSteps.length - 1;
+  }
+
+  splitBtn.addEventListener('click', () => {
+    if (step < nSteps.length - 1) { step++; render(); }
+  });
+  resetBtn.addEventListener('click', () => { step = 0; render(); });
+
+  render();
+  window.addEventListener('resize', render);
+})();
+
+// ================================================================
+// SANDBOX — full slider
+// ================================================================
+(function() {
+  const canvas = document.getElementById('sandboxCanvas');
+  const f    = x => 4 + 8 * x * (1 - x) + 3 * Math.sin(x * Math.PI * 2.5);
+  const a = 0, b = 1, yMax = 14;
+  const TRUE_AREA = 5.715;
+  let n = 4, method = 'left';
+
+  function riemann() {
+    const dx = (b - a) / n;
     let s = 0;
     for (let i = 0; i < n; i++) {
-        let x;
-        if (method === 'left')  x = lv.a + i * dx;
-        else if (method === 'right') x = lv.a + (i + 1) * dx;
-        else                    x = lv.a + (i + 0.5) * dx;
-        s += lv.f(x) * dx;
+      const x = method === 'left' ? a + i * dx : method === 'right' ? a + (i + 1) * dx : a + (i + 0.5) * dx;
+      s += f(x) * dx;
     }
     return s;
-}
+  }
 
-function draw() {
-    const lv = levels[level];
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = '#0f0f1a';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Grid
-    ctx.strokeStyle = 'rgba(99,102,241,0.04)';
-    ctx.lineWidth = 1;
-    for (let x = 0; x < canvas.width; x += 50) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x, canvas.height); ctx.stroke(); }
-    for (let y = 0; y < canvas.height; y += 50) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(canvas.width,y); ctx.stroke(); }
-
-    const dx = (lv.b - lv.a) / n;
-    const est = riemann(n, method);
-    const err = Math.abs(est - lv.trueVal) / lv.trueVal * 100;
-
-    // Update UI
-    document.getElementById('nDisplay').textContent = n;
-    document.getElementById('estVal').textContent = est.toFixed(3);
-    document.getElementById('errVal').textContent = err.toFixed(1) + '%';
-    const prec = Math.max(0, 100 - err * 4);
-    const pf = document.getElementById('precFill');
-    pf.style.width = prec + '%';
-    pf.style.background = prec > 85 ? '#10b981' : prec > 55 ? '#fbbf24' : '#ef4444';
-
-    // True area (faint fill)
-    ctx.beginPath();
-    ctx.moveTo(cx(lv.a), cy(0));
-    for (let i = 0; i <= 300; i++) {
-        const x = lv.a + (lv.b - lv.a) * i / 300;
-        ctx.lineTo(cx(x), cy(lv.f(x)));
-    }
-    ctx.lineTo(cx(lv.b), cy(0));
-    ctx.closePath();
-    ctx.fillStyle = 'rgba(99,102,241,0.07)';
-    ctx.fill();
-
-    // Rectangles
-    for (let i = 0; i < n; i++) {
-        const xL = lv.a + i * dx;
-        const xR = lv.a + (i + 1) * dx;
-        let sx;
-        if (method === 'left')  sx = xL;
-        else if (method === 'right') sx = xR;
-        else                    sx = (xL + xR) / 2;
-
-        const h = lv.f(sx);
-        const rx = cx(xL), rw = cx(xR) - cx(xL);
-        const rh_top = cy(h), rh_bot = cy(0);
-
-        ctx.fillStyle = 'rgba(99,102,241,0.28)';
-        ctx.fillRect(rx, rh_top, rw, rh_bot - rh_top);
-        ctx.strokeStyle = 'rgba(163,163,255,0.6)';
-        ctx.lineWidth = 1;
-        ctx.strokeRect(rx, rh_top, rw, rh_bot - rh_top);
-
-        // Sample point dot
-        ctx.fillStyle = 'rgba(165,180,252,0.8)';
-        ctx.beginPath();
-        ctx.arc(cx(sx), cy(h), 2.5, 0, Math.PI * 2);
-        ctx.fill();
-    }
-
-    // Axes
-    ctx.strokeStyle = 'rgba(255,255,255,0.18)';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath(); ctx.moveTo(plotLeft - 8, cy(0)); ctx.lineTo(cx(lv.b) + 8, cy(0)); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(plotLeft, plotTop - 8); ctx.lineTo(plotLeft, cy(0) + 8); ctx.stroke();
-
-    // Tick labels
-    ctx.fillStyle = 'rgba(255,255,255,0.35)';
-    ctx.font = '12px JetBrains Mono, monospace';
-    ctx.textAlign = 'center';
-    lv.xTicks.forEach(t => {
-        ctx.fillText(t.label, cx(t.v), cy(0) + 18);
-        ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-        ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(cx(t.v), cy(0) - 3); ctx.lineTo(cx(t.v), cy(0) + 3); ctx.stroke();
+  function render() {
+    drawGraph(canvas, f, a, b, yMax, {
+      n, method,
+      xLabels: [[0,'0'], [0.5,'0.5 h'], [1,'1 h']],
     });
-    ctx.textAlign = 'right';
-    ctx.fillStyle = 'rgba(255,255,255,0.3)';
-    ctx.fillText('0', plotLeft - 8, cy(0) + 4);
+    const est = riemann();
+    const err = Math.abs(est - TRUE_AREA) / TRUE_AREA * 100;
+    document.getElementById('sbNDisplay').textContent = n;
+    document.getElementById('sbEst').textContent  = est.toFixed(3);
+    document.getElementById('sbErr').textContent  = err.toFixed(1) + '%';
+    document.getElementById('sbTrue').textContent = TRUE_AREA.toFixed(3);
+  }
 
-    // True value label
-    ctx.fillStyle = 'rgba(99,102,241,0.5)';
-    ctx.font = '11px JetBrains Mono, monospace';
-    ctx.textAlign = 'left';
-    ctx.fillText('true area: ' + lv.trueVal.toFixed(3), plotLeft, plotTop - 10);
-
-    // Curve (on top)
-    ctx.beginPath();
-    ctx.strokeStyle = '#a5b4fc';
-    ctx.lineWidth = 2.5;
-    ctx.lineJoin = 'round';
-    for (let i = 0; i <= 300; i++) {
-        const x = lv.a + (lv.b - lv.a) * i / 300;
-        i === 0 ? ctx.moveTo(cx(x), cy(lv.f(x))) : ctx.lineTo(cx(x), cy(lv.f(x)));
-    }
-    ctx.stroke();
-
-    // Win check
-    if (err < 2 && !done) {
-        done = true;
-        setTimeout(() => showSuccess(err), 700);
-    }
-}
-
-function showSuccess(err) {
-    const lv = levels[level];
-    document.getElementById('modalTitle').textContent =
-        err.toFixed(1) + '% error — level complete';
-    document.getElementById('modalMsg').innerHTML = lv.successMsg;
-
-    const btn = document.getElementById('nextBtn');
-    if (level < levels.length - 1) {
-        btn.textContent = 'Next Level';
-        btn.onclick = () => {
-            document.getElementById('modal').classList.remove('show');
-            level++; n = 4; done = false;
-            document.getElementById('nSlider').value = 4;
-            loadLevel();
-        };
-    } else {
-        btn.textContent = 'See the big picture';
-        btn.onclick = () => { document.getElementById('modal').classList.remove('show'); showReveal(); };
-    }
-    document.getElementById('modal').classList.add('show');
-}
-
-function showReveal() {
-    done = true;
-    document.getElementById('levelTitle').textContent = 'The Definite Integral';
-    document.getElementById('objective').textContent = '';
-    document.getElementById('instruction').style.visibility = 'hidden';
-    document.querySelector('.controls').style.visibility = 'hidden';
-
-    document.getElementById('modalTitle').textContent = 'You just discovered integration';
-    document.getElementById('modalMsg').innerHTML =
-        'Every rectangle was <strong>f(x) · Δx</strong> — height times width, a thin slice of area. ' +
-        'Adding them up is a Riemann sum.<br><br>' +
-        'As n grows toward infinity, the slices get infinitely thin and the sum converges to an exact value. ' +
-        'That limit is the <strong>definite integral</strong>:';
-    document.getElementById('modalMsg').insertAdjacentHTML('beforeend',
-        '<div class="formula">∫<sub>a</sub><sup>b</sup> f(x) dx &nbsp;=&nbsp; lim<sub>n→∞</sub> Σ f(xᵢ) Δx</div>');
-
-    const btn = document.getElementById('nextBtn');
-    btn.textContent = 'Play again';
-    btn.onclick = () => {
-        document.getElementById('modal').classList.remove('show');
-        document.getElementById('instruction').style.visibility = '';
-        document.querySelector('.controls').style.visibility = '';
-        level = 0; n = 4; done = false; method = 'left';
-        document.getElementById('nSlider').value = 4;
-        document.querySelectorAll('.method-btn').forEach(b => b.classList.toggle('active', b.dataset.m === 'left'));
-        loadLevel();
-    };
-    document.getElementById('modal').classList.add('show');
-}
-
-function loadLevel() {
-    const lv = levels[level];
-    document.getElementById('levelTitle').textContent = lv.title;
-    document.getElementById('objective').textContent = lv.objective;
-}
-
-// Events
-document.getElementById('nSlider').addEventListener('input', e => { n = +e.target.value; });
-document.querySelectorAll('.method-btn').forEach(b => {
-    b.addEventListener('click', () => {
-        method = b.dataset.m;
-        document.querySelectorAll('.method-btn').forEach(x => x.classList.remove('active'));
-        b.classList.add('active');
+  document.getElementById('sbSlider').addEventListener('input', e => { n = +e.target.value; render(); });
+  document.querySelectorAll('#sbMethodBtns .method-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      method = btn.dataset.m;
+      document.querySelectorAll('#sbMethodBtns .method-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      render();
     });
-});
+  });
 
-loadLevel();
+  render();
+  window.addEventListener('resize', render);
+})();
 
-function loop() { draw(); requestAnimationFrame(loop); }
-loop();
+// ================================================================
+// Scroll-reveal observer
+// ================================================================
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
 </script>
+
 </body>
 </html>
