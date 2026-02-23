@@ -172,93 +172,120 @@
       line-height: 1.7;
     }
 
-    /* ---- Language sections ---- */
+    /* ---- Languages grid ---- */
     .languages-section {
       margin-bottom: 6rem;
     }
 
-    .language-entry {
+    .languages-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
-      align-items: start;
-      padding: 3rem 0;
-      border-top: 1px solid var(--border);
-    }
-
-    .language-entry:last-child {
-      border-bottom: 1px solid var(--border);
-    }
-
-    .lang-info {}
-
-    .lang-name {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 2.4rem;
-      font-weight: 300;
-      line-height: 1;
-      margin-bottom: 0.4rem;
-    }
-
-    .lang-native-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.62rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 1rem;
-    }
-
-    .lang-desc {
-      font-size: 0.9rem;
-      color: var(--text-dim);
-      line-height: 1.8;
-    }
-
-    /* Video side */
-    .lang-video-wrap {
-      position: relative;
-      border-radius: 6px;
-      overflow: hidden;
-      background: var(--surface);
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
       border: 1px solid var(--border);
-      aspect-ratio: 9 / 16;
-      max-width: 280px;
+      border-radius: 8px;
+      overflow: hidden;
     }
 
-    .lang-video-wrap video {
+    .lang-card {
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      transition: background 0.2s;
+    }
+
+    .lang-card:hover {
+      background: rgba(255,255,255,0.03);
+    }
+
+    .lang-card-video {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 9 / 16;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .lang-card-video video {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
 
-    /* No video placeholder */
-    .lang-video-placeholder {
+    .lang-card-video-placeholder {
+      width: 100%;
       aspect-ratio: 9 / 16;
-      max-width: 280px;
-      border-radius: 6px;
-      background: var(--surface);
-      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 0.75rem;
-      color: var(--text-faint);
     }
 
-    .lang-video-placeholder span {
+    .lang-card-video-placeholder span {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.6rem;
+      font-size: 0.55rem;
       letter-spacing: 0.1em;
+      color: var(--text-faint);
       text-transform: uppercase;
     }
 
-    /* Languages without video — no video col on desktop */
-    .language-entry.no-video {
-      grid-template-columns: 1fr;
-      max-width: 600px;
+    .lang-card-body {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      flex: 1;
+    }
+
+    .lang-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 300;
+      line-height: 1;
+    }
+
+    .lang-level {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .lang-desc {
+      font-size: 0.75rem;
+      color: var(--text-faint);
+      margin-top: 0.25rem;
+    }
+
+    /* ---- Booking section ---- */
+    .booking-section {
+      margin-bottom: 6rem;
+    }
+
+    .booking-header {
+      margin-bottom: 2rem;
+    }
+
+    .booking-header h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 300;
+      margin-bottom: 0.75rem;
+    }
+
+    .booking-header p {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      max-width: 520px;
+      line-height: 1.8;
+    }
+
+    .calendly-wrap {
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
     }
 
     /* ---- General fun fact ---- */
@@ -541,19 +568,8 @@
 
       main { padding: 7rem 1.5rem 4rem; }
 
-      .language-entry {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
-
-      .lang-video-wrap,
-      .lang-video-placeholder {
-        max-width: 100%;
-        aspect-ratio: 16 / 9;
-      }
-
-      .lang-video-wrap video {
-        object-fit: cover;
+      .languages-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
 
       .lessons-grid {
@@ -587,7 +603,7 @@
     <!-- Hero -->
     <section class="hero">
       <p class="hero-label">Languages</p>
-      <h1>My love for<br>language learning.</h1>
+      <h1>My love for<br>languages.</h1>
       <div class="hero-intro">
         <p>
           I grew up moving between countries, and languages came with the territory.
@@ -610,87 +626,111 @@
         independent it becomes. Each one starts to have its own interior world.</p>
     </section>
 
-    <!-- Language entries -->
+    <!-- Languages grid -->
     <section class="languages-section">
       <p class="section-label">// The languages</p>
+      <div class="languages-grid">
 
-      <!-- Czech -->
-      <div class="language-entry">
-        <div class="lang-info">
-          <h2 class="lang-name">Czech</h2>
-          <p class="lang-native-label">Native</p>
-          <p class="lang-desc">draft video for now</p>
-        </div>
-        <div class="lang-video-wrap">
-          <video controls playsinline preload="metadata">
-            <source src="../assets/videos/languages/czech.mov" type="video/mp4">
-          </video>
-        </div>
-      </div>
-
-      <!-- English -->
-      <div class="language-entry no-video">
-        <div class="lang-info">
-          <h2 class="lang-name">English</h2>
-          <p class="lang-native-label">Native</p>
-          <p class="lang-desc">video coming soon</p>
-        </div>
-      </div>
-
-      <!-- French -->
-      <div class="language-entry">
-        <div class="lang-info">
-          <h2 class="lang-name">French</h2>
-          <p class="lang-native-label">Fluent</p>
-          <p class="lang-desc">draft video for now</p>
-        </div>
-        <div class="lang-video-wrap">
-          <video controls playsinline preload="metadata">
-            <source src="../assets/videos/languages/french.mov" type="video/mp4">
-          </video>
-        </div>
-      </div>
-
-      <!-- Spanish -->
-      <div class="language-entry">
-        <div class="lang-info">
-          <h2 class="lang-name">Spanish</h2>
-          <p class="lang-native-label">Fluent</p>
-          <p class="lang-desc">draft video for now</p>
-          <div class="fun-fact">
-            <span class="fun-fact-icon">✦</span>
-            <p>Most of my Spanish came within a single month — because I already carried the vocabulary through French. The two languages share so much that one essentially unlocked the other.</p>
+        <!-- Czech -->
+        <div class="lang-card">
+          <div class="lang-card-video">
+            <video controls playsinline preload="metadata">
+              <source src="../assets/videos/languages/czech.mov" type="video/mp4">
+            </video>
+          </div>
+          <div class="lang-card-body">
+            <h2 class="lang-name">Czech</h2>
+            <p class="lang-level">Native</p>
+            <p class="lang-desc">draft video for now</p>
           </div>
         </div>
-        <div class="lang-video-wrap">
-          <video controls playsinline preload="metadata">
-            <source src="../assets/videos/languages/spanish.mov" type="video/mp4">
-          </video>
-        </div>
-      </div>
 
-      <!-- German -->
-      <div class="language-entry no-video">
-        <div class="lang-info">
-          <h2 class="lang-name">German</h2>
-          <p class="lang-native-label">Fluent</p>
-          <p class="lang-desc">video coming soon</p>
-          <div class="fun-fact">
-            <span class="fun-fact-icon">✦</span>
-            <p>I went from zero to B2 in four months and earned the certificate. That was eight years ago. I haven't lived in a German-speaking country since — and somehow, the language is still there. Apparently some things you can't unlearn.</p>
+        <!-- English -->
+        <div class="lang-card">
+          <div class="lang-card-video-placeholder">
+            <span>video coming soon</span>
+          </div>
+          <div class="lang-card-body">
+            <h2 class="lang-name">English</h2>
+            <p class="lang-level">Native</p>
           </div>
         </div>
-      </div>
 
-      <!-- Arabic -->
-      <div class="language-entry no-video">
-        <div class="lang-info">
-          <h2 class="lang-name">Arabic</h2>
-          <p class="lang-native-label">Fluent</p>
-          <p class="lang-desc">video coming soon</p>
+        <!-- French -->
+        <div class="lang-card">
+          <div class="lang-card-video">
+            <video controls playsinline preload="metadata">
+              <source src="../assets/videos/languages/french.mov" type="video/mp4">
+            </video>
+          </div>
+          <div class="lang-card-body">
+            <h2 class="lang-name">French</h2>
+            <p class="lang-level">Fluent</p>
+            <p class="lang-desc">draft video for now</p>
+          </div>
         </div>
-      </div>
 
+        <!-- Spanish -->
+        <div class="lang-card">
+          <div class="lang-card-video">
+            <video controls playsinline preload="metadata">
+              <source src="../assets/videos/languages/spanish.mov" type="video/mp4">
+            </video>
+          </div>
+          <div class="lang-card-body">
+            <h2 class="lang-name">Spanish</h2>
+            <p class="lang-level">Fluent</p>
+            <p class="lang-desc">draft video for now</p>
+            <div class="fun-fact">
+              <span class="fun-fact-icon">✦</span>
+              <p>Learned most of it in one month — French had already done half the work.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- German -->
+        <div class="lang-card">
+          <div class="lang-card-video-placeholder">
+            <span>video coming soon</span>
+          </div>
+          <div class="lang-card-body">
+            <h2 class="lang-name">German</h2>
+            <p class="lang-level">Fluent</p>
+            <div class="fun-fact">
+              <span class="fun-fact-icon">✦</span>
+              <p>Zero to B2 in four months. Certificate earned. That was 8 years ago — somehow it never left.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Arabic -->
+        <div class="lang-card">
+          <div class="lang-card-video-placeholder">
+            <span>video coming soon</span>
+          </div>
+          <div class="lang-card-body">
+            <h2 class="lang-name">Arabic</h2>
+            <p class="lang-level">Fluent</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Booking -->
+    <section class="booking-section">
+      <div class="booking-header">
+        <p class="section-label">// Book a lesson</p>
+        <h2>Book a time</h2>
+        <p>One-on-one lessons in French, Spanish, Czech, or English. Pick a slot and we'll go from there.</p>
+      </div>
+      <div class="calendly-wrap">
+        <!-- Calendly inline widget — replace YOUR_CALENDLY_URL with your actual Calendly link e.g. "natalieslaba/language-lesson" -->
+        <div class="calendly-inline-widget"
+             data-url="https://calendly.com/YOUR_CALENDLY_URL?hide_gdpr_banner=1&background_color=0d0d14&text_color=f5f5f5&primary_color=a78bfa"
+             style="min-width:320px; height:700px;"></div>
+        <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+      </div>
     </section>
 
     <!-- One-on-one lessons -->
