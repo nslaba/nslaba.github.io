@@ -300,20 +300,21 @@
       background: rgba(8,8,14,0.97);
     }
 
-    /* Libra star positions (educational) — balance scale
-                ★ (5, fulcrum)
-               / \
-          (1) ─── (2)   ← scale pans
-          |         |
-          (3)     (4)   ← base stars
-              (6)        ← scale body (center post)
+    /* Libra star positions (educational) — actual constellation
+         β (2)              ← brightest, upper center-right
+        / \
+      α(1)  γ(3)           ← α left-middle, γ far right
+      |  \ /  |
+      |   ι(6) |
+      |        |
+      σ(4)   θ(5)          ← lower left/right
     */
-    #edu-grid .project-card:nth-of-type(1) { left: 28%; top: 22%; }
-    #edu-grid .project-card:nth-of-type(2) { left: 72%; top: 24%; }
-    #edu-grid .project-card:nth-of-type(3) { left: 22%; top: 76%; }
-    #edu-grid .project-card:nth-of-type(4) { left: 76%; top: 86%; }
-    #edu-grid .project-card:nth-of-type(5) { left: 50%; top: 13%; }
-    #edu-grid .project-card:nth-of-type(6) { left: 50%; top: 57%; }
+    #edu-grid .project-card:nth-of-type(1) { left: 16%; top: 46%; }  /* α Lib */
+    #edu-grid .project-card:nth-of-type(2) { left: 57%; top: 13%; }  /* β Lib — brightest */
+    #edu-grid .project-card:nth-of-type(3) { left: 83%; top: 40%; }  /* γ Lib */
+    #edu-grid .project-card:nth-of-type(4) { left: 36%; top: 71%; }  /* σ Lib */
+    #edu-grid .project-card:nth-of-type(5) { left: 76%; top: 82%; }  /* θ Lib */
+    #edu-grid .project-card:nth-of-type(6) { left: 48%; top: 57%; }  /* ι Lib */
 
     /* Lyra star positions (expressive) — kite shape
           Vega(1)
@@ -444,11 +445,11 @@
       opacity: 1;
     }
 
-    /* Left-side cards: show prereqs on the left */
+    /* Left-side cards (α, σ): show prereqs on the right */
     #edu-grid .project-card:nth-of-type(1) .card-prereq,
-    #edu-grid .project-card:nth-of-type(3) .card-prereq {
-      left: auto;
-      right: calc(100% + 0.8rem);
+    #edu-grid .project-card:nth-of-type(4) .card-prereq {
+      left: calc(100% + 0.8rem);
+      right: auto;
     }
 
     .constellation .card-prereq-label {
@@ -1397,23 +1398,18 @@
         {
           el: document.getElementById('edu-grid'),
           filterId: 'libraGlow',
-          // Libra: balance scale — β(0) left pan, γ(1) right pan, α(2) lower-left,
-          // σ(3) lower-right, fulcrum(4) apex, ι(5) center post
-          // decorative star marks the base point below the scale
+          // Libra actual constellation: α(0) left-middle, β(1) upper-center-right,
+          // γ(2) far right, σ(3) lower-left, θ(4) lower-right, ι(5) center
           connections: [
-            [0, 1], // β ↔ γ (beam: left pan to right pan)
-            [0, 2], // β ↔ α (left chain)
-            [1, 3], // γ ↔ σ (right chain)
-            [2, 3], // α ↔ σ (base)
-            [4, 0], // fulcrum ↔ left pan
-            [4, 1], // fulcrum ↔ right pan
-            [4, 5], // fulcrum ↔ center post (spine)
-            [5, 2], // center post ↔ lower-left
-            [5, 3], // center post ↔ lower-right
+            [3, 0], // σ → α
+            [0, 1], // α → β
+            [1, 2], // β → γ
+            [2, 4], // γ → θ
+            [0, 5], // α → ι
+            [5, 3], // ι → σ
           ],
-          brightStar: null,
-          // decorative balance-point star below the scale
-          tailStar: { x: 0.50, y: 0.985, connectTo: [5] },
+          brightStar: 1, // β Lib is brightest
+          tailStar: null,
           decorStars: [
             { x: 0.08, y: 0.08,  r: 1.1, a: 0.12 },
             { x: 0.92, y: 0.06,  r: 0.9, a: 0.10 },
