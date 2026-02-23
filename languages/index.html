@@ -204,6 +204,7 @@
       aspect-ratio: 9 / 16;
       overflow: hidden;
       background: var(--bg);
+      cursor: pointer;
     }
 
     .lang-card-video video {
@@ -211,6 +212,60 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      transition: opacity 0.3s;
+    }
+
+    /* Play-on-hover hint icon */
+    .lang-card-video::after {
+      content: '▶';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: rgba(255,255,255,0.5);
+      opacity: 1;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .lang-card-video.playing::after {
+      opacity: 0;
+    }
+
+    /* Fun fact overlay — inside video area, slides up on play */
+    .lang-card-video .fun-fact {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: 0;
+      padding: 1.25rem 1rem 1rem;
+      background: linear-gradient(to top, rgba(5,5,8,0.96) 60%, transparent);
+      border: none;
+      border-radius: 0;
+      border-left: none;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      pointer-events: none;
+    }
+
+    .lang-card-video .fun-fact.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .lang-card-video .fun-fact p {
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.9);
+      line-height: 1.6;
+    }
+
+    .lang-card-video .fun-fact-icon {
+      color: var(--accent);
+      margin-right: 0.4rem;
     }
 
     .lang-card-video-placeholder {
@@ -286,6 +341,23 @@
       border-radius: 8px;
       overflow: hidden;
       border: 1px solid var(--border);
+    }
+
+    .booking-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.25rem;
+      padding: 2.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .booking-placeholder-note {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-faint);
     }
 
     /* ---- General fun fact ---- */
@@ -634,7 +706,7 @@
         <!-- Czech -->
         <div class="lang-card">
           <div class="lang-card-video">
-            <video controls playsinline preload="metadata">
+            <video muted playsinline preload="metadata">
               <source src="../assets/videos/languages/czech.mov" type="video/mp4">
             </video>
           </div>
@@ -659,7 +731,7 @@
         <!-- French -->
         <div class="lang-card">
           <div class="lang-card-video">
-            <video controls playsinline preload="metadata">
+            <video muted playsinline preload="metadata">
               <source src="../assets/videos/languages/french.mov" type="video/mp4">
             </video>
           </div>
@@ -673,18 +745,18 @@
         <!-- Spanish -->
         <div class="lang-card">
           <div class="lang-card-video">
-            <video controls playsinline preload="metadata">
+            <video muted playsinline preload="metadata">
               <source src="../assets/videos/languages/spanish.mov" type="video/mp4">
             </video>
+            <div class="fun-fact">
+              <span class="fun-fact-icon">✦</span>
+              <p>Learned most of it in one month — French had already done half the work.</p>
+            </div>
           </div>
           <div class="lang-card-body">
             <h2 class="lang-name">Spanish</h2>
             <p class="lang-level">Fluent</p>
             <p class="lang-desc">draft video for now</p>
-            <div class="fun-fact">
-              <span class="fun-fact-icon">✦</span>
-              <p>Learned most of it in one month — French had already done half the work.</p>
-            </div>
           </div>
         </div>
 
@@ -724,12 +796,15 @@
         <h2>Book a time</h2>
         <p>One-on-one lessons in French, Spanish, Czech, or English. Pick a slot and we'll go from there.</p>
       </div>
-      <div class="calendly-wrap">
-        <!-- Calendly inline widget — replace YOUR_CALENDLY_URL with your actual Calendly link e.g. "natalieslaba/language-lesson" -->
-        <div class="calendly-inline-widget"
-             data-url="https://calendly.com/YOUR_CALENDLY_URL?hide_gdpr_banner=1&background_color=0d0d14&text_color=f5f5f5&primary_color=a78bfa"
-             style="min-width:320px; height:700px;"></div>
-        <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+      <!-- TODO: replace this placeholder with a Calendly inline embed once you have an account set up -->
+      <div class="booking-placeholder">
+        <p class="booking-placeholder-note">Calendar booking coming soon.</p>
+        <a href="mailto:slaba.natalie@gmail.com?subject=Language%20Lesson%20Booking" class="lessons-cta">
+          Email to book a time
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+          </svg>
+        </a>
       </div>
     </section>
 
@@ -865,6 +940,7 @@
   </footer>
 
   <script>
+    // Nav toggle
     const navToggle = document.querySelector('.nav-toggle');
     const navLinks  = document.querySelector('.nav-links');
     navToggle.addEventListener('click', () => {
@@ -876,6 +952,31 @@
         navToggle.classList.remove('open');
         navLinks.classList.remove('open');
       });
+    });
+
+    // Hover-to-play videos + fun fact overlay
+    document.querySelectorAll('.lang-card-video').forEach(wrap => {
+      const video   = wrap.querySelector('video');
+      const funFact = wrap.querySelector('.fun-fact');
+      if (!video) return;
+
+      wrap.addEventListener('mouseenter', () => {
+        video.play().catch(() => {});
+        wrap.classList.add('playing');
+      });
+
+      wrap.addEventListener('mouseleave', () => {
+        video.pause();
+        video.currentTime = 0;
+        wrap.classList.remove('playing');
+        if (funFact) funFact.classList.remove('visible');
+      });
+
+      if (funFact) {
+        video.addEventListener('play',  () => funFact.classList.add('visible'));
+        video.addEventListener('pause', () => funFact.classList.remove('visible'));
+        video.addEventListener('ended', () => funFact.classList.remove('visible'));
+      }
     });
   </script>
 
