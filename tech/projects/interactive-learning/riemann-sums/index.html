@@ -910,61 +910,64 @@ function drawGraph(canvas, f, a, b, yMax, opts = {}) {
 // ================================================================
 function drawRunner(ctx, sx, groundY, t, normSpeed) {
   const dpr   = devicePixelRatio;
-  const phase = t * 4 * (0.4 + normSpeed * 0.6);
+  // One full stride cycle every ~2 s at normal speed
+  const phase = t * 3.2 * (0.3 + normSpeed * 0.7);
+  const p     = Math.sin(phase); // oscillates -1 → +1 → -1
+  const s     = dpr;
 
-  const headR   = 4  * dpr;
-  const bodyH   = 11 * dpr;
-  const thighL  = 7  * dpr;
-  const shinL   = 7  * dpr;
-  const armL    = 6  * dpr;
+  const headR = 5  * s;
+  const bodyH = 13 * s;
+  const legH  = 11 * s;
+  const armH  = 8  * s;
+  const ang   = p * 0.48; // leg swing angle in radians, ±~27°
 
-  // Build figure bottom-up from ground
-  const hipY      = groundY - thighL - shinL;
-  const shoulderY = hipY    - bodyH;
-  const headCY    = shoulderY - headR;
+  // Y positions — built downward from head
+  const hipY  = groundY - legH;
+  const topY  = hipY - bodyH;
+  const headY = topY - headR;
 
   ctx.save();
   ctx.strokeStyle = '#c4b5fd';
   ctx.fillStyle   = '#c4b5fd';
-  ctx.lineWidth   = 2 * dpr;
+  ctx.lineWidth   = 2 * s;
   ctx.lineCap     = 'round';
   ctx.lineJoin    = 'round';
 
   // Head
   ctx.beginPath();
-  ctx.arc(sx, headCY, headR, 0, Math.PI * 2);
+  ctx.arc(sx, headY, headR, 0, Math.PI * 2);
   ctx.fill();
 
   // Body
   ctx.beginPath();
-  ctx.moveTo(sx, shoulderY);
+  ctx.moveTo(sx, topY);
   ctx.lineTo(sx, hipY);
   ctx.stroke();
 
+  // Legs — fixed length, swing like scissors from hip.
+  // cos(ang) > 0 always → both feet are always BELOW the hip, no spinning possible.
+  const legFy = hipY + Math.cos(ang) * legH;
+  // right leg: foot goes forward (+x) when p > 0
+  ctx.beginPath();
+  ctx.moveTo(sx, hipY);
+  ctx.lineTo(sx + Math.sin(ang) * legH, legFy);
+  ctx.stroke();
+  // left leg: opposite
+  ctx.beginPath();
+  ctx.moveTo(sx, hipY);
+  ctx.lineTo(sx - Math.sin(ang) * legH, legFy);
+  ctx.stroke();
+
   // Arms — swing opposite to legs
-  const armSwing = Math.sin(phase) * armL;
-  ctx.beginPath(); ctx.moveTo(sx, shoulderY + 2*dpr); ctx.lineTo(sx + armSwing,  shoulderY + 7*dpr); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(sx, shoulderY + 2*dpr); ctx.lineTo(sx - armSwing,  shoulderY + 7*dpr); ctx.stroke();
-
-  // Legs — thigh swings ±25°, shin bends naturally at knee
-  const swing = Math.sin(phase) * 0.44; // radians
-
-  function drawLeg(thighAngle) {
-    const kx = sx + Math.sin(thighAngle) * thighL;
-    const ky = hipY + Math.cos(thighAngle) * thighL;
-    // Shin trails the thigh: bends back when leg swings forward
-    const shinAngle = thighAngle - Math.sin(thighAngle) * 0.5;
-    const fx = kx + Math.sin(shinAngle) * shinL;
-    const fy = ky + Math.cos(shinAngle) * shinL;
-    ctx.beginPath();
-    ctx.moveTo(sx, hipY);
-    ctx.lineTo(kx, ky);
-    ctx.lineTo(fx, fy);
-    ctx.stroke();
-  }
-
-  drawLeg( swing);   // right leg
-  drawLeg(-swing);   // left leg (opposite)
+  const armFy = topY + 3*s + armH * 0.6;
+  ctx.beginPath();
+  ctx.moveTo(sx, topY + 3*s);
+  ctx.lineTo(sx - Math.sin(ang) * armH * 0.7, armFy);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(sx, topY + 3*s);
+  ctx.lineTo(sx + Math.sin(ang) * armH * 0.7, armFy);
+  ctx.stroke();
 
   ctx.restore();
 }
@@ -1070,7 +1073,7 @@ function drawRunner(ctx, sx, groundY, t, normSpeed) {
 
   const f     = x => 4 + 8 * x * (1 - x) + 3 * Math.sin(x * Math.PI * 2.5);
   const a = 0, b = 1, yMax = 14;
-  const TRUE_AREA = 5.715; // ∫₀¹ (4 + 8x(1-x) + 3sin(2.5πx)) dx ≈ 5.715
+  const TRUE_AREA = 4 + 4/3 + 6/(5 * Math.PI); // exact: ∫₀¹ (4 + 8x(1-x) + 3sin(2.5πx)) dx
 
   const nSteps = [1, 2, 4, 8, 16, 32];
   let step = 0;
@@ -1130,7 +1133,7 @@ function drawRunner(ctx, sx, groundY, t, normSpeed) {
   const canvas = document.getElementById('sandboxCanvas');
   const f    = x => 4 + 8 * x * (1 - x) + 3 * Math.sin(x * Math.PI * 2.5);
   const a = 0, b = 1, yMax = 14;
-  const TRUE_AREA = 5.715;
+  const TRUE_AREA = 4 + 4/3 + 6/(5 * Math.PI); // exact analytical value
   let n = 4, method = 'left';
 
   function riemann() {
