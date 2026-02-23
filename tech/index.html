@@ -300,12 +300,13 @@
       background: rgba(8,8,14,0.97);
     }
 
-    /* Delphinus star positions (educational) — diamond body
-       β(1) ---- α(2)
-       |          |
-       γ(3) ---- δ(4)
-       |
-       ε (decorative tail, drawn in JS)
+    /* Libra star positions (educational) — balance scale
+                ★ (5, fulcrum)
+               / \
+          (1) ─── (2)   ← scale pans
+          |         |
+          (3)     (4)   ← base stars
+              (6)        ← scale body (center post)
     */
     #edu-grid .project-card:nth-of-type(1) { left: 28%; top: 22%; }
     #edu-grid .project-card:nth-of-type(2) { left: 72%; top: 24%; }
@@ -1024,8 +1025,8 @@
   </div>
 
   <span class="constellation-label">
-    <span class="constellation-label-name">Delphinus (constellation)</span>
-    <span class="constellation-label-note">In Greek myth, a dolphin's cleverness won a favor from Poseidon — placed among the stars as a symbol of ingenuity at play</span>
+    <span class="constellation-label-name">Libra (constellation)</span>
+    <span class="constellation-label-note">Libra holds the scales — the oldest instrument of measurement. In antiquity it marked the autumn equinox: the moment when day and night balance exactly. Mathematics is the same impulse taken further — the search for what is precisely, irreducibly true.</span>
   </span>
 
   <div class="divider"></div>
@@ -1388,30 +1389,31 @@
       cardObserver.observe(grid);
     });
 
-    // --- Constellation lines (Delphinus + Lyra) ---
+    // --- Constellation lines (Libra + Lyra) ---
     (function() {
       const svgNS = 'http://www.w3.org/2000/svg';
 
       const constellations = [
         {
           el: document.getElementById('edu-grid'),
-          filterId: 'delGlow',
-          // Delphinus: β(0)-α(1) top, γ(2)-δ(3) bottom, ε(4) apex, ζ(5) center
-          // tail star is decorative (not a card)
+          filterId: 'libraGlow',
+          // Libra: balance scale — β(0) left pan, γ(1) right pan, α(2) lower-left,
+          // σ(3) lower-right, fulcrum(4) apex, ι(5) center post
+          // decorative star marks the base point below the scale
           connections: [
-            [0, 1], // β ↔ α (top)
-            [0, 2], // β ↔ γ (left side)
-            [1, 3], // α ↔ δ (right side)
-            [2, 3], // γ ↔ δ (bottom)
-            [4, 0], // apex ↔ β
-            [4, 1], // apex ↔ α
-            [4, 5], // apex ↔ center (spine)
-            [5, 2], // center ↔ γ
-            [5, 3], // center ↔ δ
+            [0, 1], // β ↔ γ (beam: left pan to right pan)
+            [0, 2], // β ↔ α (left chain)
+            [1, 3], // γ ↔ σ (right chain)
+            [2, 3], // α ↔ σ (base)
+            [4, 0], // fulcrum ↔ left pan
+            [4, 1], // fulcrum ↔ right pan
+            [4, 5], // fulcrum ↔ center post (spine)
+            [5, 2], // center post ↔ lower-left
+            [5, 3], // center post ↔ lower-right
           ],
           brightStar: null,
-          // ε Delphini tail: extends down-left from γ (card index 2)
-          tailStar: { x: 0.13, y: 0.985, connectTo: [2] },
+          // decorative balance-point star below the scale
+          tailStar: { x: 0.50, y: 0.985, connectTo: [5] },
           decorStars: [
             { x: 0.08, y: 0.08,  r: 1.1, a: 0.12 },
             { x: 0.92, y: 0.06,  r: 0.9, a: 0.10 },
