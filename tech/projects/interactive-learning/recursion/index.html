@@ -33,7 +33,10 @@
       inset: 0;
       width: 100%;
       height: 100%;
+      cursor: default;
     }
+    #fractal.grabbable { cursor: grab; }
+    #fractal.grabbing  { cursor: grabbing; }
 
     /* ---- Vignette ---- */
     .vignette {
@@ -162,7 +165,7 @@
       animation: arrowPulse 2s ease-in-out 3s infinite;
     }
 
-    /* ---- Hint: move mouse ---- */
+    /* ---- Mouse / interaction hint ---- */
     .mouse-hint {
       position: fixed;
       bottom: 2.5rem;
@@ -175,6 +178,46 @@
       color: var(--text-faint);
       opacity: 0;
       animation: fadeIn 1s ease 3.5s forwards;
+      transition: opacity 0.5s;
+      pointer-events: none;
+    }
+
+    /* ---- Zoom UI ---- */
+    .zoom-ui {
+      position: fixed;
+      bottom: 2.5rem;
+      left: 2.5rem;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .zoom-level {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+    }
+
+    .zoom-reset {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--text-faint);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.12em;
+      padding: 0.3rem 0.75rem;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .zoom-reset:hover {
+      color: var(--text);
+      border-color: rgba(255,255,255,0.4);
     }
 
     /* ---- Lesson sections (below the fold) ---- */
@@ -183,11 +226,11 @@
       inset: 0;
       z-index: 30;
       overflow-y: auto;
-      pointer-events: none; /* let fractal canvas receive events when at top */
+      pointer-events: none;
     }
 
     .lesson-spacer {
-      height: 100vh; /* push content below fold */
+      height: 100vh;
     }
 
     .lesson-body {
@@ -260,11 +303,9 @@
 </head>
 <body>
 
-  <!-- The fractal lives here -->
   <canvas id="fractal"></canvas>
   <div class="vignette"></div>
 
-  <!-- Fixed nav -->
   <nav class="nav">
     <a href="../../../index.html" class="back-link">
       <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -275,7 +316,6 @@
     <span class="nav-label">// Recursion</span>
   </nav>
 
-  <!-- Hero text (over the fractal) -->
   <div class="hero" id="hero">
     <p class="hero-eyebrow">Interactive Lesson</p>
     <h1 class="hero-title">A function<br>that calls <em>itself.</em></h1>
@@ -287,9 +327,14 @@
     <div class="scroll-hint-arrow"></div>
   </div>
 
-  <div class="mouse-hint">move mouse · change the fractal</div>
+  <div class="mouse-hint" id="mouseHintEl">scroll to zoom · drag to pan · move mouse · change the fractal</div>
 
-  <!-- Scrollable lesson content -->
+  <!-- Zoom indicator (shown once user starts zooming) -->
+  <div class="zoom-ui" id="zoomUi">
+    <span class="zoom-level" id="zoomLabel">1×</span>
+    <button class="zoom-reset" id="zoomResetBtn">reset view</button>
+  </div>
+
   <div class="lesson-wrap" id="lessonWrap">
     <div class="lesson-spacer"></div>
     <div class="lesson-body">
@@ -334,10 +379,9 @@
           If it escapes to infinity — color it by how fast it escaped.
         </p>
         <p>
-          That's it. One two-line rule, applied recursively, produces every detail
-          you see — the filaments, the spirals, the infinite self-similar edges.
-          Move your mouse over the fractal above to change <em>c</em> and watch the
-          whole structure morph while obeying the same rule.
+          Move your mouse to change <em>c</em> and morph the whole structure.
+          Scroll on the fractal to zoom in — the boundary has infinite complexity.
+          No matter how deep you go, the same rule keeps generating new detail.
         </p>
       </div>
 
@@ -358,43 +402,75 @@
 
   <script>
     // ---------------------------------------------------------------
-    // Julia Set renderer
-    // Renders to a small offscreen canvas, scales up to fill screen.
-    // c parameter auto-orbits a beautiful path; mouse overrides it.
+    // Julia Set renderer with infinite zoom
+    //
+    // Default mode:   mouse movement changes c (the Julia parameter)
+    //                 fractal auto-orbits when mouse is away
+    // Zoom mode:      scroll wheel zooms centered on cursor
+    //                 drag to pan
+    //                 c is locked to ZOOM_C (Dragon Julia set) so the
+    //                 structure stays stable as you dive in
+    //                 MAX_ITER grows with depth so detail never disappears
     // ---------------------------------------------------------------
 
     const canvas  = document.getElementById('fractal');
     const ctx     = canvas.getContext('2d');
-
-    // Offscreen canvas for Julia set (rendered at reduced resolution for performance)
     const off     = document.createElement('canvas');
     const offCtx  = off.getContext('2d');
 
     let W, H, OW, OH;
-    const MAX_ITER = 96;
+
+    // ---- Viewport (complex plane) ----
+    let viewCx = 0, viewCy = 0;      // center
+    let viewRadius = 1.7;             // half-height
+    const FULL_RADIUS = 1.7;
+
+    // ---- Zoom mode ----
+    let zoomMode = false;
+    // "Dragon" Julia set  c ≈ −0.7269 + 0.1889i
+    // Connected fractal with spiraling arms — beautiful at any zoom depth
+    const ZOOM_C = { x: -0.7269, y: 0.1889 };
+
+    // ---- Mouse / drag state ----
+    let mouseC        = null;
+    let isDragging    = false;
+    let dragPrev      = null;
+    let lastPinchDist = null;
+
+    // ---- Auto-orbit ----
+    let autoAngle = 0;
+
+    // ---- Render timing ----
+    let lastRender = -Infinity;
+    const RENDER_INTERVAL = 40; // ms (~25fps for the fractal compute)
 
     function resize() {
-      W = canvas.width  = window.innerWidth;
-      H = canvas.height = window.innerHeight;
-      // Render at ~40% resolution, bilinear scale up looks great for fractals
+      W  = canvas.width  = window.innerWidth;
+      H  = canvas.height = window.innerHeight;
       OW = off.width  = Math.round(W * 0.38);
       OH = off.height = Math.round(H * 0.38);
     }
     resize();
     window.addEventListener('resize', resize);
 
+    // ---- Iteration depth scales with zoom ----
+    // At full view: 96 iterations. Each doubling of zoom: +55 more.
+    function getMaxIter() {
+      const depth = Math.max(0, Math.log2(FULL_RADIUS / viewRadius));
+      return Math.round(96 + depth * 55);
+    }
+
     // ---- Color palette ----
-    // Maps smooth iteration count [0,1] → [R,G,B]
-    // Palette: near-black deep blue → indigo → violet → lavender → white
+    // near-black → deep indigo → vivid violet → lavender → white
     const PALETTE = [
-      [3,   3,   12],   // 0.00 — almost black
-      [15,  5,   60],   // 0.12 — deep indigo
-      [55,  15,  150],  // 0.25 — indigo
-      [99,  50,  220],  // 0.40 — vivid violet
-      [160, 90,  255],  // 0.55 — bright purple
-      [210, 150, 255],  // 0.70 — lavender
-      [240, 210, 255],  // 0.85 — near-white
-      [255, 248, 255],  // 1.00 — white
+      [3,   3,   12],
+      [15,  5,   60],
+      [55,  15,  150],
+      [99,  50,  220],
+      [160, 90,  255],
+      [210, 150, 255],
+      [240, 210, 255],
+      [255, 248, 255],
     ];
 
     function palette(t) {
@@ -403,27 +479,23 @@
       const i = Math.min(Math.floor(s), n - 1);
       const f = s - i;
       const a = PALETTE[i], b = PALETTE[i + 1];
-      return [
-        a[0] + f * (b[0] - a[0]),
-        a[1] + f * (b[1] - a[1]),
-        a[2] + f * (b[2] - a[2]),
-      ];
+      return [a[0]+f*(b[0]-a[0]), a[1]+f*(b[1]-a[1]), a[2]+f*(b[2]-a[2])];
     }
 
-    // ---- Julia set ----
+    // ---- Julia set render ----
+    // Maps offscreen pixels through the current viewport, then iterates z → z² + c.
     function renderJulia(cx, cy) {
-      const imgData = offCtx.createImageData(OW, OH);
-      const data    = imgData.data;
-      const log2    = Math.log(2);
-
-      // Map offscreen pixels to complex plane [-1.6, 1.6] x [-1.1, 1.1] (approx, 16:9)
-      const scaleX = 3.2 / OW;
-      const scaleY = 2.2 / OH;
+      const imgData  = offCtx.createImageData(OW, OH);
+      const data     = imgData.data;
+      const log2     = Math.log(2);
+      const MAX_ITER = getMaxIter();
+      const aspect   = OW / OH;
 
       for (let py = 0; py < OH; py++) {
         for (let px = 0; px < OW; px++) {
-          let zx = px * scaleX - 1.6;
-          let zy = py * scaleY - 1.1;
+          // Map pixel → complex plane via viewport
+          let zx = viewCx + (px / OW - 0.5) * 2 * viewRadius * aspect;
+          let zy = viewCy + (py / OH - 0.5) * 2 * viewRadius;
 
           let iter = 0;
           while (zx * zx + zy * zy < 4 && iter < MAX_ITER) {
@@ -434,76 +506,198 @@
           }
 
           const idx = (py * OW + px) * 4;
-
           if (iter === MAX_ITER) {
             // Inside the set — deep black/indigo
-            data[idx]     = 3;
-            data[idx + 1] = 2;
-            data[idx + 2] = 12;
-            data[idx + 3] = 255;
+            data[idx]=3; data[idx+1]=2; data[idx+2]=12; data[idx+3]=255;
           } else {
-            // Smooth coloring — removes banding
-            const mag    = Math.sqrt(zx * zx + zy * zy);
+            // Smooth coloring — removes iteration-count banding
+            const mag    = Math.sqrt(zx*zx + zy*zy);
             const smooth = iter + 1 - Math.log(Math.log(mag)) / log2;
             const t      = Math.max(0, Math.min(1, smooth / MAX_ITER));
             const col    = palette(t);
-            data[idx]     = col[0];
-            data[idx + 1] = col[1];
-            data[idx + 2] = col[2];
-            data[idx + 3] = 255;
+            data[idx]=col[0]; data[idx+1]=col[1]; data[idx+2]=col[2]; data[idx+3]=255;
           }
         }
       }
-
       offCtx.putImageData(imgData, 0, 0);
     }
 
-    // ---- Animation state ----
-    let autoAngle = 0;         // slowly orbiting c parameter
-    let mouseC    = null;      // set when mouse is over canvas
-    let lastRender = -Infinity;
-    const RENDER_INTERVAL = 48; // ms between Julia recomputes (~20fps)
+    // ---- Screen coords → complex plane ----
+    function screenToComplex(sx, sy) {
+      const aspect = W / H;
+      return {
+        x: viewCx + (sx / W - 0.5) * 2 * viewRadius * aspect,
+        y: viewCy + (sy / H - 0.5) * 2 * viewRadius,
+      };
+    }
 
-    // Nice orbit: stays near the Mandelbrot boundary for interesting Julia sets
-    // r = 0.7885 gives continuously morphing connected/disconnected Julia sets
+    // ---- Zoom UI ----
+    const zoomUi      = document.getElementById('zoomUi');
+    const zoomLabel   = document.getElementById('zoomLabel');
+    const mouseHintEl = document.getElementById('mouseHintEl');
+
+    function enterZoomMode() {
+      if (zoomMode) return;
+      zoomMode = true;
+      canvas.classList.add('grabbable');
+      zoomUi.style.opacity       = '1';
+      zoomUi.style.pointerEvents = 'auto';
+      mouseHintEl.style.opacity  = '0';
+    }
+
+    function updateZoomLabel() {
+      const z = FULL_RADIUS / viewRadius;
+      let label;
+      if      (z < 10)    label = z.toFixed(1) + '×';
+      else if (z < 1e6)   label = Math.round(z) + '×';
+      else                label = z.toExponential(1) + '×';
+      zoomLabel.textContent = label;
+    }
+
+    function resetZoom() {
+      zoomMode = false;
+      viewCx = 0; viewCy = 0; viewRadius = FULL_RADIUS;
+      canvas.classList.remove('grabbable', 'grabbing');
+      zoomUi.style.opacity       = '0';
+      zoomUi.style.pointerEvents = 'none';
+      mouseHintEl.style.opacity  = '';
+    }
+
+    document.getElementById('zoomResetBtn').addEventListener('click', resetZoom);
+
+    // ---- Scroll wheel zoom ----
+    // Zooms centered on the cursor position so the point under the cursor stays fixed.
+    canvas.addEventListener('wheel', e => {
+      e.preventDefault();
+      enterZoomMode();
+
+      const factor = e.deltaY > 0 ? 1.12 : 0.88; // scroll down = zoom out
+      const pivot  = screenToComplex(e.clientX, e.clientY); // fixed point
+
+      viewRadius = Math.max(3e-9, Math.min(FULL_RADIUS * 1.05, viewRadius * factor));
+
+      // Recenter so the pivot complex coord remains under the cursor
+      const aspect = W / H;
+      viewCx = pivot.x - (e.clientX / W - 0.5) * 2 * viewRadius * aspect;
+      viewCy = pivot.y - (e.clientY / H - 0.5) * 2 * viewRadius;
+
+      updateZoomLabel();
+    }, { passive: false });
+
+    // ---- Double-click: zoom 3× to that point ----
+    canvas.addEventListener('dblclick', e => {
+      enterZoomMode();
+      const pivot = screenToComplex(e.clientX, e.clientY);
+      viewRadius  = Math.max(3e-9, viewRadius * 0.33);
+      const aspect = W / H;
+      viewCx = pivot.x - (e.clientX / W - 0.5) * 2 * viewRadius * aspect;
+      viewCy = pivot.y - (e.clientY / H - 0.5) * 2 * viewRadius;
+      updateZoomLabel();
+    });
+
+    // ---- Drag to pan (zoom mode only) ----
+    canvas.addEventListener('mousedown', e => {
+      if (!zoomMode) return;
+      isDragging = true;
+      dragPrev   = { x: e.clientX, y: e.clientY };
+      canvas.classList.add('grabbing');
+    });
+
+    window.addEventListener('mousemove', e => {
+      if (isDragging && zoomMode && dragPrev) {
+        // Pan: translate viewport by the drag delta in complex units
+        const aspect = W / H;
+        const dx = (e.clientX - dragPrev.x) / W * 2 * viewRadius * aspect;
+        const dy = (e.clientY - dragPrev.y) / H * 2 * viewRadius;
+        viewCx -= dx;
+        viewCy -= dy;
+        dragPrev = { x: e.clientX, y: e.clientY };
+      } else if (!zoomMode) {
+        // Normal mode: mouse position drives c parameter
+        mouseC = {
+          x: (e.clientX / W * 2 - 1) * 1.5,
+          y: (e.clientY / H * 2 - 1),
+        };
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+      dragPrev   = null;
+      canvas.classList.remove('grabbing');
+    });
+
+    window.addEventListener('mouseleave', () => {
+      mouseC     = null;
+      isDragging = false;
+      dragPrev   = null;
+    });
+
+    // ---- Touch: pinch to zoom + drag to pan ----
+    canvas.addEventListener('touchstart', e => {
+      if (e.touches.length === 2) {
+        isDragging = false;
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        lastPinchDist = Math.sqrt(dx*dx + dy*dy);
+      } else if (e.touches.length === 1) {
+        dragPrev   = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        isDragging = true;
+      }
+    }, { passive: true });
+
+    canvas.addEventListener('touchmove', e => {
+      if (e.touches.length === 2 && lastPinchDist) {
+        enterZoomMode();
+        const dx   = e.touches[0].clientX - e.touches[1].clientX;
+        const dy   = e.touches[0].clientY - e.touches[1].clientY;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        const mx   = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        const my   = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+        const pivot = screenToComplex(mx, my);
+        viewRadius  = Math.max(3e-9, Math.min(FULL_RADIUS * 1.05, viewRadius * (lastPinchDist / dist)));
+        const aspect = W / H;
+        viewCx = pivot.x - (mx / W - 0.5) * 2 * viewRadius * aspect;
+        viewCy = pivot.y - (my / H - 0.5) * 2 * viewRadius;
+        lastPinchDist = dist;
+        updateZoomLabel();
+      } else if (e.touches.length === 1 && isDragging && dragPrev && zoomMode) {
+        const aspect = W / H;
+        const dx = (e.touches[0].clientX - dragPrev.x) / W * 2 * viewRadius * aspect;
+        const dy = (e.touches[0].clientY - dragPrev.y) / H * 2 * viewRadius;
+        viewCx -= dx;
+        viewCy -= dy;
+        dragPrev = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }
+    }, { passive: true });
+
+    canvas.addEventListener('touchend', () => {
+      isDragging    = false;
+      lastPinchDist = null;
+      dragPrev      = null;
+    }, { passive: true });
+
+    // ---- Auto-orbit c (normal mode) ----
+    // Orbits near the Mandelbrot boundary: r=0.7885 gives continuously morphing Julia sets
     function autoC() {
       const r = 0.7885;
       return { x: r * Math.cos(autoAngle), y: r * Math.sin(autoAngle) };
     }
 
-    // ---- Mouse / touch interaction ----
-    // Map mouse position to a small region of the complex plane around the orbit path
-    function mouseToC(mx, my) {
-      // Map screen to [-2, 2] x [-1.5, 1.5], then constrain to interesting region
-      const nx = (mx / W) * 2 - 1;   // [-1, 1]
-      const ny = (my / H) * 2 - 1;
-      // Scale to a band near the Mandelbrot boundary (interesting c values)
-      return { x: nx * 1.5, y: ny * 1.0 };
-    }
-
-    window.addEventListener('mousemove', e => {
-      mouseC = mouseToC(e.clientX, e.clientY);
-    });
-    window.addEventListener('mouseleave', () => { mouseC = null; });
-    window.addEventListener('touchmove', e => {
-      const t = e.touches[0];
-      mouseC = mouseToC(t.clientX, t.clientY);
-    }, { passive: true });
-    window.addEventListener('touchend', () => { mouseC = null; });
-
     // ---- Render loop ----
     function loop(now) {
       requestAnimationFrame(loop);
 
-      autoAngle += 0.0018; // very slow orbit
+      autoAngle += 0.0018;
 
       if (now - lastRender > RENDER_INTERVAL) {
-        const c = mouseC || autoC();
+        // Zoom mode: fix c so the fractal stays stable as you dive in
+        // Normal mode: use mouse position or auto-orbit
+        const c = zoomMode ? ZOOM_C : (mouseC || autoC());
         renderJulia(c.x, c.y);
         lastRender = now;
       }
 
-      // Always draw the last rendered frame (smooth overlay animations)
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'high';
       ctx.drawImage(off, 0, 0, W, H);
@@ -516,10 +710,9 @@
     const hero       = document.getElementById('hero');
 
     lessonWrap.addEventListener('scroll', () => {
-      const s = lessonWrap.scrollTop;
+      const s    = lessonWrap.scrollTop;
       const fade = Math.max(0, 1 - s / (window.innerHeight * 0.6));
-      hero.style.opacity = fade;
-      // Also fade the fractal slightly once lesson starts
+      hero.style.opacity   = fade;
       canvas.style.opacity = Math.max(0.15, fade * 0.85 + 0.15);
     });
 
@@ -527,15 +720,11 @@
     const phases = document.querySelectorAll('.phase');
 
     function checkPhases() {
-      const wrapRect  = lessonWrap.getBoundingClientRect();
-      const wrapScroll = lessonWrap.scrollTop;
-
+      const wrapRect = lessonWrap.getBoundingClientRect();
       phases.forEach(phase => {
-        const rect  = phase.getBoundingClientRect();
+        const rect   = phase.getBoundingClientRect();
         const relTop = rect.top - wrapRect.top;
-        if (relTop < window.innerHeight * 0.82) {
-          phase.classList.add('visible');
-        }
+        if (relTop < window.innerHeight * 0.82) phase.classList.add('visible');
       });
     }
 
