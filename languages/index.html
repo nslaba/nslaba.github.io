@@ -989,11 +989,17 @@
       const soundBtn  = wrap.querySelector('.sound-btn');
       if (!video) return;
 
-      // Hover: play muted (always works)
+      // Hover: try unmuted, fall back to muted if browser blocks it (requires prior user gesture)
       wrap.addEventListener('mouseenter', () => {
-        video.muted = true;
-        video.play().catch(() => {});
+        video.muted = false;
+        video.play().catch(() => {
+          // Browser blocked unmuted autoplay — play muted instead
+          video.muted = true;
+          video.play().catch(() => {});
+          if (soundBtn) soundBtn.textContent = '🔇';
+        });
         wrap.classList.add('playing');
+        if (soundBtn) soundBtn.textContent = '🔊';
       });
 
       wrap.addEventListener('mouseleave', () => {
@@ -1005,7 +1011,7 @@
         if (funFact)  funFact.classList.remove('visible');
       });
 
-      // Click the sound button: toggle mute (click IS a user gesture → browsers allow it)
+      // Sound button still works as a manual toggle
       if (soundBtn) {
         soundBtn.addEventListener('click', e => {
           e.stopPropagation();
