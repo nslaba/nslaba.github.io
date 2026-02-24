@@ -740,6 +740,115 @@
       color: rgba(255,255,255,0.2);
     }
 
+    /* Philosophy button */
+    .philo-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      background: none;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 4px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .philo-btn:hover {
+      color: rgba(255,255,255,0.75);
+      border-color: rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.03);
+    }
+    .philo-btn svg {
+      opacity: 0.5;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .philo-btn:hover svg {
+      opacity: 1;
+      transform: translateX(2px);
+    }
+
+    /* Philosophy modal */
+    .philo-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(5,5,8,0.88);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+    }
+    .philo-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .philo-modal {
+      position: relative;
+      background: #0d0d14;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 12px;
+      max-width: 640px;
+      width: 100%;
+      padding: 3rem;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(16px);
+      transition: transform 0.35s ease;
+    }
+    .philo-overlay.open .philo-modal {
+      transform: translateY(0);
+    }
+    .philo-modal-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+    }
+    .philo-modal h2 {
+      font-family: 'Roboto Slab', serif;
+      font-size: clamp(1.3rem, 3vw, 1.9rem);
+      font-weight: 300;
+      color: #fff;
+      margin-bottom: 2rem;
+      line-height: 1.3;
+    }
+    .philo-modal p {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.9;
+      margin-bottom: 1.25rem;
+    }
+    .philo-modal p:last-of-type {
+      margin-bottom: 0;
+    }
+    .philo-close {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.25);
+      font-size: 1.4rem;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0.25rem 0.5rem;
+      transition: color 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .philo-close:hover { color: rgba(255,255,255,0.7); }
+
     /* Responsive */
     @media (max-width: 900px) {
       .category {
@@ -895,6 +1004,12 @@
       <p class="category-label">educational</p>
       <h2 class="category-title">Learn by Playing</h2>
       <p class="category-desc">I wanted to present some of my projects in an educational way to invite you to play. Each one lists prerequisites, but don't let that stop you — drag things around and build intuition. <span class="difficulty-note">Ordered easiest → hardest.</span></p>
+      <button class="philo-btn" id="philoBtn">
+        // on pedagogy
+        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+        </svg>
+      </button>
     </div>
   </section>
 
@@ -1154,6 +1269,19 @@
     <span class="constellation-label-note">Orpheus's lyre — where Pythagoras first heard mathematics in music</span>
   </span>
 
+  <!-- Philosophy modal -->
+  <div class="philo-overlay" id="philoOverlay">
+    <div class="philo-modal" role="dialog" aria-modal="true" aria-labelledby="philoTitle">
+      <button class="philo-close" id="philoClose" aria-label="Close">×</button>
+      <p class="philo-modal-label">// On pedagogy</p>
+      <h2 id="philoTitle">Learning should be accessible.</h2>
+      <p>I have always been in awe of the beauty of mathematics, and I want to share that sense of wonder with others. Math does not have to be intimidating, even though it is often introduced that way.</p>
+      <p>During my first, second, and third year pure mathematics courses at McGill, it was not uncommon to hear statements like, "Those who cannot understand this proof should not be sitting in this class." That approach to teaching never sat right with me. Yes, mathematics requires rigor. But its beauty and utility should not be gated by ego or exclusivity.</p>
+      <p>For me, pedagogy should center on curiosity, play, and discovery. I love learning, and that is why I strive to present my projects in a way that invites exploration rather than intimidation.</p>
+      <p>Learning mathematics, much like learning a natural language, begins with exposure. You build intuition first — through patterns, examples, and lived interaction. Only after that foundation is formed do the formal rules truly make sense. When learners are given space to develop their own reasoning before being handed definitions, understanding becomes deeper, more personal, and more lasting.</p>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer class="footer">
     <nav class="footer-nav">
@@ -1397,6 +1525,29 @@
         navToggle.classList.remove('open');
         navLinks.classList.remove('open');
       });
+    });
+
+    // Philosophy modal
+    const philoBtn     = document.getElementById('philoBtn');
+    const philoOverlay = document.getElementById('philoOverlay');
+    const philoClose   = document.getElementById('philoClose');
+
+    function openPhilo() {
+      philoOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closePhilo() {
+      philoOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    philoBtn.addEventListener('click', openPhilo);
+    philoClose.addEventListener('click', closePhilo);
+    philoOverlay.addEventListener('click', e => {
+      if (e.target === philoOverlay) closePhilo();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closePhilo();
     });
 
     // Scroll-triggered reveal animations
