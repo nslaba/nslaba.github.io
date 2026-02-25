@@ -78,9 +78,19 @@
       flex-shrink: 0;
     }
 
-    .hero-text {
-      text-align: center;
+    /* Single fixed-height zone where hero text + both quizzes all live */
+    .text-zone {
+      position: relative;
+      width: 100%;
       max-width: 500px;
+      min-height: 320px;  /* tall enough for quiz 2 with insight */
+      flex-shrink: 0;
+    }
+
+    .hero-text {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      text-align: center;
     }
 
     .text-main {
@@ -106,8 +116,9 @@
 
     /* ---- Quiz panels ---- */
     .quiz-panel {
+      position: absolute;
+      top: 0; left: 0; right: 0;
       text-align: center;
-      max-width: 480px;
       opacity: 0;
       transition: opacity 1s ease;
     }
@@ -228,6 +239,7 @@
       .text-main     { font-size: 1rem; }
       .text-question { font-size: 0.9rem; }
       .hero-section  { gap: 2rem; }
+      .text-zone     { min-height: 260px; }
     }
   </style>
 </head>
@@ -246,39 +258,41 @@
   <div class="hero-section">
     <canvas id="sierpinski"></canvas>
 
-    <div class="hero-text">
-      <p class="text-main" id="textMain">
-        This image is made from one simple rule.<br>
-        Yet it can continue forever.
-      </p>
-      <p class="text-question" id="textQuestion">
-        How can something endless come from something finite?
-      </p>
-    </div>
-
-    <!-- Quiz 1: self-similarity observation -->
-    <div class="quiz-panel" id="quiz1Panel">
-      <p class="quiz-q">Do you see smaller copies of the whole image inside it?</p>
-      <div class="quiz-btns">
-        <button class="quiz-btn" id="btnYes1">Yes</button>
-        <button class="quiz-btn" id="btnNo1">No</button>
+    <div class="text-zone">
+      <div class="hero-text">
+        <p class="text-main" id="textMain">
+          This image is made from one simple rule.<br>
+          Yet it can continue forever.
+        </p>
+        <p class="text-question" id="textQuestion">
+          How can something endless come from something finite?
+        </p>
       </div>
-      <p class="quiz-feedback" id="quiz1Feedback"></p>
-    </div>
 
-    <!-- Quiz 2: recursive construction insight (appears after zoom) -->
-    <div class="quiz-panel" id="quiz2Panel">
-      <p class="quiz-q">If each small triangle looks like the whole,<br>could we build the large one by repeatedly building smaller ones?</p>
-      <div class="quiz-btns">
-        <button class="quiz-btn" id="btnYes2">Yes</button>
-        <button class="quiz-btn" id="btnNo2">No</button>
+      <!-- Quiz 1: self-similarity observation -->
+      <div class="quiz-panel" id="quiz1Panel">
+        <p class="quiz-q">Do you see smaller copies of the whole image inside it?</p>
+        <div class="quiz-btns">
+          <button class="quiz-btn" id="btnYes1">Yes</button>
+          <button class="quiz-btn" id="btnNo1">No</button>
+        </div>
+        <p class="quiz-feedback" id="quiz1Feedback"></p>
       </div>
-      <p class="quiz-feedback" id="quiz2Feedback"></p>
-      <p class="quiz-insight" id="quiz2Insight">
-        Then maybe we don't draw the big triangle directly.<br>
-        Maybe we only know how to draw a small one —<br>
-        and repeat.
-      </p>
+
+      <!-- Quiz 2: recursive construction insight (appears after zoom) -->
+      <div class="quiz-panel" id="quiz2Panel">
+        <p class="quiz-q">If each small triangle looks like the whole,<br>could we build the large one by repeatedly building smaller ones?</p>
+        <div class="quiz-btns">
+          <button class="quiz-btn" id="btnYes2">Yes</button>
+          <button class="quiz-btn" id="btnNo2">No</button>
+        </div>
+        <p class="quiz-feedback" id="quiz2Feedback"></p>
+        <p class="quiz-insight" id="quiz2Insight">
+          Then maybe we don't draw the big triangle directly.<br>
+          Maybe we only know how to draw a small one —<br>
+          and repeat.
+        </p>
+      </div>
     </div>
   </div>
 
