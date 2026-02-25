@@ -929,6 +929,26 @@
       drawFrame(now);
     }
 
+    // ---- Correct-answer feedback helper ----
+    // Fades + collapses the buttons, reveals the explanation in the freed space,
+    // then calls callback after readMs (ms the explanation stays visible).
+    function showCorrectFeedback(btnsEl, explanationEl, readMs, callback) {
+      // Lock current height so CSS can animate it to 0
+      btnsEl.style.height   = btnsEl.offsetHeight + 'px';
+      btnsEl.style.overflow = 'hidden';
+      // Double rAF ensures the locked height is committed before the transition fires
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        btnsEl.style.transition = 'opacity 0.25s ease, height 0.3s ease 0.15s';
+        btnsEl.style.opacity    = '0';
+        btnsEl.style.height     = '0';
+      }));
+      // Show explanation once buttons have collapsed (~520 ms)
+      setTimeout(() => {
+        explanationEl.style.opacity = '1';
+        if (callback) setTimeout(callback, readMs ?? 2500);
+      }, 520);
+    }
+
     // ---- Quiz 1 ----
     document.getElementById('btnYes1').addEventListener('click', () => {
       if (!quiz1Active) return;
@@ -960,9 +980,8 @@
       quiz2Answered = true;
       document.getElementById('btnYes2').disabled = true;
       document.getElementById('btnNo2').disabled  = true;
-      document.getElementById('quiz2Insight').style.opacity = '1';
-      // After insight is read, cross-fade to quiz 3
-      setTimeout(() => {
+      const btns = document.querySelector('#quiz2Panel .quiz-btns');
+      showCorrectFeedback(btns, document.getElementById('quiz2Insight'), 3000, () => {
         const q2 = document.getElementById('quiz2Panel');
         q2.style.opacity       = '0';
         q2.style.pointerEvents = 'none';
@@ -973,7 +992,7 @@
           p3.style.pointerEvents = 'auto';
           advanceStage(3);
         }, 800);
-      }, 3500);
+      });
     });
 
     document.getElementById('btnNo2').addEventListener('click', () => {
@@ -992,11 +1011,10 @@
       quiz3Answered = true;
       document.getElementById('btnRuleA').disabled = true;
       document.getElementById('btnRuleB').disabled = true;
-      const fb = document.getElementById('quiz3Feedback');
+      const fb   = document.getElementById('quiz3Feedback');
+      const btns = document.querySelector('#quiz3Panel .quiz-choices');
       fb.innerHTML = 'A recursive rule does not redraw the whole.<br>It transforms a simpler version into a more detailed one.';
-      fb.style.opacity = '1';
-      // Transition to quiz 4 after feedback is read
-      setTimeout(() => {
+      showCorrectFeedback(btns, fb, 2800, () => {
         const q3 = document.getElementById('quiz3Panel');
         q3.style.opacity       = '0';
         q3.style.pointerEvents = 'none';
@@ -1007,7 +1025,7 @@
           p4.style.pointerEvents = 'auto';
           advanceStage(4);
         }, 800);
-      }, 3000);
+      });
     });
 
     document.getElementById('btnRuleA').addEventListener('click', () => {
@@ -1035,11 +1053,10 @@
       quiz4Active   = false;
       quiz4Answered = true;
       ['btnQ4A','btnQ4B','btnQ4C','btnQ4D'].forEach(id => document.getElementById(id).disabled = true);
-      const fb = document.getElementById('quiz4Feedback');
-      fb.innerHTML     = 'Exactly. And a real program can\'t run forever — it has finite memory.';
-      fb.style.opacity = '1';
-      // Transition to quiz 5
-      setTimeout(() => {
+      const fb   = document.getElementById('quiz4Feedback');
+      const btns = document.querySelector('#quiz4Panel .quiz-choices');
+      fb.innerHTML = 'Exactly. And a real program can\'t run forever — it has finite memory.';
+      showCorrectFeedback(btns, fb, 2800, () => {
         const q4 = document.getElementById('quiz4Panel');
         q4.style.opacity       = '0';
         q4.style.pointerEvents = 'none';
@@ -1050,7 +1067,7 @@
           p5.style.pointerEvents = 'auto';
           advanceStage(5);
         }, 800);
-      }, 3000);
+      });
     });
 
     document.getElementById('btnQ4A').addEventListener('click', () => {
@@ -1080,18 +1097,17 @@
       quiz5Active   = false;
       quiz5Answered = true;
       ['btnQ5A','btnQ5B','btnQ5C'].forEach(id => document.getElementById(id).disabled = true);
-      const fb = document.getElementById('quiz5Feedback');
-      fb.innerHTML     = 'This is the base case — the condition that stops the recursion.<br>Without it, the program crashes.';
-      fb.style.opacity = '1';
-      // Transition to conclusion panel after feedback is read
-      setTimeout(() => {
+      const fb   = document.getElementById('quiz5Feedback');
+      const btns = document.querySelector('#quiz5Panel .quiz-choices');
+      fb.innerHTML = 'This is the base case — the condition that stops the recursion.<br>Without it, the program crashes.';
+      showCorrectFeedback(btns, fb, 2800, () => {
         const q5 = document.getElementById('quiz5Panel');
         q5.style.opacity       = '0';
         q5.style.pointerEvents = 'none';
         setTimeout(() => {
           const cp = document.getElementById('conclusionPanel');
           cp.style.opacity       = '1';
-          cp.style.pointerEvents = 'none'; // no interaction needed — auto-advances
+          cp.style.pointerEvents = 'none';
           advanceStage(6);
           // Auto-advance to quiz 6 after reading time
           setTimeout(() => {
@@ -1105,7 +1121,7 @@
             }, 800);
           }, 4000);
         }, 800);
-      }, 3000);
+      });
     });
 
     document.getElementById('btnQ5B').addEventListener('click', () => {
@@ -1131,7 +1147,10 @@
       quiz6Active   = false;
       quiz6Answered = true;
       ['btnQ6A','btnQ6B','btnQ6C','btnQ6D'].forEach(id => document.getElementById(id).disabled = true);
-      document.getElementById('quiz6Insight').style.opacity = '1';
+      // Hide any wrong-answer hint that may be showing
+      document.getElementById('quiz6Feedback').style.opacity = '0';
+      const btns = document.querySelector('#quiz6Panel .quiz-choices');
+      showCorrectFeedback(btns, document.getElementById('quiz6Insight'), 0, null);
     });
 
     document.getElementById('btnQ6A').addEventListener('click', () => {
