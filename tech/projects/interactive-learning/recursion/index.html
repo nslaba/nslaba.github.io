@@ -216,6 +216,21 @@
       margin-bottom: 0.3rem;
     }
 
+    /* Definition reveal panel (between quiz 5 and quiz 6) */
+    .conclusion-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1rem, 2.1vw, 1.35rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 2.1;
+      color: rgba(255,255,255,0.88);
+      text-align: center;
+    }
+    .conclusion-text em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
     /* Insight text shown on correct answer to quiz 2 */
     .quiz-insight {
       margin-top: 2rem;
@@ -373,6 +388,33 @@
           <button class="quiz-choice" id="btnQ5C">The computer simplifies it automatically.</button>
         </div>
         <p class="quiz-feedback" id="quiz5Feedback"></p>
+      </div>
+
+      <!-- Conclusion: definition of recursion (auto-advances to quiz 6) -->
+      <div class="quiz-panel" id="conclusionPanel">
+        <p class="conclusion-text">
+          A structure built by defining a large thing<br>
+          in terms of smaller copies of itself,<br>
+          together with a stopping condition,<br>
+          is called <em>recursion</em>.
+        </p>
+      </div>
+
+      <!-- Quiz 6: why isn't recursion circular? -->
+      <div class="quiz-panel" id="quiz6Panel">
+        <p class="quiz-q">Why doesn't this feel like a circle?</p>
+        <div class="quiz-choices">
+          <button class="quiz-choice" id="btnQ6A">Because each step gets smaller.</button>
+          <button class="quiz-choice" id="btnQ6B">Because it eventually stops.</button>
+          <button class="quiz-choice" id="btnQ6C">Because it builds upward.</button>
+          <button class="quiz-choice" id="btnQ6D">All of the above.</button>
+        </div>
+        <p class="quiz-feedback" id="quiz6Feedback"></p>
+        <p class="quiz-insight" id="quiz6Insight">
+          Recursion is not circular.<br>
+          It is convergent.<br>
+          Each step moves toward something simpler.
+        </p>
       </div>
     </div>
   </div>
@@ -577,6 +619,8 @@
     let quiz4Answered = false;
     let quiz5Active   = false;
     let quiz5Answered = false;
+    let quiz6Active   = false;
+    let quiz6Answered = false;
 
     let textMainShown = false;
     let textQShown    = false;
@@ -670,7 +714,7 @@
       }
 
       // Fractal animation frozen while any quiz is active or zoom is playing
-      if (quiz1Active || quiz2Active || quiz3Active || quiz4Active || quiz5Active || zoomAnimating) {
+      if (quiz1Active || quiz2Active || quiz3Active || quiz4Active || quiz5Active || quiz6Active || zoomAnimating) {
         drawFrame(now);
         return;
       }
@@ -911,6 +955,27 @@
       const fb = document.getElementById('quiz5Feedback');
       fb.innerHTML     = 'This is the base case — the condition that stops the recursion.<br>Without it, the program crashes.';
       fb.style.opacity = '1';
+      // Transition to conclusion panel after feedback is read
+      setTimeout(() => {
+        const q5 = document.getElementById('quiz5Panel');
+        q5.style.opacity       = '0';
+        q5.style.pointerEvents = 'none';
+        setTimeout(() => {
+          const cp = document.getElementById('conclusionPanel');
+          cp.style.opacity       = '1';
+          cp.style.pointerEvents = 'none'; // no interaction needed — auto-advances
+          // Auto-advance to quiz 6 after reading time
+          setTimeout(() => {
+            cp.style.opacity = '0';
+            setTimeout(() => {
+              quiz6Active = true;
+              const p6 = document.getElementById('quiz6Panel');
+              p6.style.opacity       = '1';
+              p6.style.pointerEvents = 'auto';
+            }, 800);
+          }, 4000);
+        }, 800);
+      }, 3000);
     });
 
     document.getElementById('btnQ5B').addEventListener('click', () => {
@@ -920,6 +985,36 @@
     document.getElementById('btnQ5C').addEventListener('click', () => {
       if (!quiz5Active) return;
       q5Wrong('btnQ5C', 'Computers follow instructions exactly — they only stop if told to.');
+    });
+
+    // ---- Quiz 6 ----
+    function q6Wrong(btnId, hint) {
+      document.getElementById(btnId).disabled = true;
+      const fb = document.getElementById('quiz6Feedback');
+      fb.innerHTML     = hint;
+      fb.style.opacity = '1';
+      setTimeout(() => { document.getElementById('btnQ6D').disabled = false; }, 1200);
+    }
+
+    document.getElementById('btnQ6D').addEventListener('click', () => {
+      if (!quiz6Active) return;
+      quiz6Active   = false;
+      quiz6Answered = true;
+      ['btnQ6A','btnQ6B','btnQ6C','btnQ6D'].forEach(id => document.getElementById(id).disabled = true);
+      document.getElementById('quiz6Insight').style.opacity = '1';
+    });
+
+    document.getElementById('btnQ6A').addEventListener('click', () => {
+      if (!quiz6Active) return;
+      q6Wrong('btnQ6A', 'True — but that alone doesn\'t explain everything.');
+    });
+    document.getElementById('btnQ6B').addEventListener('click', () => {
+      if (!quiz6Active) return;
+      q6Wrong('btnQ6B', 'True — but consider the other reasons as well.');
+    });
+    document.getElementById('btnQ6C').addEventListener('click', () => {
+      if (!quiz6Active) return;
+      q6Wrong('btnQ6C', 'True — but look at all three options together.');
     });
 
     // ---- Boot ----
