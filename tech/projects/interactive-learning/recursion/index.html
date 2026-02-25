@@ -78,6 +78,38 @@
       flex-shrink: 0;
     }
 
+    /* ---- Stage navigation wrapper ---- */
+    .stage-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      width: 100%;
+      max-width: 620px;
+      justify-content: center;
+    }
+
+    .stage-arrow {
+      flex-shrink: 0;
+      width: 34px;
+      height: 34px;
+      background: none;
+      border: 1px solid rgba(255,255,255,0.13);
+      color: rgba(255,255,255,0.28);
+      font-size: 1.4rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease, border-color 0.2s, color 0.2s;
+    }
+    .stage-arrow:hover {
+      border-color: rgba(255,255,255,0.38);
+      color: rgba(255,255,255,0.65);
+    }
+
     /* Single fixed-height zone where hero text + all quizzes live */
     .text-zone {
       position: relative;
@@ -316,6 +348,8 @@
   <div class="hero-section">
     <canvas id="sierpinski"></canvas>
 
+    <div class="stage-wrapper">
+    <button class="stage-arrow" id="arrowLeft"  aria-label="Previous">&#8249;</button>
     <div class="text-zone">
       <div class="hero-text">
         <p class="text-main" id="textMain">
@@ -417,6 +451,8 @@
         </p>
       </div>
     </div>
+    <button class="stage-arrow" id="arrowRight" aria-label="Next">&#8250;</button>
+    </div><!-- end .stage-wrapper -->
   </div>
 
   <div class="lesson-body">
@@ -625,6 +661,92 @@
     let textMainShown = false;
     let textQShown    = false;
 
+    // ---- Stage navigation ----
+    // Stage 0 = hero text, 1–7 = quiz/conclusion panels
+    let currentStage = -1;
+    let maxStage     = -1;
+
+    const STAGE_PANEL_IDS = [
+      null,              // 0 — hero text
+      'quiz1Panel',      // 1
+      'quiz2Panel',      // 2
+      'quiz3Panel',      // 3
+      'quiz4Panel',      // 4
+      'quiz5Panel',      // 5
+      'conclusionPanel', // 6
+      'quiz6Panel',      // 7
+    ];
+
+    function hideAllPanels() {
+      document.getElementById('textMain').style.opacity     = '0';
+      document.getElementById('textQuestion').style.opacity = '0';
+      STAGE_PANEL_IDS.filter(Boolean).forEach(id => {
+        const el = document.getElementById(id);
+        el.style.opacity       = '0';
+        el.style.pointerEvents = 'none';
+      });
+      quiz1Active = quiz2Active = quiz3Active = quiz4Active = quiz5Active = quiz6Active = false;
+    }
+
+    function showStagePanel(n) {
+      if (n === 0) {
+        document.getElementById('textMain').style.opacity     = '1';
+        document.getElementById('textQuestion').style.opacity = '1';
+        return;
+      }
+      const el = document.getElementById(STAGE_PANEL_IDS[n]);
+      if (!el) return;
+      el.style.opacity       = '1';
+      el.style.pointerEvents = n === 6 ? 'none' : 'auto'; // conclusionPanel is non-interactive
+      // Re-activate if not yet answered
+      if (n === 1 && !quiz1Answered) quiz1Active = true;
+      if (n === 2 && !quiz2Answered) quiz2Active = true;
+      if (n === 3 && !quiz3Answered) quiz3Active = true;
+      if (n === 4 && !quiz4Answered) quiz4Active = true;
+      if (n === 5 && !quiz5Answered) quiz5Active = true;
+      if (n === 7 && !quiz6Answered) quiz6Active = true;
+    }
+
+    function applyZoomForStage(n) {
+      const target = n >= 2 ? 2.1 : 1;
+      if (currentZoom !== target) {
+        if (target === 2.1) {
+          const pivot = getTopCornerCentroid();
+          zoomPivotX = pivot.x;
+          zoomPivotY = pivot.y;
+        }
+        currentZoom   = target;
+        zoomAnimating = false; // cancel any in-progress zoom animation
+      }
+    }
+
+    function updateArrows() {
+      const leftBtn  = document.getElementById('arrowLeft');
+      const rightBtn = document.getElementById('arrowRight');
+      if (!leftBtn) return;
+      const canBack    = currentStage > 0;
+      const canForward = currentStage >= 0 && currentStage < maxStage;
+      leftBtn.style.opacity        = canBack    ? '1' : '0';
+      leftBtn.style.pointerEvents  = canBack    ? 'auto' : 'none';
+      rightBtn.style.opacity       = canForward ? '1' : '0';
+      rightBtn.style.pointerEvents = canForward ? 'auto' : 'none';
+    }
+
+    function advanceStage(n) {
+      currentStage = n;
+      if (n > maxStage) maxStage = n;
+      updateArrows();
+    }
+
+    function goToStage(n) {
+      if (n < 0 || n > maxStage) return;
+      hideAllPanels();
+      applyZoomForStage(n);
+      currentStage = n;
+      showStagePanel(n);
+      updateArrows();
+    }
+
     function init() {
       leaves    = [baseTriangle()];
       middles   = [];
@@ -708,6 +830,7 @@
               const p2 = document.getElementById('quiz2Panel');
               p2.style.opacity       = '1';
               p2.style.pointerEvents = 'auto';
+              advanceStage(2);
             }, 500);
           }
         }
@@ -743,6 +866,7 @@
             if (depth === 3 && !textMainShown) {
               textMainShown = true;
               document.getElementById('textMain').style.opacity = '1';
+              advanceStage(0); // hero text is stage 0 — enables back-nav from quiz 1
             }
             if (depth === 5 && !textQShown) {
               textQShown = true;
@@ -778,6 +902,7 @@
                   const p1 = document.getElementById('quiz1Panel');
                   p1.style.opacity       = '1';
                   p1.style.pointerEvents = 'auto';
+                  advanceStage(1);
                 }, 600);
               }, 1200);
             }, 2240);
@@ -846,6 +971,7 @@
           const p3 = document.getElementById('quiz3Panel');
           p3.style.opacity       = '1';
           p3.style.pointerEvents = 'auto';
+          advanceStage(3);
         }, 800);
       }, 3500);
     });
@@ -879,6 +1005,7 @@
           const p4 = document.getElementById('quiz4Panel');
           p4.style.opacity       = '1';
           p4.style.pointerEvents = 'auto';
+          advanceStage(4);
         }, 800);
       }, 3000);
     });
@@ -921,6 +1048,7 @@
           const p5 = document.getElementById('quiz5Panel');
           p5.style.opacity       = '1';
           p5.style.pointerEvents = 'auto';
+          advanceStage(5);
         }, 800);
       }, 3000);
     });
@@ -964,6 +1092,7 @@
           const cp = document.getElementById('conclusionPanel');
           cp.style.opacity       = '1';
           cp.style.pointerEvents = 'none'; // no interaction needed — auto-advances
+          advanceStage(6);
           // Auto-advance to quiz 6 after reading time
           setTimeout(() => {
             cp.style.opacity = '0';
@@ -972,6 +1101,7 @@
               const p6 = document.getElementById('quiz6Panel');
               p6.style.opacity       = '1';
               p6.style.pointerEvents = 'auto';
+              advanceStage(7);
             }, 800);
           }, 4000);
         }, 800);
@@ -1015,6 +1145,14 @@
     document.getElementById('btnQ6C').addEventListener('click', () => {
       if (!quiz6Active) return;
       q6Wrong('btnQ6C', 'True — but look at all three options together.');
+    });
+
+    // ---- Arrow navigation ----
+    document.getElementById('arrowLeft').addEventListener('click', () => {
+      goToStage(currentStage - 1);
+    });
+    document.getElementById('arrowRight').addEventListener('click', () => {
+      goToStage(currentStage + 1);
     });
 
     // ---- Boot ----
