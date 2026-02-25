@@ -13,76 +13,17 @@
 
     :root {
       --accent: #a78bfa;
-      --accent-dim: rgba(167,139,250,0.18);
       --text: #f5f5f5;
       --text-dim: rgba(255,255,255,0.55);
       --text-faint: rgba(255,255,255,0.25);
+      --bg: #05050a;
     }
 
     html, body {
-      width: 100%; height: 100%;
-      background: #05050a;
-      overflow: hidden;
+      background: var(--bg);
       font-family: 'Inter', sans-serif;
       color: var(--text);
-    }
-
-    /* ---- Intro overlay ---- */
-    .intro-overlay {
-      position: fixed;
-      inset: 0;
-      z-index: 100;
-      background: #05050a;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      text-align: center;
-      transition: opacity 1.3s ease;
-      pointer-events: auto;
-    }
-
-    .intro-line1 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.2rem, 2.6vw, 1.9rem);
-      font-weight: 300;
-      line-height: 1.9;
-      color: rgba(255,255,255,0.88);
-      opacity: 0;
-      animation: fadeIn 1.1s ease 0.7s forwards;
-    }
-
-    .intro-line2 {
-      margin-top: 2.8rem;
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.1rem, 2.3vw, 1.65rem);
-      font-style: italic;
-      font-weight: 300;
-      color: var(--accent);
-      opacity: 0;
-      animation: fadeIn 1s ease 2.6s forwards;
-    }
-
-    /* ---- Canvas ---- */
-    #fractal {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      cursor: default;
-    }
-    #fractal.grabbable { cursor: grab; }
-    #fractal.grabbing  { cursor: grabbing; }
-
-    /* ---- Vignette ---- */
-    .vignette {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 2;
-      background:
-        radial-gradient(ellipse at center, transparent 30%, rgba(5,5,10,0.7) 100%);
+      overflow-x: hidden;
     }
 
     /* ---- Nav ---- */
@@ -116,23 +57,66 @@
       text-transform: uppercase;
       color: var(--accent);
       opacity: 0;
-      animation: fadeIn 1s ease 8s forwards;
+      animation: fadeIn 1s ease 1.5s forwards;
+    }
+
+    /* ---- Hero section ---- */
+    .hero-section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3rem;
+      padding: 6rem 2rem 5rem;
+      position: relative;
+    }
+
+    #sierpinski {
+      display: block;
+      opacity: 0;
+      transition: opacity 0.7s ease;
+    }
+
+    .hero-text {
+      text-align: center;
+      max-width: 500px;
+    }
+
+    .text-main {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.05rem, 2.2vw, 1.5rem);
+      font-weight: 300;
+      line-height: 1.95;
+      color: rgba(255,255,255,0.78);
+      opacity: 0;
+      transition: opacity 1.3s ease;
+    }
+
+    .text-question {
+      margin-top: 1.5rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(0.95rem, 2vw, 1.3rem);
+      font-style: italic;
+      font-weight: 300;
+      color: var(--accent);
+      opacity: 0;
+      transition: opacity 1.3s ease;
     }
 
     /* ---- Scroll hint ---- */
     .scroll-hint {
-      position: fixed;
+      position: absolute;
       bottom: 2.5rem;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 20;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 0.6rem;
       opacity: 0;
-      animation: fadeIn 1s ease 8.8s forwards;
-      pointer-events: auto;
+      transition: opacity 1s ease;
+      pointer-events: none;
     }
 
     .scroll-hint-text {
@@ -147,83 +131,13 @@
       width: 1px;
       height: 32px;
       background: linear-gradient(to bottom, var(--text-faint), transparent);
-      animation: arrowPulse 2s ease-in-out 9.5s infinite;
     }
 
-    /* ---- Mouse / interaction hint ---- */
-    .mouse-hint {
-      position: fixed;
-      bottom: 2.5rem;
-      right: 2.5rem;
-      z-index: 20;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.58rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-faint);
-      opacity: 0;
-      transition: opacity 0.5s;
-      pointer-events: none;
-    }
-
-    /* ---- Zoom UI ---- */
-    .zoom-ui {
-      position: fixed;
-      bottom: 2.5rem;
-      left: 2.5rem;
-      z-index: 20;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.5s;
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .zoom-level {
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      color: var(--accent);
-    }
-
-    .zoom-reset {
-      background: none;
-      border: 1px solid rgba(255,255,255,0.15);
-      color: var(--text-faint);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.55rem;
-      letter-spacing: 0.12em;
-      padding: 0.3rem 0.75rem;
-      cursor: pointer;
-      text-transform: uppercase;
-      transition: color 0.2s, border-color 0.2s;
-    }
-    .zoom-reset:hover {
-      color: var(--text);
-      border-color: rgba(255,255,255,0.4);
-    }
-
-    /* ---- Lesson sections (below the fold) ---- */
-    .lesson-wrap {
-      position: fixed;
-      inset: 0;
-      z-index: 30;
-      overflow-y: auto;
-      pointer-events: none;
-    }
-
-    .lesson-spacer {
-      height: 100vh;
-    }
-
+    /* ---- Lesson body ---- */
     .lesson-body {
-      position: relative;
-      background: #05050a;
-      pointer-events: auto;
-      padding: 6rem 2rem 8rem;
       max-width: 720px;
       margin: 0 auto;
+      padding: 4rem 2rem 10rem;
     }
 
     /* ---- Phase ---- */
@@ -262,41 +176,20 @@
       line-height: 1.9;
       max-width: 620px;
     }
-
     .phase p + p { margin-top: 1rem; }
 
     /* ---- Animations ---- */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: none; }
-    }
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-    @keyframes arrowPulse {
-      0%, 100% { opacity: 0.25; transform: scaleY(1); }
-      50%       { opacity: 0.6;  transform: scaleY(1.15); }
-    }
+    @keyframes fadeIn { to { opacity: 1; } }
 
     /* ---- Mobile ---- */
     @media (max-width: 600px) {
-      .mouse-hint { display: none; }
-      .hero-sub { font-size: 0.87rem; }
-      .intro-line1 { font-size: 1.15rem; }
-      .intro-line2 { font-size: 1.05rem; }
+      .text-main     { font-size: 1rem; }
+      .text-question { font-size: 0.9rem; }
+      .hero-section  { gap: 2rem; }
     }
   </style>
 </head>
 <body>
-
-  <!-- Intro overlay — sits above everything, fades out to reveal the fractal -->
-  <div class="intro-overlay" id="introOverlay">
-    <p class="intro-line1">This image contains infinite detail.<br>Yet it was generated from a finite rule.</p>
-    <p class="intro-line2">How is that possible?</p>
-  </div>
-
-  <canvas id="fractal"></canvas>
-  <div class="vignette"></div>
 
   <nav class="nav">
     <a href="../../../index.html" class="back-link">
@@ -308,514 +201,303 @@
     <span class="nav-label">// Recursion</span>
   </nav>
 
-  <div class="scroll-hint">
-    <span class="scroll-hint-text">Scroll to begin</span>
-    <div class="scroll-hint-arrow"></div>
-  </div>
+  <div class="hero-section">
+    <canvas id="sierpinski"></canvas>
 
-  <div class="mouse-hint" id="mouseHintEl">scroll to explore · drag to pan</div>
-
-  <div class="zoom-ui" id="zoomUi">
-    <span class="zoom-level" id="zoomLabel">1×</span>
-    <button class="zoom-reset" id="zoomResetBtn">reset view</button>
-  </div>
-
-  <div class="lesson-wrap" id="lessonWrap">
-    <div class="lesson-spacer"></div>
-    <div class="lesson-body">
-
-      <div class="phase" data-phase="1">
-        <p class="phase-label">// 01 — The paradox</p>
-        <h2>Can something describe itself?</h2>
-        <p>
-          Sounds circular. If a definition refers to itself, doesn't it go on forever?
-          Sometimes — yes. But sometimes self-reference is exactly the right description.
-        </p>
-        <p>
-          Think about a folder on your computer. It contains files.
-          But it can also contain <em>other folders</em> — which contain files,
-          and other folders, and so on. The only honest way to describe
-          what's in a folder is: <em>"files, plus whatever's in each sub-folder."</em>
-          That sentence refers to itself. That's recursion.
-        </p>
-      </div>
-
-      <div class="phase" data-phase="2">
-        <p class="phase-label">// 02 — The two rules</p>
-        <h2>Every recursive thing needs exactly two ingredients.</h2>
-        <p>
-          A <strong style="color:#fff">base case</strong> — the simplest version of the problem,
-          which you can answer directly without recursing. Without this, the function calls itself forever and crashes.
-        </p>
-        <p>
-          A <strong style="color:#fff">recursive case</strong> — the rule that reduces the problem
-          to a slightly simpler version of itself, then trusts that the simpler version is already solved.
-          The leap of faith: assume it works for <em>n − 1</em>, use that to solve <em>n</em>.
-        </p>
-      </div>
-
-      <div class="phase" data-phase="3">
-        <p class="phase-label">// 03 — What you're looking at</p>
-        <h2>The fractal above is defined by one recursive rule.</h2>
-        <p>
-          This is a Julia set. Every point on screen is a complex number <em>z</em>.
-          The rule is: replace <em>z</em> with <em>z² + c</em>, then do it again.
-          And again. If <em>z</em> stays bounded — it's in the set (dark).
-          If it escapes to infinity — color it by how fast it escaped.
-        </p>
-        <p>
-          Move your mouse to change <em>c</em> and morph the whole structure.
-          Scroll on the fractal to zoom in — the boundary has infinite complexity.
-          No matter how deep you go, the same rule keeps generating new detail.
-        </p>
-      </div>
-
-      <div class="phase" data-phase="4">
-        <p class="phase-label">// Coming next</p>
-        <h2>The call stack — and why it matters for ray tracing.</h2>
-        <p>
-          When a ray of light hits a mirror, it spawns a reflected ray.
-          That reflected ray might hit another mirror, spawning another ray.
-          This continues until the ray hits nothing, or we've gone deep enough.
-          Ray tracing <em>is</em> recursion — and understanding the call stack
-          is what makes it click.
-        </p>
-      </div>
-
+    <div class="hero-text">
+      <p class="text-main" id="textMain">
+        This image is made from one simple rule.<br>
+        Yet it can continue forever.
+      </p>
+      <p class="text-question" id="textQuestion">
+        How can something endless come from something finite?
+      </p>
     </div>
+
+    <div class="scroll-hint" id="scrollHint">
+      <span class="scroll-hint-text">Scroll to begin</span>
+      <div class="scroll-hint-arrow"></div>
+    </div>
+  </div>
+
+  <div class="lesson-body">
+
+    <div class="phase">
+      <p class="phase-label">// 01 — The paradox</p>
+      <h2>Can something describe itself?</h2>
+      <p>
+        Sounds circular. If a definition refers to itself, doesn't it go on forever?
+        Sometimes — yes. But sometimes self-reference is exactly the right description.
+      </p>
+      <p>
+        Think about a folder on your computer. It contains files.
+        But it can also contain <em>other folders</em> — which contain files,
+        and other folders, and so on. The only honest way to describe
+        what's in a folder is: <em>"files, plus whatever's in each sub-folder."</em>
+        That sentence refers to itself. That's recursion.
+      </p>
+    </div>
+
+    <div class="phase">
+      <p class="phase-label">// 02 — The two rules</p>
+      <h2>Every recursive thing needs exactly two ingredients.</h2>
+      <p>
+        A <strong style="color:#fff">base case</strong> — the simplest version of the problem,
+        which you can answer directly without recursing. Without this, the function calls itself forever and crashes.
+      </p>
+      <p>
+        A <strong style="color:#fff">recursive case</strong> — the rule that reduces the problem
+        to a slightly simpler version of itself, then trusts that the simpler version is already solved.
+        The leap of faith: assume it works for <em>n − 1</em>, use that to solve <em>n</em>.
+      </p>
+    </div>
+
+    <div class="phase">
+      <p class="phase-label">// 03 — What you're looking at</p>
+      <h2>The Sierpinski triangle is defined by one recursive rule.</h2>
+      <p>
+        Start with a triangle. Find the midpoint of each edge and connect them —
+        this divides it into four smaller triangles. Remove the middle one.
+        That's the rule.
+      </p>
+      <p>
+        Now apply it to each triangle that remains. And again. And again.
+        The same rule, applied to itself, produces every level of detail you saw above.
+        Look at any corner — it is the whole triangle, shrunk down.
+        That's what recursion does: it describes a thing in terms of a smaller version of itself.
+      </p>
+    </div>
+
+    <div class="phase">
+      <p class="phase-label">// Coming next</p>
+      <h2>The call stack — and why it matters for ray tracing.</h2>
+      <p>
+        When a ray of light hits a mirror, it spawns a reflected ray.
+        That reflected ray might hit another mirror, spawning another ray.
+        This continues until the ray hits nothing, or we've gone deep enough.
+        Ray tracing <em>is</em> recursion — and understanding the call stack
+        is what makes it click.
+      </p>
+    </div>
+
   </div>
 
   <script>
     // ---------------------------------------------------------------
-    // Julia Set renderer — infinite looping zoom + manual exploration
+    // Sierpinski triangle — recursive build animation
     //
-    // Loop zoom mechanism:
-    //   Phase 0→1 drives an exponential radius decrease (constant log-speed).
-    //   At phase 0.80 a cached "start frame" crossfades in over the deep frame,
-    //   making the reset to phase 0 invisible.
-    //   Between recomputes, the last rendered frame is scaled to match the
-    //   current radius — this makes the zoom appear silky at any compute rate.
+    // The triangle builds depth-by-depth. At each step, every white
+    // triangle splits into 3 corner triangles, and the middle one
+    // fades from white to black — visually showing the recursive rule.
+    // After reaching max depth the canvas fades out and restarts.
     // ---------------------------------------------------------------
 
-    const canvas  = document.getElementById('fractal');
-    const ctx     = canvas.getContext('2d');
+    const canvas = document.getElementById('sierpinski');
+    const ctx    = canvas.getContext('2d');
+    const BG     = { r: 5, g: 5, b: 10 }; // matches --bg: #05050a
 
-    // Primary offscreen canvas — current zoom frame
-    const off     = document.createElement('canvas');
-    const offCtx  = off.getContext('2d');
+    let SIZE = 0;
 
-    // Secondary offscreen canvas — cached start-of-loop frame for crossfade
-    const offReset    = document.createElement('canvas');
-    const offResetCtx = offReset.getContext('2d');
-
-    let W, H, OW, OH;
-
-    // ---- Viewport ----
-    let viewCx = 0, viewCy = 0;
-    let viewRadius = 1.4;
-    const FULL_RADIUS = 1.7;
-
-    // ---- Dragon Julia set  c ≈ −0.7269 + 0.1889i ----
-    // Connected fractal with spiraling arms — self-similar at every scale
-    const ZOOM_C = { x: -0.7269, y: 0.1889 };
-
-    // ---- Loop zoom constants ----
-    const LOOP_DURATION = 16000; // ms per full cycle
-    const LOOP_R_START  = 1.4;   // wide view
-    const LOOP_R_END    = 0.055; // deep view (~25× zoom)
-    const LOOP_BLEND    = 0.80;  // phase at which crossfade begins (last 20%)
-    const LOOP_CX       = 0.0;   // zoom target center (complex plane)
-    const LOOP_CY       = 0.0;
-
-    // ---- Loop zoom state ----
-    let loopZoomActive   = false;
-    let loopPhase        = 0;      // 0 → 1, wraps
-    let lastLoopTime     = null;
-    let viewRadiusAtRender = LOOP_R_START; // radius at last recompute (for scale compensation)
-    let resetFrameReady  = false;
-
-    // ---- Manual zoom mode (user takes control) ----
-    let zoomMode = false;
-
-    // ---- Interaction state ----
-    let introComplete = false;
-    let mouseC        = null;
-    let isDragging    = false;
-    let dragPrev      = null;
-    let lastPinchDist = null;
-    let autoAngle     = 0;
-
-    // ---- Render timing ----
-    let lastRender = -Infinity;
-    const RENDER_INTERVAL = 40; // ms between fractal recomputes
-
-    // ---------------------------------------------------------------
-    function resize() {
-      W  = canvas.width  = window.innerWidth;
-      H  = canvas.height = window.innerHeight;
-      OW = off.width      = offReset.width  = Math.round(W * 0.38);
-      OH = off.height     = offReset.height = Math.round(H * 0.38);
-      // Rebuild the reset frame at the new resolution
-      if (loopZoomActive) buildResetFrame();
+    function resizeCanvas() {
+      const maxW = Math.min(window.innerWidth * 0.78, 560);
+      const maxH = window.innerHeight * 0.46;
+      SIZE = Math.floor(Math.min(maxW, maxH));
+      canvas.width = canvas.height = SIZE;
     }
-    resize();
-    window.addEventListener('resize', resize);
+    resizeCanvas();
 
-    // ---- Dynamic iteration depth ----
-    function getMaxIter() {
-      const depth = Math.max(0, Math.log2(FULL_RADIUS / viewRadius));
-      return Math.round(96 + depth * 55);
-    }
+    // ---- Triangle geometry ----
+    // Returns an equilateral triangle that fills the canvas with padding.
+    // { x1,y1 } = top apex, { x2,y2 } = bottom-right, { x3,y3 } = bottom-left
 
-    // ---- Color palette ----
-    const PALETTE = [
-      [3,   3,   12],
-      [15,  5,   60],
-      [55,  15,  150],
-      [99,  50,  220],
-      [160, 90,  255],
-      [210, 150, 255],
-      [240, 210, 255],
-      [255, 248, 255],
-    ];
-
-    function palette(t) {
-      const n = PALETTE.length - 1;
-      const s = t * n;
-      const i = Math.min(Math.floor(s), n - 1);
-      const f = s - i;
-      const a = PALETTE[i], b = PALETTE[i + 1];
-      return [a[0]+f*(b[0]-a[0]), a[1]+f*(b[1]-a[1]), a[2]+f*(b[2]-a[2])];
-    }
-
-    // ---- Julia set render ----
-    // Renders to `targetCtx` (defaults to offCtx) using the current viewport.
-    function renderJulia(cx, cy, targetCtx, tw, th) {
-      targetCtx = targetCtx || offCtx;
-      tw = tw || OW;
-      th = th || OH;
-
-      const imgData  = targetCtx.createImageData(tw, th);
-      const data     = imgData.data;
-      const log2     = Math.log(2);
-      const MAX_ITER = getMaxIter();
-      const aspect   = tw / th;
-
-      for (let py = 0; py < th; py++) {
-        for (let px = 0; px < tw; px++) {
-          let zx = viewCx + (px / tw - 0.5) * 2 * viewRadius * aspect;
-          let zy = viewCy + (py / th - 0.5) * 2 * viewRadius;
-
-          let iter = 0;
-          while (zx * zx + zy * zy < 4 && iter < MAX_ITER) {
-            const tmp = zx * zx - zy * zy + cx;
-            zy = 2 * zx * zy + cy;
-            zx = tmp;
-            iter++;
-          }
-
-          const idx = (py * tw + px) * 4;
-          if (iter === MAX_ITER) {
-            data[idx]=3; data[idx+1]=2; data[idx+2]=12; data[idx+3]=255;
-          } else {
-            const mag    = Math.sqrt(zx*zx + zy*zy);
-            const smooth = iter + 1 - Math.log(Math.log(mag)) / log2;
-            const t      = Math.max(0, Math.min(1, smooth / MAX_ITER));
-            const col    = palette(t);
-            data[idx]=col[0]; data[idx+1]=col[1]; data[idx+2]=col[2]; data[idx+3]=255;
-          }
-        }
-      }
-      targetCtx.putImageData(imgData, 0, 0);
-    }
-
-    // ---- Build the cached reset frame ----
-    // Renders the start-of-loop view into offReset without touching `off`.
-    function buildResetFrame() {
-      const savedCx = viewCx, savedCy = viewCy, savedR = viewRadius;
-      viewCx = LOOP_CX; viewCy = LOOP_CY; viewRadius = LOOP_R_START;
-      renderJulia(ZOOM_C.x, ZOOM_C.y, offResetCtx, OW, OH);
-      viewCx = savedCx; viewCy = savedCy; viewRadius = savedR;
-      resetFrameReady = true;
-    }
-
-    // ---- Screen → complex ----
-    function screenToComplex(sx, sy) {
-      const aspect = W / H;
+    function baseTriangle() {
+      const pad  = SIZE * 0.06;
+      const base = SIZE - 2 * pad;
+      const h    = base * (Math.sqrt(3) / 2);
+      const top  = (SIZE - h) / 2;      // vertically centered
       return {
-        x: viewCx + (sx / W - 0.5) * 2 * viewRadius * aspect,
-        y: viewCy + (sy / H - 0.5) * 2 * viewRadius,
+        x1: SIZE / 2,   y1: top,
+        x2: SIZE - pad, y2: top + h,
+        x3: pad,        y3: top + h,
       };
     }
 
-    // ---- UI refs ----
-    const introOverlay = document.getElementById('introOverlay');
-    const zoomUi       = document.getElementById('zoomUi');
-    const zoomLabel    = document.getElementById('zoomLabel');
-    const mouseHintEl  = document.getElementById('mouseHintEl');
-
-    function enterZoomMode() {
-      if (zoomMode) return;
-      zoomMode = true;
-      canvas.classList.add('grabbable');
-      zoomUi.style.opacity       = '1';
-      zoomUi.style.pointerEvents = 'auto';
-      mouseHintEl.style.opacity  = '0';
+    // Split one triangle into 3 corners + 1 middle
+    function split(t) {
+      const ax = (t.x1 + t.x2) * .5, ay = (t.y1 + t.y2) * .5; // mid edge 1-2
+      const bx = (t.x2 + t.x3) * .5, by = (t.y2 + t.y3) * .5; // mid edge 2-3
+      const cx = (t.x1 + t.x3) * .5, cy = (t.y1 + t.y3) * .5; // mid edge 1-3
+      return {
+        corners: [
+          { x1: t.x1, y1: t.y1, x2: ax, y2: ay, x3: cx, y3: cy }, // top
+          { x1: ax,   y1: ay,   x2: t.x2, y2: t.y2, x3: bx, y3: by }, // right
+          { x1: cx,   y1: cy,   x2: bx, y2: by, x3: t.x3, y3: t.y3 }, // left
+        ],
+        middle: { x1: ax, y1: ay, x2: bx, y2: by, x3: cx, y3: cy },
+      };
     }
 
-    function updateZoomLabel() {
-      const z = FULL_RADIUS / viewRadius;
-      let label;
-      if      (z < 10)  label = z.toFixed(1) + '×';
-      else if (z < 1e6) label = Math.round(z) + '×';
-      else              label = z.toExponential(1) + '×';
-      zoomLabel.textContent = label;
-    }
-
-    // Reset returns to the looping zoom
-    function resetZoom() {
-      zoomMode   = false;
-      loopPhase  = 0;
-      lastLoopTime = null;
-      viewCx = LOOP_CX; viewCy = LOOP_CY; viewRadius = LOOP_R_START;
-      viewRadiusAtRender = LOOP_R_START;
-      lastRender = -Infinity;
-      canvas.classList.remove('grabbable', 'grabbing');
-      zoomUi.style.opacity       = '0';
-      zoomUi.style.pointerEvents = 'none';
-      mouseHintEl.style.opacity  = '0';
-    }
-
-    document.getElementById('zoomResetBtn').addEventListener('click', resetZoom);
-
-    // ---- Intro sequence timing ----
-    // At 5s: overlay begins fading out (1.3s CSS transition)
-    // At 6.3s: overlay fully gone — start the looping zoom and unlock interaction
-    setTimeout(() => {
-      introOverlay.style.opacity       = '0';
-      introOverlay.style.pointerEvents = 'none';
-    }, 5000);
-
-    setTimeout(() => {
-      introOverlay.style.display = 'none';
-      introComplete    = true;
-      loopZoomActive   = true;
-      loopPhase        = 0;
-      lastLoopTime     = null;
-      viewCx = LOOP_CX; viewCy = LOOP_CY;
-      viewRadius = LOOP_R_START;
-      viewRadiusAtRender = LOOP_R_START;
-      buildResetFrame();
-      // Hint appears after the first half-cycle
-      setTimeout(() => {
-        if (!zoomMode) mouseHintEl.style.opacity = '1';
-      }, LOOP_DURATION * 0.5);
-    }, 6300);
-
-    // ---- Wheel zoom ----
-    canvas.addEventListener('wheel', e => {
-      e.preventDefault();
-      if (!introComplete) return;
-      enterZoomMode();
-
-      const factor = e.deltaY > 0 ? 1.12 : 0.88;
-      const pivot  = screenToComplex(e.clientX, e.clientY);
-      viewRadius   = Math.max(3e-9, Math.min(FULL_RADIUS * 1.05, viewRadius * factor));
-      const aspect = W / H;
-      viewCx = pivot.x - (e.clientX / W - 0.5) * 2 * viewRadius * aspect;
-      viewCy = pivot.y - (e.clientY / H - 0.5) * 2 * viewRadius;
-      updateZoomLabel();
-    }, { passive: false });
-
-    // ---- Double-click to zoom ----
-    canvas.addEventListener('dblclick', e => {
-      if (!introComplete) return;
-      enterZoomMode();
-      const pivot = screenToComplex(e.clientX, e.clientY);
-      viewRadius  = Math.max(3e-9, viewRadius * 0.33);
-      const aspect = W / H;
-      viewCx = pivot.x - (e.clientX / W - 0.5) * 2 * viewRadius * aspect;
-      viewCy = pivot.y - (e.clientY / H - 0.5) * 2 * viewRadius;
-      updateZoomLabel();
-    });
-
-    // ---- Drag to pan ----
-    canvas.addEventListener('mousedown', e => {
-      if (!introComplete || !zoomMode) return;
-      isDragging = true;
-      dragPrev   = { x: e.clientX, y: e.clientY };
-      canvas.classList.add('grabbing');
-    });
-
-    window.addEventListener('mousemove', e => {
-      if (isDragging && zoomMode && dragPrev) {
-        const aspect = W / H;
-        const dx = (e.clientX - dragPrev.x) / W * 2 * viewRadius * aspect;
-        const dy = (e.clientY - dragPrev.y) / H * 2 * viewRadius;
-        viewCx -= dx;
-        viewCy -= dy;
-        dragPrev = { x: e.clientX, y: e.clientY };
-      } else if (introComplete && !zoomMode) {
-        mouseC = {
-          x: (e.clientX / W * 2 - 1) * 1.5,
-          y: (e.clientY / H * 2 - 1),
-        };
+    // Batch-fill an array of triangles with a single canvas path
+    function fillAll(tris, color) {
+      if (!tris.length) return;
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      for (const t of tris) {
+        ctx.moveTo(t.x1, t.y1);
+        ctx.lineTo(t.x2, t.y2);
+        ctx.lineTo(t.x3, t.y3);
+        ctx.closePath();
       }
-    });
-
-    window.addEventListener('mouseup', () => {
-      isDragging = false;
-      dragPrev   = null;
-      canvas.classList.remove('grabbing');
-    });
-
-    window.addEventListener('mouseleave', () => {
-      mouseC     = null;
-      isDragging = false;
-      dragPrev   = null;
-    });
-
-    // ---- Touch: pinch + drag ----
-    canvas.addEventListener('touchstart', e => {
-      if (!introComplete) return;
-      if (e.touches.length === 2) {
-        isDragging = false;
-        const dx = e.touches[0].clientX - e.touches[1].clientX;
-        const dy = e.touches[0].clientY - e.touches[1].clientY;
-        lastPinchDist = Math.sqrt(dx*dx + dy*dy);
-      } else if (e.touches.length === 1) {
-        dragPrev   = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-        isDragging = true;
-      }
-    }, { passive: true });
-
-    canvas.addEventListener('touchmove', e => {
-      if (!introComplete) return;
-      if (e.touches.length === 2 && lastPinchDist) {
-        enterZoomMode();
-        const dx   = e.touches[0].clientX - e.touches[1].clientX;
-        const dy   = e.touches[0].clientY - e.touches[1].clientY;
-        const dist = Math.sqrt(dx*dx + dy*dy);
-        const mx   = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-        const my   = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-        const pivot = screenToComplex(mx, my);
-        viewRadius  = Math.max(3e-9, Math.min(FULL_RADIUS * 1.05, viewRadius * (lastPinchDist / dist)));
-        const aspect = W / H;
-        viewCx = pivot.x - (mx / W - 0.5) * 2 * viewRadius * aspect;
-        viewCy = pivot.y - (my / H - 0.5) * 2 * viewRadius;
-        lastPinchDist = dist;
-        updateZoomLabel();
-      } else if (e.touches.length === 1 && isDragging && dragPrev && zoomMode) {
-        const aspect = W / H;
-        const dx = (e.touches[0].clientX - dragPrev.x) / W * 2 * viewRadius * aspect;
-        const dy = (e.touches[0].clientY - dragPrev.y) / H * 2 * viewRadius;
-        viewCx -= dx;
-        viewCy -= dy;
-        dragPrev = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-      }
-    }, { passive: true });
-
-    canvas.addEventListener('touchend', () => {
-      isDragging    = false;
-      lastPinchDist = null;
-      dragPrev      = null;
-    }, { passive: true });
-
-    // ---- Auto-orbit c ----
-    function autoC() {
-      const r = 0.7885;
-      return { x: r * Math.cos(autoAngle), y: r * Math.sin(autoAngle) };
+      ctx.fill();
     }
 
-    // ---- Render loop ----
-    function loop(now) {
-      requestAnimationFrame(loop);
+    // Smooth ease for the middle-removal animation
+    function ease(t) { return t < .5 ? 2*t*t : -1 + (4 - 2*t)*t; }
 
-      autoAngle += 0.0018;
+    // ---- Animation state ----
+    let leaves  = [];   // white triangles at current depth
+    let middles = [];   // triangles being removed (splitting phase)
+    let depth   = 0;
+    let phase   = 'hold'; // 'hold' | 'splitting' | 'done'
+    let timer   = 0;
+    let splitT  = 0;
+    let prevNow = null;
+    let resetting = false;
 
-      // ---- Advance loop zoom ----
-      let blendAlpha = 0;
-      if (loopZoomActive && !zoomMode) {
-        const dt = (lastLoopTime !== null) ? now - lastLoopTime : 0;
-        lastLoopTime = now;
-        loopPhase += dt / LOOP_DURATION;
+    const MAX_DEPTH = 7;
+    const SPLIT_MS  = 460;
+    const DONE_WAIT = 2400;
+    const HOLD_MS   = [1200, 750, 680, 620, 600, 600, 600, 1900];
 
-        if (loopPhase >= 1) {
-          // Wrap — seamless because the crossfade has already fully shown the start frame
-          loopPhase -= 1;
-          viewRadius         = LOOP_R_START;
-          viewRadiusAtRender = LOOP_R_START;
-          lastRender         = -Infinity; // force immediate recompute at start position
+    let textMainShown = false;
+    let textQShown    = false;
+
+    function init() {
+      leaves    = [baseTriangle()];
+      middles   = [];
+      depth     = 0;
+      phase     = 'hold';
+      timer     = 0;
+      splitT    = 0;
+      prevNow   = null;
+      resetting = false;
+    }
+
+    function drawFrame() {
+      ctx.clearRect(0, 0, SIZE, SIZE);
+
+      // Draw white corners
+      fillAll(leaves, '#ffffff');
+
+      // During a split: fade the removed middles from white → background
+      if (phase === 'splitting' && middles.length) {
+        const t = ease(splitT);
+        const rv = Math.round(255 * (1 - t) + BG.r * t);
+        const gv = Math.round(255 * (1 - t) + BG.g * t);
+        const bv = Math.round(255 * (1 - t) + BG.b * t);
+        fillAll(middles, `rgb(${rv},${gv},${bv})`);
+      }
+    }
+
+    function tick(now) {
+      requestAnimationFrame(tick);
+      if (resetting) { drawFrame(); return; }
+
+      const dt = prevNow !== null ? Math.min(now - prevNow, 100) : 0;
+      prevNow = now;
+      timer  += dt;
+
+      if (phase === 'hold') {
+        const holdDur = HOLD_MS[depth] ?? 700;
+        if (timer >= holdDur) {
+          timer = 0;
+          if (depth < MAX_DEPTH) {
+            // Compute next depth: split every leaf into 3 corners + 1 middle
+            const newLeaves  = [];
+            const newMiddles = [];
+            for (const t of leaves) {
+              const { corners, middle } = split(t);
+              newLeaves.push(...corners);
+              newMiddles.push(middle);
+            }
+            leaves  = newLeaves;
+            middles = newMiddles;
+            depth++;
+            phase  = 'splitting';
+            splitT = 0;
+
+            // Reveal text tied to specific depths
+            if (depth === 3 && !textMainShown) {
+              textMainShown = true;
+              document.getElementById('textMain').style.opacity = '1';
+            }
+            if (depth === 5 && !textQShown) {
+              textQShown = true;
+              setTimeout(() => {
+                document.getElementById('textQuestion').style.opacity = '1';
+              }, 700);
+              setTimeout(() => {
+                document.getElementById('scrollHint').style.opacity = '1';
+              }, 2000);
+            }
+          } else {
+            phase = 'done';
+            timer = 0;
+          }
         }
-
-        // Exponential interpolation → constant perceived zoom speed
-        viewCx     = LOOP_CX;
-        viewCy     = LOOP_CY;
-        viewRadius = LOOP_R_START * Math.pow(LOOP_R_END / LOOP_R_START, loopPhase);
-
-        // Crossfade alpha: 0 until phase reaches LOOP_BLEND, then 0→1
-        blendAlpha = loopPhase > LOOP_BLEND
-          ? (loopPhase - LOOP_BLEND) / (1 - LOOP_BLEND)
-          : 0;
-      } else {
-        lastLoopTime = now;
-      }
-
-      // ---- Recompute fractal ----
-      if (now - lastRender > RENDER_INTERVAL) {
-        const c = (loopZoomActive && !zoomMode) || zoomMode ? ZOOM_C : (mouseC || autoC());
-        renderJulia(c.x, c.y);
-        viewRadiusAtRender = viewRadius;
-        lastRender = now;
-      }
-
-      // ---- Draw ----
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
-
-      if (loopZoomActive && !zoomMode) {
-        // Scale compensation: stretches the last rendered frame to match the
-        // current radius, making the zoom continuous between recomputes.
-        const zf = viewRadiusAtRender / viewRadius; // >1 once zoom has advanced past last render
-        const dw = W * zf, dh = H * zf;
-        ctx.drawImage(off, (W - dw) * 0.5, (H - dh) * 0.5, dw, dh);
-
-        // Dissolve in the cached start frame as the loop nears its end
-        if (blendAlpha > 0 && resetFrameReady) {
-          ctx.globalAlpha = blendAlpha;
-          ctx.drawImage(offReset, 0, 0, W, H);
-          ctx.globalAlpha = 1;
+      } else if (phase === 'splitting') {
+        splitT = Math.min(1, timer / SPLIT_MS);
+        if (splitT >= 1) {
+          middles = [];
+          phase   = 'hold';
+          timer   = 0;
         }
-      } else {
-        ctx.drawImage(off, 0, 0, W, H);
+      } else if (phase === 'done') {
+        if (timer >= DONE_WAIT) {
+          // Fade canvas out, reset, fade back in
+          resetting = true;
+          canvas.style.opacity = '0';
+          setTimeout(() => {
+            init();
+            resizeCanvas();
+            drawFrame();
+            canvas.style.opacity = '1';
+          }, 700);
+          timer = 0;
+        }
       }
+
+      drawFrame();
     }
 
-    requestAnimationFrame(loop);
+    // Boot: start drawing immediately (canvas is opacity 0), then fade in
+    init();
+    requestAnimationFrame(tick);
+    setTimeout(() => { canvas.style.opacity = '1'; }, 300);
 
-    // ---- Fade fractal on scroll ----
-    const lessonWrap = document.getElementById('lessonWrap');
-
-    lessonWrap.addEventListener('scroll', () => {
-      const s    = lessonWrap.scrollTop;
-      const fade = Math.max(0, 1 - s / (window.innerHeight * 0.6));
-      canvas.style.opacity = Math.max(0.15, fade * 0.85 + 0.15);
+    // Rebuild on resize
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      if (phase === 'hold' || phase === 'done') {
+        // Rebuild leaf/middle arrays at new scale by re-running to current depth
+        const base = baseTriangle();
+        let cur = [base];
+        for (let d = 0; d < depth; d++) {
+          const next = [];
+          for (const t of cur) next.push(...split(t).corners);
+          cur = next;
+        }
+        leaves = cur;
+        middles = [];
+      }
     });
 
-    // ---- Scroll-reveal phases ----
-    const phases = document.querySelectorAll('.phase');
+    // ---- Scroll-reveal lesson phases ----
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.15 });
 
-    function checkPhases() {
-      const wrapRect = lessonWrap.getBoundingClientRect();
-      phases.forEach(phase => {
-        const rect   = phase.getBoundingClientRect();
-        const relTop = rect.top - wrapRect.top;
-        if (relTop < window.innerHeight * 0.82) phase.classList.add('visible');
-      });
-    }
-
-    lessonWrap.addEventListener('scroll', checkPhases);
-    checkPhases();
+    document.querySelectorAll('.phase').forEach(el => observer.observe(el));
   </script>
 
 </body>
