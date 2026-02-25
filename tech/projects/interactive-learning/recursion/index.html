@@ -313,7 +313,7 @@
     <div class="scroll-hint-arrow"></div>
   </div>
 
-  <div class="mouse-hint" id="mouseHintEl">scroll to zoom · drag to pan · move mouse · change the fractal</div>
+  <div class="mouse-hint" id="mouseHintEl">scroll to explore · drag to pan</div>
 
   <div class="zoom-ui" id="zoomUi">
     <span class="zoom-level" id="zoomLabel">1×</span>
@@ -387,61 +387,81 @@
 
   <script>
     // ---------------------------------------------------------------
-    // Julia Set renderer with infinite zoom + intro animation
+    // Julia Set renderer — infinite looping zoom + manual exploration
+    //
+    // Loop zoom mechanism:
+    //   Phase 0→1 drives an exponential radius decrease (constant log-speed).
+    //   At phase 0.80 a cached "start frame" crossfades in over the deep frame,
+    //   making the reset to phase 0 invisible.
+    //   Between recomputes, the last rendered frame is scaled to match the
+    //   current radius — this makes the zoom appear silky at any compute rate.
     // ---------------------------------------------------------------
 
     const canvas  = document.getElementById('fractal');
     const ctx     = canvas.getContext('2d');
+
+    // Primary offscreen canvas — current zoom frame
     const off     = document.createElement('canvas');
     const offCtx  = off.getContext('2d');
+
+    // Secondary offscreen canvas — cached start-of-loop frame for crossfade
+    const offReset    = document.createElement('canvas');
+    const offResetCtx = offReset.getContext('2d');
 
     let W, H, OW, OH;
 
     // ---- Viewport ----
     let viewCx = 0, viewCy = 0;
-    let viewRadius = 1.7;
+    let viewRadius = 1.4;
     const FULL_RADIUS = 1.7;
 
-    // ---- Zoom mode ----
-    let zoomMode = false;
-    // "Dragon" Julia set  c ≈ −0.7269 + 0.1889i
+    // ---- Dragon Julia set  c ≈ −0.7269 + 0.1889i ----
+    // Connected fractal with spiraling arms — self-similar at every scale
     const ZOOM_C = { x: -0.7269, y: 0.1889 };
 
-    // ---- Intro zoom state ----
-    let introZoomPending = false;
-    let introZoomActive  = false;
-    let introZoomStart   = null;
-    let introComplete    = false;
-    const INTRO_ZOOM_DURATION = 7200; // ms to go from full view to target
-    const INTRO_ZOOM_TO       = 0.14; // destination radius (~12× zoom)
+    // ---- Loop zoom constants ----
+    const LOOP_DURATION = 16000; // ms per full cycle
+    const LOOP_R_START  = 1.4;   // wide view
+    const LOOP_R_END    = 0.055; // deep view (~25× zoom)
+    const LOOP_BLEND    = 0.80;  // phase at which crossfade begins (last 20%)
+    const LOOP_CX       = 0.0;   // zoom target center (complex plane)
+    const LOOP_CY       = 0.0;
 
-    function easeInOutCubic(t) {
-      return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
-    }
+    // ---- Loop zoom state ----
+    let loopZoomActive   = false;
+    let loopPhase        = 0;      // 0 → 1, wraps
+    let lastLoopTime     = null;
+    let viewRadiusAtRender = LOOP_R_START; // radius at last recompute (for scale compensation)
+    let resetFrameReady  = false;
 
-    // ---- Mouse / drag state ----
+    // ---- Manual zoom mode (user takes control) ----
+    let zoomMode = false;
+
+    // ---- Interaction state ----
+    let introComplete = false;
     let mouseC        = null;
     let isDragging    = false;
     let dragPrev      = null;
     let lastPinchDist = null;
-
-    // ---- Auto-orbit ----
-    let autoAngle = 0;
+    let autoAngle     = 0;
 
     // ---- Render timing ----
     let lastRender = -Infinity;
-    const RENDER_INTERVAL = 40;
+    const RENDER_INTERVAL = 40; // ms between fractal recomputes
 
+    // ---------------------------------------------------------------
     function resize() {
       W  = canvas.width  = window.innerWidth;
       H  = canvas.height = window.innerHeight;
-      OW = off.width  = Math.round(W * 0.38);
-      OH = off.height = Math.round(H * 0.38);
+      OW = off.width      = offReset.width  = Math.round(W * 0.38);
+      OH = off.height     = offReset.height = Math.round(H * 0.38);
+      // Rebuild the reset frame at the new resolution
+      if (loopZoomActive) buildResetFrame();
     }
     resize();
     window.addEventListener('resize', resize);
 
-    // ---- Dynamic iterations ----
+    // ---- Dynamic iteration depth ----
     function getMaxIter() {
       const depth = Math.max(0, Math.log2(FULL_RADIUS / viewRadius));
       return Math.round(96 + depth * 55);
@@ -469,17 +489,22 @@
     }
 
     // ---- Julia set render ----
-    function renderJulia(cx, cy) {
-      const imgData  = offCtx.createImageData(OW, OH);
+    // Renders to `targetCtx` (defaults to offCtx) using the current viewport.
+    function renderJulia(cx, cy, targetCtx, tw, th) {
+      targetCtx = targetCtx || offCtx;
+      tw = tw || OW;
+      th = th || OH;
+
+      const imgData  = targetCtx.createImageData(tw, th);
       const data     = imgData.data;
       const log2     = Math.log(2);
       const MAX_ITER = getMaxIter();
-      const aspect   = OW / OH;
+      const aspect   = tw / th;
 
-      for (let py = 0; py < OH; py++) {
-        for (let px = 0; px < OW; px++) {
-          let zx = viewCx + (px / OW - 0.5) * 2 * viewRadius * aspect;
-          let zy = viewCy + (py / OH - 0.5) * 2 * viewRadius;
+      for (let py = 0; py < th; py++) {
+        for (let px = 0; px < tw; px++) {
+          let zx = viewCx + (px / tw - 0.5) * 2 * viewRadius * aspect;
+          let zy = viewCy + (py / th - 0.5) * 2 * viewRadius;
 
           let iter = 0;
           while (zx * zx + zy * zy < 4 && iter < MAX_ITER) {
@@ -489,7 +514,7 @@
             iter++;
           }
 
-          const idx = (py * OW + px) * 4;
+          const idx = (py * tw + px) * 4;
           if (iter === MAX_ITER) {
             data[idx]=3; data[idx+1]=2; data[idx+2]=12; data[idx+3]=255;
           } else {
@@ -501,7 +526,17 @@
           }
         }
       }
-      offCtx.putImageData(imgData, 0, 0);
+      targetCtx.putImageData(imgData, 0, 0);
+    }
+
+    // ---- Build the cached reset frame ----
+    // Renders the start-of-loop view into offReset without touching `off`.
+    function buildResetFrame() {
+      const savedCx = viewCx, savedCy = viewCy, savedR = viewRadius;
+      viewCx = LOOP_CX; viewCy = LOOP_CY; viewRadius = LOOP_R_START;
+      renderJulia(ZOOM_C.x, ZOOM_C.y, offResetCtx, OW, OH);
+      viewCx = savedCx; viewCy = savedCy; viewRadius = savedR;
+      resetFrameReady = true;
     }
 
     // ---- Screen → complex ----
@@ -513,7 +548,7 @@
       };
     }
 
-    // ---- Zoom UI ----
+    // ---- UI refs ----
     const introOverlay = document.getElementById('introOverlay');
     const zoomUi       = document.getElementById('zoomUi');
     const zoomLabel    = document.getElementById('zoomLabel');
@@ -537,21 +572,25 @@
       zoomLabel.textContent = label;
     }
 
+    // Reset returns to the looping zoom
     function resetZoom() {
-      zoomMode = false;
-      viewCx = 0; viewCy = 0; viewRadius = FULL_RADIUS;
+      zoomMode   = false;
+      loopPhase  = 0;
+      lastLoopTime = null;
+      viewCx = LOOP_CX; viewCy = LOOP_CY; viewRadius = LOOP_R_START;
+      viewRadiusAtRender = LOOP_R_START;
+      lastRender = -Infinity;
       canvas.classList.remove('grabbable', 'grabbing');
       zoomUi.style.opacity       = '0';
       zoomUi.style.pointerEvents = 'none';
-      if (introComplete) mouseHintEl.style.opacity = '1';
+      mouseHintEl.style.opacity  = '0';
     }
 
     document.getElementById('zoomResetBtn').addEventListener('click', resetZoom);
 
     // ---- Intro sequence timing ----
     // At 5s: overlay begins fading out (1.3s CSS transition)
-    // At 6.3s: overlay hidden, intro zoom begins
-    // At ~13.5s: zoom lands, zoom UI appears, interaction unlocked
+    // At 6.3s: overlay fully gone — start the looping zoom and unlock interaction
     setTimeout(() => {
       introOverlay.style.opacity       = '0';
       introOverlay.style.pointerEvents = 'none';
@@ -559,7 +598,18 @@
 
     setTimeout(() => {
       introOverlay.style.display = 'none';
-      introZoomPending = true;
+      introComplete    = true;
+      loopZoomActive   = true;
+      loopPhase        = 0;
+      lastLoopTime     = null;
+      viewCx = LOOP_CX; viewCy = LOOP_CY;
+      viewRadius = LOOP_R_START;
+      viewRadiusAtRender = LOOP_R_START;
+      buildResetFrame();
+      // Hint appears after the first half-cycle
+      setTimeout(() => {
+        if (!zoomMode) mouseHintEl.style.opacity = '1';
+      }, LOOP_DURATION * 0.5);
     }, 6300);
 
     // ---- Wheel zoom ----
@@ -683,47 +733,62 @@
 
       autoAngle += 0.0018;
 
-      // Kick off intro zoom once the overlay has cleared
-      if (introZoomPending) {
-        introZoomPending = false;
-        introZoomActive  = true;
-        introZoomStart   = now;
-        viewCx = 0; viewCy = 0; viewRadius = FULL_RADIUS;
-      }
+      // ---- Advance loop zoom ----
+      let blendAlpha = 0;
+      if (loopZoomActive && !zoomMode) {
+        const dt = (lastLoopTime !== null) ? now - lastLoopTime : 0;
+        lastLoopTime = now;
+        loopPhase += dt / LOOP_DURATION;
 
-      // Animate intro zoom — exponential interpolation for smooth geometric zoom
-      if (introZoomActive && introZoomStart !== null) {
-        const t      = Math.min(1, (now - introZoomStart) / INTRO_ZOOM_DURATION);
-        const eased  = easeInOutCubic(t);
-        viewRadius   = FULL_RADIUS * Math.pow(INTRO_ZOOM_TO / FULL_RADIUS, eased);
-        if (t >= 1) {
-          introZoomActive = false;
-          introComplete   = true;
-          viewRadius      = INTRO_ZOOM_TO;
-          // Transition into zoom mode so the user can keep exploring
-          zoomMode = true;
-          canvas.classList.add('grabbable');
-          zoomUi.style.opacity       = '1';
-          zoomUi.style.pointerEvents = 'auto';
-          updateZoomLabel();
-          // Show the mouse hint after a short pause
-          setTimeout(() => {
-            if (zoomMode) return; // they already reset — don't re-show
-            mouseHintEl.style.opacity = '1';
-          }, 1200);
+        if (loopPhase >= 1) {
+          // Wrap — seamless because the crossfade has already fully shown the start frame
+          loopPhase -= 1;
+          viewRadius         = LOOP_R_START;
+          viewRadiusAtRender = LOOP_R_START;
+          lastRender         = -Infinity; // force immediate recompute at start position
         }
+
+        // Exponential interpolation → constant perceived zoom speed
+        viewCx     = LOOP_CX;
+        viewCy     = LOOP_CY;
+        viewRadius = LOOP_R_START * Math.pow(LOOP_R_END / LOOP_R_START, loopPhase);
+
+        // Crossfade alpha: 0 until phase reaches LOOP_BLEND, then 0→1
+        blendAlpha = loopPhase > LOOP_BLEND
+          ? (loopPhase - LOOP_BLEND) / (1 - LOOP_BLEND)
+          : 0;
+      } else {
+        lastLoopTime = now;
       }
 
+      // ---- Recompute fractal ----
       if (now - lastRender > RENDER_INTERVAL) {
-        // During intro zoom: fix c so the structure stays stable as we dive in
-        const c = (introZoomActive || introZoomPending || zoomMode) ? ZOOM_C : (mouseC || autoC());
+        const c = (loopZoomActive && !zoomMode) || zoomMode ? ZOOM_C : (mouseC || autoC());
         renderJulia(c.x, c.y);
+        viewRadiusAtRender = viewRadius;
         lastRender = now;
       }
 
+      // ---- Draw ----
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(off, 0, 0, W, H);
+
+      if (loopZoomActive && !zoomMode) {
+        // Scale compensation: stretches the last rendered frame to match the
+        // current radius, making the zoom continuous between recomputes.
+        const zf = viewRadiusAtRender / viewRadius; // >1 once zoom has advanced past last render
+        const dw = W * zf, dh = H * zf;
+        ctx.drawImage(off, (W - dw) * 0.5, (H - dh) * 0.5, dw, dh);
+
+        // Dissolve in the cached start frame as the loop nears its end
+        if (blendAlpha > 0 && resetFrameReady) {
+          ctx.globalAlpha = blendAlpha;
+          ctx.drawImage(offReset, 0, 0, W, H);
+          ctx.globalAlpha = 1;
+        }
+      } else {
+        ctx.drawImage(off, 0, 0, W, H);
+      }
     }
 
     requestAnimationFrame(loop);
