@@ -689,19 +689,22 @@
           timer   = 0;
 
           // After depth-5 split settles: fade text out → pause → highlight → quiz 1
+          // textQuestion appears at split_start+700ms; split ends at +460ms.
+          // Delay of 2240ms from split end = 2700ms from split start,
+          // giving the question a full 2 s of reading time before fading.
           if (depth === 5 && !quiz1Answered) {
             setTimeout(() => {
               // Fade out hero text
               document.getElementById('textMain').style.opacity     = '0';
               document.getElementById('textQuestion').style.opacity = '0';
-              // 1 s after text gone: turn on highlights, then quiz panel
+              // 1.2 s after text starts fading: highlights on, then quiz panel
               setTimeout(() => {
                 quiz1Active = true;
                 setTimeout(() => {
                   document.getElementById('quiz1Panel').style.opacity = '1';
                 }, 600);
-              }, 1000);
-            }, 900);
+              }, 1200);
+            }, 2240);
           }
         }
       } else if (phase === 'done') {
