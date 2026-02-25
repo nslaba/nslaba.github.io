@@ -119,58 +119,6 @@
       animation: fadeIn 1s ease 8s forwards;
     }
 
-    /* ---- Hero overlay ---- */
-    .hero {
-      position: fixed;
-      inset: 0;
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
-      text-align: center;
-      padding: 2rem;
-    }
-
-    .hero-eyebrow {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      animation: fadeUp 1s ease 6.8s forwards;
-    }
-
-    .hero-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(3rem, 8vw, 6.5rem);
-      font-weight: 300;
-      line-height: 1.05;
-      letter-spacing: -0.01em;
-      color: #fff;
-      opacity: 0;
-      animation: fadeUp 1.2s ease 7.1s forwards;
-      text-shadow: 0 0 80px rgba(167,139,250,0.3);
-    }
-
-    .hero-title em {
-      font-style: italic;
-      color: var(--accent);
-    }
-
-    .hero-sub {
-      margin-top: 2rem;
-      font-size: 0.95rem;
-      color: var(--text-dim);
-      max-width: 440px;
-      line-height: 1.8;
-      opacity: 0;
-      animation: fadeUp 1s ease 7.6s forwards;
-    }
-
     /* ---- Scroll hint ---- */
     .scroll-hint {
       position: fixed;
@@ -359,12 +307,6 @@
     </a>
     <span class="nav-label">// Recursion</span>
   </nav>
-
-  <div class="hero" id="hero">
-    <p class="hero-eyebrow">Interactive Lesson</p>
-    <h1 class="hero-title">A function<br>that calls <em>itself.</em></h1>
-    <p class="hero-sub">Every boundary you see here was drawn by the same rule, applied to itself — infinitely.</p>
-  </div>
 
   <div class="scroll-hint">
     <span class="scroll-hint-text">Scroll to begin</span>
@@ -786,14 +728,12 @@
 
     requestAnimationFrame(loop);
 
-    // ---- Hero fade on scroll ----
+    // ---- Fade fractal on scroll ----
     const lessonWrap = document.getElementById('lessonWrap');
-    const hero       = document.getElementById('hero');
 
     lessonWrap.addEventListener('scroll', () => {
       const s    = lessonWrap.scrollTop;
       const fade = Math.max(0, 1 - s / (window.innerHeight * 0.6));
-      hero.style.opacity   = fade;
       canvas.style.opacity = Math.max(0.15, fade * 0.85 + 0.15);
     });
 
