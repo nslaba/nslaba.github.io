@@ -67,8 +67,8 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3rem;
-      padding: 6rem 2rem 5rem;
+      gap: 2.6rem;
+      padding: 6rem 2rem 7rem;
       position: relative;
     }
 
@@ -76,6 +76,7 @@
       display: block;
       opacity: 0;
       transition: opacity 0.7s ease;
+      flex-shrink: 0;
     }
 
     .hero-text {
@@ -102,6 +103,64 @@
       color: var(--accent);
       opacity: 0;
       transition: opacity 1.3s ease;
+    }
+
+    /* ---- Quiz panel ---- */
+    .quiz-panel {
+      text-align: center;
+      max-width: 460px;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .quiz-q {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1rem, 2.1vw, 1.35rem);
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.88);
+      margin-bottom: 1.6rem;
+    }
+
+    .quiz-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .quiz-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 0.6rem 2rem;
+      background: none;
+      border: 1px solid rgba(255,255,255,0.18);
+      color: var(--text-faint);
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .quiz-btn:hover {
+      border-color: rgba(255,255,255,0.55);
+      color: var(--text);
+    }
+    .quiz-btn:disabled {
+      opacity: 0.3;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .quiz-feedback {
+      margin-top: 1.4rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--text-dim);
+      line-height: 1.8;
+      opacity: 0;
+      transition: opacity 0.9s ease;
+      min-height: 1rem;
     }
 
     /* ---- Scroll hint ---- */
@@ -214,6 +273,15 @@
       </p>
     </div>
 
+    <div class="quiz-panel" id="quizPanel">
+      <p class="quiz-q">Do you see smaller copies of the whole image inside it?</p>
+      <div class="quiz-btns">
+        <button class="quiz-btn" id="btnYes">Yes</button>
+        <button class="quiz-btn" id="btnNo">No</button>
+      </div>
+      <p class="quiz-feedback" id="quizFeedback"></p>
+    </div>
+
     <div class="scroll-hint" id="scrollHint">
       <span class="scroll-hint-text">Scroll to begin</span>
       <div class="scroll-hint-arrow"></div>
@@ -286,35 +354,36 @@
     // ---------------------------------------------------------------
     // Sierpinski triangle — recursive build animation
     //
-    // The triangle builds depth-by-depth. At each step, every white
-    // triangle splits into 3 corner triangles, and the middle one
-    // fades from white to black — visually showing the recursive rule.
-    // After reaching max depth the canvas fades out and restarts.
+    // Each depth transition shows the rule being applied:
+    // the middle inverted triangle fades from white → black,
+    // leaving three white corner triangles.
+    //
+    // After both intro texts appear, the animation pauses and a
+    // yes/no question is shown. The three depth-1 corner triangles
+    // are highlighted in yellow to guide the observation.
     // ---------------------------------------------------------------
 
     const canvas = document.getElementById('sierpinski');
     const ctx    = canvas.getContext('2d');
-    const BG     = { r: 5, g: 5, b: 10 }; // matches --bg: #05050a
+    const BG     = { r: 5, g: 5, b: 10 }; // #05050a
 
     let SIZE = 0;
 
     function resizeCanvas() {
       const maxW = Math.min(window.innerWidth * 0.78, 560);
-      const maxH = window.innerHeight * 0.46;
+      const maxH = window.innerHeight * 0.44;
       SIZE = Math.floor(Math.min(maxW, maxH));
       canvas.width = canvas.height = SIZE;
     }
     resizeCanvas();
 
-    // ---- Triangle geometry ----
-    // Returns an equilateral triangle that fills the canvas with padding.
-    // { x1,y1 } = top apex, { x2,y2 } = bottom-right, { x3,y3 } = bottom-left
+    // ---- Geometry helpers ----
 
     function baseTriangle() {
       const pad  = SIZE * 0.06;
       const base = SIZE - 2 * pad;
       const h    = base * (Math.sqrt(3) / 2);
-      const top  = (SIZE - h) / 2;      // vertically centered
+      const top  = (SIZE - h) / 2;
       return {
         x1: SIZE / 2,   y1: top,
         x2: SIZE - pad, y2: top + h,
@@ -322,22 +391,27 @@
       };
     }
 
-    // Split one triangle into 3 corners + 1 middle
+    // The three depth-1 corner triangles — used for the yellow highlight.
+    // Recomputed from baseTriangle() so it stays correct after resize.
+    function depth1Corners() {
+      const b = baseTriangle();
+      return split(b).corners;
+    }
+
     function split(t) {
-      const ax = (t.x1 + t.x2) * .5, ay = (t.y1 + t.y2) * .5; // mid edge 1-2
-      const bx = (t.x2 + t.x3) * .5, by = (t.y2 + t.y3) * .5; // mid edge 2-3
-      const cx = (t.x1 + t.x3) * .5, cy = (t.y1 + t.y3) * .5; // mid edge 1-3
+      const ax = (t.x1 + t.x2) * .5, ay = (t.y1 + t.y2) * .5;
+      const bx = (t.x2 + t.x3) * .5, by = (t.y2 + t.y3) * .5;
+      const cx = (t.x1 + t.x3) * .5, cy = (t.y1 + t.y3) * .5;
       return {
         corners: [
-          { x1: t.x1, y1: t.y1, x2: ax, y2: ay, x3: cx, y3: cy }, // top
-          { x1: ax,   y1: ay,   x2: t.x2, y2: t.y2, x3: bx, y3: by }, // right
-          { x1: cx,   y1: cy,   x2: bx, y2: by, x3: t.x3, y3: t.y3 }, // left
+          { x1: t.x1, y1: t.y1, x2: ax,   y2: ay,   x3: cx,   y3: cy   },
+          { x1: ax,   y1: ay,   x2: t.x2,  y2: t.y2, x3: bx,   y3: by   },
+          { x1: cx,   y1: cy,   x2: bx,    y2: by,   x3: t.x3, y3: t.y3 },
         ],
         middle: { x1: ax, y1: ay, x2: bx, y2: by, x3: cx, y3: cy },
       };
     }
 
-    // Batch-fill an array of triangles with a single canvas path
     function fillAll(tris, color) {
       if (!tris.length) return;
       ctx.fillStyle = color;
@@ -351,18 +425,36 @@
       ctx.fill();
     }
 
-    // Smooth ease for the middle-removal animation
+    function strokeAll(tris, color, lw) {
+      if (!tris.length) return;
+      ctx.strokeStyle = color;
+      ctx.lineWidth   = lw;
+      ctx.lineJoin    = 'round';
+      ctx.beginPath();
+      for (const t of tris) {
+        ctx.moveTo(t.x1, t.y1);
+        ctx.lineTo(t.x2, t.y2);
+        ctx.lineTo(t.x3, t.y3);
+        ctx.closePath();
+      }
+      ctx.stroke();
+    }
+
     function ease(t) { return t < .5 ? 2*t*t : -1 + (4 - 2*t)*t; }
 
     // ---- Animation state ----
-    let leaves  = [];   // white triangles at current depth
-    let middles = [];   // triangles being removed (splitting phase)
+    let leaves  = [];
+    let middles = [];
     let depth   = 0;
-    let phase   = 'hold'; // 'hold' | 'splitting' | 'done'
+    let phase   = 'hold';
     let timer   = 0;
     let splitT  = 0;
     let prevNow = null;
     let resetting = false;
+
+    // Quiz state — persists across animation loops
+    let quizActive   = false;
+    let quizAnswered = false;
 
     const MAX_DEPTH = 7;
     const SPLIT_MS  = 460;
@@ -381,27 +473,40 @@
       splitT    = 0;
       prevNow   = null;
       resetting = false;
+      // quizActive / quizAnswered intentionally NOT reset — persists
     }
 
-    function drawFrame() {
+    // ---- Draw ----
+    function drawFrame(now) {
       ctx.clearRect(0, 0, SIZE, SIZE);
-
-      // Draw white corners
       fillAll(leaves, '#ffffff');
 
-      // During a split: fade the removed middles from white → background
+      // Splitting: fade middles from white to background
       if (phase === 'splitting' && middles.length) {
-        const t = ease(splitT);
+        const t  = ease(splitT);
         const rv = Math.round(255 * (1 - t) + BG.r * t);
         const gv = Math.round(255 * (1 - t) + BG.g * t);
         const bv = Math.round(255 * (1 - t) + BG.b * t);
         fillAll(middles, `rgb(${rv},${gv},${bv})`);
       }
+
+      // Quiz highlight: pulsing yellow outlines on the three depth-1 corners
+      if (quizActive) {
+        const pulse = 0.55 + 0.45 * Math.sin((now ?? performance.now()) / 700);
+        ctx.globalAlpha = pulse;
+        strokeAll(depth1Corners(), '#facc15', Math.max(1.5, SIZE / 130));
+        ctx.globalAlpha = 1;
+      }
     }
 
+    // ---- Tick ----
     function tick(now) {
       requestAnimationFrame(tick);
-      if (resetting) { drawFrame(); return; }
+
+      if (resetting) { drawFrame(now); return; }
+
+      // Frozen during quiz — keep repainting for the pulse
+      if (quizActive) { drawFrame(now); return; }
 
       const dt = prevNow !== null ? Math.min(now - prevNow, 100) : 0;
       prevNow = now;
@@ -411,8 +516,8 @@
         const holdDur = HOLD_MS[depth] ?? 700;
         if (timer >= holdDur) {
           timer = 0;
+
           if (depth < MAX_DEPTH) {
-            // Compute next depth: split every leaf into 3 corners + 1 middle
             const newLeaves  = [];
             const newMiddles = [];
             for (const t of leaves) {
@@ -426,7 +531,7 @@
             phase  = 'splitting';
             splitT = 0;
 
-            // Reveal text tied to specific depths
+            // Text triggers
             if (depth === 3 && !textMainShown) {
               textMainShown = true;
               document.getElementById('textMain').style.opacity = '1';
@@ -436,9 +541,6 @@
               setTimeout(() => {
                 document.getElementById('textQuestion').style.opacity = '1';
               }, 700);
-              setTimeout(() => {
-                document.getElementById('scrollHint').style.opacity = '1';
-              }, 2000);
             }
           } else {
             phase = 'done';
@@ -447,14 +549,24 @@
         }
       } else if (phase === 'splitting') {
         splitT = Math.min(1, timer / SPLIT_MS);
+
+        // After depth-5 split settles: pause and show quiz (once per page load)
         if (splitT >= 1) {
           middles = [];
           phase   = 'hold';
           timer   = 0;
+
+          if (depth === 5 && !quizAnswered) {
+            setTimeout(() => {
+              quizActive = true;
+              document.getElementById('quizPanel').style.opacity = '1';
+              // Show scroll hint now too
+              document.getElementById('scrollHint').style.opacity = '1';
+            }, 1000);
+          }
         }
       } else if (phase === 'done') {
         if (timer >= DONE_WAIT) {
-          // Fade canvas out, reset, fade back in
           resetting = true;
           canvas.style.opacity = '0';
           setTimeout(() => {
@@ -467,19 +579,38 @@
         }
       }
 
-      drawFrame();
+      drawFrame(now);
     }
 
-    // Boot: start drawing immediately (canvas is opacity 0), then fade in
+    // ---- Quiz interaction ----
+    document.getElementById('btnYes').addEventListener('click', () => {
+      if (!quizActive) return;
+      quizAnswered = true;
+      quizActive   = false;
+      document.getElementById('quizPanel').style.opacity = '0';
+      // Resume animation from depth 5
+    });
+
+    document.getElementById('btnNo').addEventListener('click', () => {
+      if (!quizActive) return;
+      const btn      = document.getElementById('btnNo');
+      const feedback = document.getElementById('quizFeedback');
+      // Disable both buttons after answering
+      document.getElementById('btnYes').disabled = true;
+      btn.disabled = true;
+      feedback.innerHTML = 'Look at the three corner triangles.<br>Compare their shape to the whole.';
+      feedback.style.opacity = '1';
+    });
+
+    // ---- Boot ----
     init();
     requestAnimationFrame(tick);
     setTimeout(() => { canvas.style.opacity = '1'; }, 300);
 
-    // Rebuild on resize
+    // Rebuild geometry on resize
     window.addEventListener('resize', () => {
       resizeCanvas();
       if (phase === 'hold' || phase === 'done') {
-        // Rebuild leaf/middle arrays at new scale by re-running to current depth
         const base = baseTriangle();
         let cur = [base];
         for (let d = 0; d < depth; d++) {
@@ -487,7 +618,7 @@
           for (const t of cur) next.push(...split(t).corners);
           cur = next;
         }
-        leaves = cur;
+        leaves  = cur;
         middles = [];
       }
     });
