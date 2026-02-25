@@ -615,11 +615,19 @@
           phase   = 'hold';
           timer   = 0;
 
-          // After depth-5 split settles: pause and show quiz 1
+          // After depth-5 split settles: fade text out → pause → highlight → quiz 1
           if (depth === 5 && !quiz1Answered) {
             setTimeout(() => {
-              quiz1Active = true;
-              document.getElementById('quiz1Panel').style.opacity = '1';
+              // Fade out hero text
+              document.getElementById('textMain').style.opacity     = '0';
+              document.getElementById('textQuestion').style.opacity = '0';
+              // 1 s after text gone: turn on highlights, then quiz panel
+              setTimeout(() => {
+                quiz1Active = true;
+                setTimeout(() => {
+                  document.getElementById('quiz1Panel').style.opacity = '1';
+                }, 600);
+              }, 1000);
             }, 900);
           }
         }
@@ -656,11 +664,14 @@
 
     document.getElementById('btnNo1').addEventListener('click', () => {
       if (!quiz1Active) return;
-      document.getElementById('btnYes1').disabled = true;
       document.getElementById('btnNo1').disabled  = true;
       const fb = document.getElementById('quiz1Feedback');
       fb.innerHTML = 'Look at the three corner triangles.<br>Compare their shape to the whole.';
       fb.style.opacity = '1';
+      // Re-enable Yes after the hint has a moment to register
+      setTimeout(() => {
+        document.getElementById('btnYes1').disabled = false;
+      }, 1200);
     });
 
     // ---- Quiz 2 ----
