@@ -68,8 +68,7 @@
       align-items: center;
       justify-content: center;
       gap: 2.6rem;
-      padding: 6rem 2rem 7rem;
-      position: relative;
+      padding: 6rem 2rem 5rem;
     }
 
     #sierpinski {
@@ -105,10 +104,10 @@
       transition: opacity 1.3s ease;
     }
 
-    /* ---- Quiz panel ---- */
+    /* ---- Quiz panels ---- */
     .quiz-panel {
       text-align: center;
-      max-width: 460px;
+      max-width: 480px;
       opacity: 0;
       transition: opacity 1s ease;
     }
@@ -117,7 +116,7 @@
       font-family: 'Cormorant Garamond', serif;
       font-size: clamp(1rem, 2.1vw, 1.35rem);
       font-weight: 300;
-      line-height: 1.7;
+      line-height: 1.75;
       color: rgba(255,255,255,0.88);
       margin-bottom: 1.6rem;
     }
@@ -145,7 +144,7 @@
       color: var(--text);
     }
     .quiz-btn:disabled {
-      opacity: 0.3;
+      opacity: 0.25;
       cursor: default;
       pointer-events: none;
     }
@@ -161,6 +160,19 @@
       opacity: 0;
       transition: opacity 0.9s ease;
       min-height: 1rem;
+    }
+
+    /* Insight text shown on correct answer to quiz 2 */
+    .quiz-insight {
+      margin-top: 2rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1rem, 2.2vw, 1.4rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 2;
+      color: rgba(255,255,255,0.82);
+      opacity: 0;
+      transition: opacity 1.3s ease;
     }
 
     /* ---- Lesson body ---- */
@@ -244,15 +256,30 @@
       </p>
     </div>
 
-    <div class="quiz-panel" id="quizPanel">
+    <!-- Quiz 1: self-similarity observation -->
+    <div class="quiz-panel" id="quiz1Panel">
       <p class="quiz-q">Do you see smaller copies of the whole image inside it?</p>
       <div class="quiz-btns">
-        <button class="quiz-btn" id="btnYes">Yes</button>
-        <button class="quiz-btn" id="btnNo">No</button>
+        <button class="quiz-btn" id="btnYes1">Yes</button>
+        <button class="quiz-btn" id="btnNo1">No</button>
       </div>
-      <p class="quiz-feedback" id="quizFeedback"></p>
+      <p class="quiz-feedback" id="quiz1Feedback"></p>
     </div>
 
+    <!-- Quiz 2: recursive construction insight (appears after zoom) -->
+    <div class="quiz-panel" id="quiz2Panel">
+      <p class="quiz-q">If each small triangle looks like the whole,<br>could we build the large one by repeatedly building smaller ones?</p>
+      <div class="quiz-btns">
+        <button class="quiz-btn" id="btnYes2">Yes</button>
+        <button class="quiz-btn" id="btnNo2">No</button>
+      </div>
+      <p class="quiz-feedback" id="quiz2Feedback"></p>
+      <p class="quiz-insight" id="quiz2Insight">
+        Then maybe we don't draw the big triangle directly.<br>
+        Maybe we only know how to draw a small one —<br>
+        and repeat.
+      </p>
+    </div>
   </div>
 
   <div class="lesson-body">
@@ -319,20 +346,21 @@
 
   <script>
     // ---------------------------------------------------------------
-    // Sierpinski triangle — recursive build animation
+    // Sierpinski triangle — recursive build animation + guided quizzes
     //
-    // Each depth transition shows the rule being applied:
-    // the middle inverted triangle fades from white → black,
-    // leaving three white corner triangles.
-    //
-    // After both intro texts appear, the animation pauses and a
-    // yes/no question is shown. The three depth-1 corner triangles
-    // are highlighted in yellow to guide the observation.
+    // Sequence:
+    //   1. Triangle builds depth by depth (middles fade white → black)
+    //   2. At depth 3: first text appears
+    //   3. At depth 5: second text appears; animation pauses; quiz 1 shown
+    //      with yellow highlights on the three depth-1 corner triangles
+    //   4. Quiz 1 "Yes" → highlights off, slow zoom into top corner (2 s)
+    //   5. After zoom settles → quiz 2 shown
+    //   6. Quiz 2 "Yes" → insight text fades in
     // ---------------------------------------------------------------
 
     const canvas = document.getElementById('sierpinski');
     const ctx    = canvas.getContext('2d');
-    const BG     = { r: 5, g: 5, b: 10 }; // #05050a
+    const BG     = { r: 5, g: 5, b: 10 };
 
     let SIZE = 0;
 
@@ -344,7 +372,7 @@
     }
     resizeCanvas();
 
-    // ---- Geometry helpers ----
+    // ---- Geometry ----
 
     function baseTriangle() {
       const pad  = SIZE * 0.06;
@@ -358,13 +386,6 @@
       };
     }
 
-    // The three depth-1 corner triangles — used for the yellow highlight.
-    // Recomputed from baseTriangle() so it stays correct after resize.
-    function depth1Corners() {
-      const b = baseTriangle();
-      return split(b).corners;
-    }
-
     function split(t) {
       const ax = (t.x1 + t.x2) * .5, ay = (t.y1 + t.y2) * .5;
       const bx = (t.x2 + t.x3) * .5, by = (t.y2 + t.y3) * .5;
@@ -376,6 +397,21 @@
           { x1: cx,   y1: cy,   x2: bx,    y2: by,   x3: t.x3, y3: t.y3 },
         ],
         middle: { x1: ax, y1: ay, x2: bx, y2: by, x3: cx, y3: cy },
+      };
+    }
+
+    // The three depth-1 corner triangles — recomputed dynamically so
+    // they stay correct after resize.
+    function getDepth1Corners() {
+      return split(baseTriangle()).corners;
+    }
+
+    // Centroid of the top corner triangle — zoom target
+    function getTopCornerCentroid() {
+      const c = getDepth1Corners()[0];
+      return {
+        x: (c.x1 + c.x2 + c.x3) / 3,
+        y: (c.y1 + c.y2 + c.y3) / 3,
       };
     }
 
@@ -407,7 +443,8 @@
       ctx.stroke();
     }
 
-    function ease(t) { return t < .5 ? 2*t*t : -1 + (4 - 2*t)*t; }
+    function easeInOut(t)       { return t < .5 ? 2*t*t : -1 + (4-2*t)*t; }
+    function easeInOutCubic(t)  { return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
 
     // ---- Animation state ----
     let leaves  = [];
@@ -419,14 +456,26 @@
     let prevNow = null;
     let resetting = false;
 
-    // Quiz state — persists across animation loops
-    let quizActive   = false;
-    let quizAnswered = false;
-
     const MAX_DEPTH = 7;
     const SPLIT_MS  = 460;
     const DONE_WAIT = 2400;
     const HOLD_MS   = [1200, 750, 680, 620, 600, 600, 600, 1900];
+
+    // ---- Zoom state ----
+    let currentZoom  = 1;
+    let zoomPivotX   = 0;
+    let zoomPivotY   = 0;
+    let zoomAnimating = false;
+    let zoomAnimT    = 0;
+    let zoomAnimDur  = 2400;
+    let zoomFromVal  = 1;
+    let zoomToVal    = 2;
+
+    // ---- Quiz state (persists across animation loops) ----
+    let quiz1Active   = false;
+    let quiz1Answered = false;
+    let quiz2Active   = false;
+    let quiz2Answered = false;
 
     let textMainShown = false;
     let textQShown    = false;
@@ -440,30 +489,54 @@
       splitT    = 0;
       prevNow   = null;
       resetting = false;
-      // quizActive / quizAnswered intentionally NOT reset — persists
+      // quiz states intentionally NOT reset — persist for the page session
     }
 
     // ---- Draw ----
     function drawFrame(now) {
       ctx.clearRect(0, 0, SIZE, SIZE);
+
+      // Apply zoom transform (centered on top corner)
+      ctx.save();
+      if (currentZoom !== 1) {
+        ctx.translate(zoomPivotX, zoomPivotY);
+        ctx.scale(currentZoom, currentZoom);
+        ctx.translate(-zoomPivotX, -zoomPivotY);
+      }
+
+      // White corners
       fillAll(leaves, '#ffffff');
 
-      // Splitting: fade middles from white to background
+      // Splitting: fade middles from white → background
       if (phase === 'splitting' && middles.length) {
-        const t  = ease(splitT);
+        const t  = easeInOut(splitT);
         const rv = Math.round(255 * (1 - t) + BG.r * t);
         const gv = Math.round(255 * (1 - t) + BG.g * t);
         const bv = Math.round(255 * (1 - t) + BG.b * t);
         fillAll(middles, `rgb(${rv},${gv},${bv})`);
       }
 
-      // Quiz highlight: pulsing yellow outlines on the three depth-1 corners
-      if (quizActive) {
+      // Quiz 1 highlight: pulsing yellow outlines on depth-1 corners
+      if (quiz1Active) {
         const pulse = 0.55 + 0.45 * Math.sin((now ?? performance.now()) / 700);
         ctx.globalAlpha = pulse;
-        strokeAll(depth1Corners(), '#facc15', Math.max(1.5, SIZE / 130));
+        strokeAll(getDepth1Corners(), '#facc15', Math.max(1.5, SIZE / 130));
         ctx.globalAlpha = 1;
       }
+
+      ctx.restore();
+    }
+
+    // ---- Zoom helpers ----
+    function startZoom(toScale, dur) {
+      const pivot  = getTopCornerCentroid();
+      zoomPivotX   = pivot.x;
+      zoomPivotY   = pivot.y;
+      zoomFromVal  = currentZoom;
+      zoomToVal    = toScale;
+      zoomAnimT    = 0;
+      zoomAnimDur  = dur;
+      zoomAnimating = true;
     }
 
     // ---- Tick ----
@@ -472,12 +545,34 @@
 
       if (resetting) { drawFrame(now); return; }
 
-      // Frozen during quiz — keep repainting for the pulse
-      if (quizActive) { drawFrame(now); return; }
-
       const dt = prevNow !== null ? Math.min(now - prevNow, 100) : 0;
       prevNow = now;
-      timer  += dt;
+
+      // Advance zoom animation (runs independently of fractal state)
+      if (zoomAnimating) {
+        zoomAnimT += dt;
+        const t = Math.min(1, zoomAnimT / zoomAnimDur);
+        currentZoom = zoomFromVal + (zoomToVal - zoomFromVal) * easeInOutCubic(t);
+        if (t >= 1) {
+          zoomAnimating = false;
+          currentZoom   = zoomToVal;
+          // Zoom settled — show quiz 2
+          if (!quiz2Answered) {
+            setTimeout(() => {
+              quiz2Active = true;
+              document.getElementById('quiz2Panel').style.opacity = '1';
+            }, 500);
+          }
+        }
+      }
+
+      // Fractal animation frozen while any quiz is active or zoom is playing
+      if (quiz1Active || quiz2Active || zoomAnimating) {
+        drawFrame(now);
+        return;
+      }
+
+      timer += dt;
 
       if (phase === 'hold') {
         const holdDur = HOLD_MS[depth] ?? 700;
@@ -498,7 +593,6 @@
             phase  = 'splitting';
             splitT = 0;
 
-            // Text triggers
             if (depth === 3 && !textMainShown) {
               textMainShown = true;
               document.getElementById('textMain').style.opacity = '1';
@@ -516,18 +610,17 @@
         }
       } else if (phase === 'splitting') {
         splitT = Math.min(1, timer / SPLIT_MS);
-
-        // After depth-5 split settles: pause and show quiz (once per page load)
         if (splitT >= 1) {
           middles = [];
           phase   = 'hold';
           timer   = 0;
 
-          if (depth === 5 && !quizAnswered) {
+          // After depth-5 split settles: pause and show quiz 1
+          if (depth === 5 && !quiz1Answered) {
             setTimeout(() => {
-              quizActive = true;
-              document.getElementById('quizPanel').style.opacity = '1';
-            }, 1000);
+              quiz1Active = true;
+              document.getElementById('quiz1Panel').style.opacity = '1';
+            }, 900);
           }
         }
       } else if (phase === 'done') {
@@ -537,6 +630,10 @@
           setTimeout(() => {
             init();
             resizeCanvas();
+            // Restore zoom pivot after resize
+            const pivot = getTopCornerCentroid();
+            zoomPivotX = pivot.x;
+            zoomPivotY = pivot.y;
             drawFrame();
             canvas.style.opacity = '1';
           }, 700);
@@ -547,24 +644,42 @@
       drawFrame(now);
     }
 
-    // ---- Quiz interaction ----
-    document.getElementById('btnYes').addEventListener('click', () => {
-      if (!quizActive) return;
-      quizAnswered = true;
-      quizActive   = false;
-      document.getElementById('quizPanel').style.opacity = '0';
-      // Resume animation from depth 5
+    // ---- Quiz 1 ----
+    document.getElementById('btnYes1').addEventListener('click', () => {
+      if (!quiz1Active) return;
+      quiz1Active   = false;
+      quiz1Answered = true;
+      document.getElementById('quiz1Panel').style.opacity = '0';
+      // After quiz fades out, start the zoom toward the top corner
+      setTimeout(() => startZoom(2.1, 2400), 800);
     });
 
-    document.getElementById('btnNo').addEventListener('click', () => {
-      if (!quizActive) return;
-      const btn      = document.getElementById('btnNo');
-      const feedback = document.getElementById('quizFeedback');
-      // Disable both buttons after answering
-      document.getElementById('btnYes').disabled = true;
-      btn.disabled = true;
-      feedback.innerHTML = 'Look at the three corner triangles.<br>Compare their shape to the whole.';
-      feedback.style.opacity = '1';
+    document.getElementById('btnNo1').addEventListener('click', () => {
+      if (!quiz1Active) return;
+      document.getElementById('btnYes1').disabled = true;
+      document.getElementById('btnNo1').disabled  = true;
+      const fb = document.getElementById('quiz1Feedback');
+      fb.innerHTML = 'Look at the three corner triangles.<br>Compare their shape to the whole.';
+      fb.style.opacity = '1';
+    });
+
+    // ---- Quiz 2 ----
+    document.getElementById('btnYes2').addEventListener('click', () => {
+      if (!quiz2Active) return;
+      quiz2Active   = false;
+      quiz2Answered = true;
+      document.getElementById('btnYes2').disabled = true;
+      document.getElementById('btnNo2').disabled  = true;
+      document.getElementById('quiz2Insight').style.opacity = '1';
+    });
+
+    document.getElementById('btnNo2').addEventListener('click', () => {
+      if (!quiz2Active) return;
+      document.getElementById('btnYes2').disabled = true;
+      document.getElementById('btnNo2').disabled  = true;
+      const fb = document.getElementById('quiz2Feedback');
+      fb.innerHTML = 'Look at how each corner mirrors the structure of the whole.';
+      fb.style.opacity = '1';
     });
 
     // ---- Boot ----
@@ -575,6 +690,9 @@
     // Rebuild geometry on resize
     window.addEventListener('resize', () => {
       resizeCanvas();
+      const pivot = getTopCornerCentroid();
+      zoomPivotX = pivot.x;
+      zoomPivotY = pivot.y;
       if (phase === 'hold' || phase === 'done') {
         const base = baseTriangle();
         let cur = [base];
