@@ -983,6 +983,8 @@
       quiz2Answered = true;
       document.getElementById('btnYes2').disabled = true;
       document.getElementById('btnNo2').disabled  = true;
+      // Clear any wrong-answer hint before showing the insight
+      document.getElementById('quiz2Feedback').style.opacity = '0';
       const btns = document.querySelector('#quiz2Panel .quiz-btns');
       showCorrectFeedback(btns, document.getElementById('quiz2Insight'), 3000, () => {
         const q2 = document.getElementById('quiz2Panel');
@@ -1000,11 +1002,13 @@
 
     document.getElementById('btnNo2').addEventListener('click', () => {
       if (!quiz2Active) return;
-      document.getElementById('btnYes2').disabled = true;
-      document.getElementById('btnNo2').disabled  = true;
+      document.getElementById('btnNo2').disabled = true;
       const fb = document.getElementById('quiz2Feedback');
       fb.innerHTML = 'Look at how each corner mirrors the structure of the whole.';
       fb.style.opacity = '1';
+      setTimeout(() => {
+        document.getElementById('btnYes2').disabled = false;
+      }, 1200);
     });
 
     // ---- Quiz 3 ----
