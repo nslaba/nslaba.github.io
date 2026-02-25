@@ -173,6 +173,48 @@
       min-height: 1rem;
     }
 
+    /* Multiple-choice buttons for quiz 3 */
+    .quiz-choices {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .quiz-choice {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+      font-weight: 300;
+      padding: 0.75rem 1.2rem;
+      background: none;
+      border: 1px solid rgba(255,255,255,0.18);
+      color: var(--text-dim);
+      cursor: pointer;
+      text-align: left;
+      line-height: 1.55;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .quiz-choice:hover {
+      border-color: rgba(255,255,255,0.55);
+      color: var(--text);
+    }
+    .quiz-choice:disabled {
+      opacity: 0.25;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .choice-label {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.3rem;
+    }
+
     /* Insight text shown on correct answer to quiz 2 */
     .quiz-insight {
       margin-top: 2rem;
@@ -292,6 +334,21 @@
           Maybe we only know how to draw a small one —<br>
           and repeat.
         </p>
+      </div>
+      <!-- Quiz 3: which rule is recursive? (appears after quiz 2 insight) -->
+      <div class="quiz-panel" id="quiz3Panel">
+        <p class="quiz-q">Which rule actually explains how this image grows?</p>
+        <div class="quiz-choices">
+          <button class="quiz-choice" id="btnRuleA">
+            <span class="choice-label">Rule A</span>
+            "Draw the final image."
+          </button>
+          <button class="quiz-choice" id="btnRuleB">
+            <span class="choice-label">Rule B</span>
+            "Draw three smaller triangles inside a triangle."
+          </button>
+        </div>
+        <p class="quiz-feedback" id="quiz3Feedback"></p>
       </div>
     </div>
   </div>
@@ -490,6 +547,8 @@
     let quiz1Answered = false;
     let quiz2Active   = false;
     let quiz2Answered = false;
+    let quiz3Active   = false;
+    let quiz3Answered = false;
 
     let textMainShown = false;
     let textQShown    = false;
@@ -581,7 +640,7 @@
       }
 
       // Fractal animation frozen while any quiz is active or zoom is playing
-      if (quiz1Active || quiz2Active || zoomAnimating) {
+      if (quiz1Active || quiz2Active || quiz3Active || zoomAnimating) {
         drawFrame(now);
         return;
       }
@@ -696,6 +755,14 @@
       document.getElementById('btnYes2').disabled = true;
       document.getElementById('btnNo2').disabled  = true;
       document.getElementById('quiz2Insight').style.opacity = '1';
+      // After insight is read, cross-fade to quiz 3
+      setTimeout(() => {
+        document.getElementById('quiz2Panel').style.opacity = '0';
+        setTimeout(() => {
+          quiz3Active = true;
+          document.getElementById('quiz3Panel').style.opacity = '1';
+        }, 800);
+      }, 3500);
     });
 
     document.getElementById('btnNo2').addEventListener('click', () => {
@@ -705,6 +772,29 @@
       const fb = document.getElementById('quiz2Feedback');
       fb.innerHTML = 'Look at how each corner mirrors the structure of the whole.';
       fb.style.opacity = '1';
+    });
+
+    // ---- Quiz 3 ----
+    document.getElementById('btnRuleB').addEventListener('click', () => {
+      if (!quiz3Active) return;
+      quiz3Active   = false;
+      quiz3Answered = true;
+      document.getElementById('btnRuleA').disabled = true;
+      document.getElementById('btnRuleB').disabled = true;
+      const fb = document.getElementById('quiz3Feedback');
+      fb.innerHTML = 'A recursive rule does not redraw the whole.<br>It transforms a simpler version into a more detailed one.';
+      fb.style.opacity = '1';
+    });
+
+    document.getElementById('btnRuleA').addEventListener('click', () => {
+      if (!quiz3Active) return;
+      document.getElementById('btnRuleA').disabled = true;
+      const fb = document.getElementById('quiz3Feedback');
+      fb.innerHTML = 'Think about what actually changes at each step.';
+      fb.style.opacity = '1';
+      setTimeout(() => {
+        document.getElementById('btnRuleB').disabled = false;
+      }, 1200);
     });
 
     // ---- Boot ----
