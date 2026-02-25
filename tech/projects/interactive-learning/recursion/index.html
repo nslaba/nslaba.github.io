@@ -120,6 +120,7 @@
       top: 0; left: 0; right: 0;
       text-align: center;
       opacity: 0;
+      pointer-events: none;
       transition: opacity 1s ease;
     }
 
@@ -633,7 +634,9 @@
           if (!quiz2Answered) {
             setTimeout(() => {
               quiz2Active = true;
-              document.getElementById('quiz2Panel').style.opacity = '1';
+              const p2 = document.getElementById('quiz2Panel');
+              p2.style.opacity       = '1';
+              p2.style.pointerEvents = 'auto';
             }, 500);
           }
         }
@@ -701,7 +704,9 @@
               setTimeout(() => {
                 quiz1Active = true;
                 setTimeout(() => {
-                  document.getElementById('quiz1Panel').style.opacity = '1';
+                  const p1 = document.getElementById('quiz1Panel');
+                  p1.style.opacity       = '1';
+                  p1.style.pointerEvents = 'auto';
                 }, 600);
               }, 1200);
             }, 2240);
@@ -733,7 +738,9 @@
       if (!quiz1Active) return;
       quiz1Active   = false;
       quiz1Answered = true;
-      document.getElementById('quiz1Panel').style.opacity = '0';
+      const q1 = document.getElementById('quiz1Panel');
+      q1.style.opacity       = '0';
+      q1.style.pointerEvents = 'none';
       // After quiz fades out, start the zoom toward the top corner
       setTimeout(() => startZoom(2.1, 2400), 800);
     });
@@ -760,10 +767,14 @@
       document.getElementById('quiz2Insight').style.opacity = '1';
       // After insight is read, cross-fade to quiz 3
       setTimeout(() => {
-        document.getElementById('quiz2Panel').style.opacity = '0';
+        const q2 = document.getElementById('quiz2Panel');
+        q2.style.opacity       = '0';
+        q2.style.pointerEvents = 'none';
         setTimeout(() => {
           quiz3Active = true;
-          document.getElementById('quiz3Panel').style.opacity = '1';
+          const p3 = document.getElementById('quiz3Panel');
+          p3.style.opacity       = '1';
+          p3.style.pointerEvents = 'auto';
         }, 800);
       }, 3500);
     });
