@@ -665,6 +665,7 @@
     // Stage 0 = hero text, 1–7 = quiz/conclusion panels
     let currentStage = -1;
     let maxStage     = -1;
+    let navPaused    = false; // true while user is reviewing a previous stage
 
     const STAGE_PANEL_IDS = [
       null,              // 0 — hero text
@@ -735,6 +736,7 @@
     function advanceStage(n) {
       currentStage = n;
       if (n > maxStage) maxStage = n;
+      navPaused = false; // always at the frontier when auto-advancing
       updateArrows();
     }
 
@@ -743,6 +745,7 @@
       hideAllPanels();
       applyZoomForStage(n);
       currentStage = n;
+      navPaused    = n < maxStage; // pause if reviewing a previous stage
       showStagePanel(n);
       updateArrows();
     }
@@ -836,8 +839,8 @@
         }
       }
 
-      // Fractal animation frozen while any quiz is active or zoom is playing
-      if (quiz1Active || quiz2Active || quiz3Active || quiz4Active || quiz5Active || quiz6Active || zoomAnimating) {
+      // Fractal animation frozen while any quiz is active, zoom is playing, or user is reviewing a past stage
+      if (quiz1Active || quiz2Active || quiz3Active || quiz4Active || quiz5Active || quiz6Active || zoomAnimating || navPaused) {
         drawFrame(now);
         return;
       }
