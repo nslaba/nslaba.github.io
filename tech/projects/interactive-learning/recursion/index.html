@@ -163,35 +163,6 @@
       min-height: 1rem;
     }
 
-    /* ---- Scroll hint ---- */
-    .scroll-hint {
-      position: absolute;
-      bottom: 2.5rem;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.6rem;
-      opacity: 0;
-      transition: opacity 1s ease;
-      pointer-events: none;
-    }
-
-    .scroll-hint-text {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.6rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--text-faint);
-    }
-
-    .scroll-hint-arrow {
-      width: 1px;
-      height: 32px;
-      background: linear-gradient(to bottom, var(--text-faint), transparent);
-    }
-
     /* ---- Lesson body ---- */
     .lesson-body {
       max-width: 720px;
@@ -282,10 +253,6 @@
       <p class="quiz-feedback" id="quizFeedback"></p>
     </div>
 
-    <div class="scroll-hint" id="scrollHint">
-      <span class="scroll-hint-text">Scroll to begin</span>
-      <div class="scroll-hint-arrow"></div>
-    </div>
   </div>
 
   <div class="lesson-body">
@@ -560,8 +527,6 @@
             setTimeout(() => {
               quizActive = true;
               document.getElementById('quizPanel').style.opacity = '1';
-              // Show scroll hint now too
-              document.getElementById('scrollHint').style.opacity = '1';
             }, 1000);
           }
         }
