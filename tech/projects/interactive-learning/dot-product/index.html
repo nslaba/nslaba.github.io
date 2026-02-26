@@ -513,25 +513,47 @@
             document.querySelector('.reset-btn').style.display = 'none';
             document.getElementById('dotDisplay').style.display = 'none';
 
-            setTimeout(() => {
-                const modal = document.getElementById('successModal');
-                document.getElementById('successTitle').textContent = "You Just Learned The Dot Product";
-                document.getElementById('successMessage').innerHTML = `
-                    <p style="text-align: left; margin-bottom: 0.75rem;">Every time you clicked, the game computed one number:</p>
-                    <div class="formula">thrust · velocity</div>
-                    <p style="text-align: left; margin: 0.75rem 0 1rem;">That number is the dot product.</p>
-                    <p style="text-align: left; font-family: var(--font-mono); font-size: 0.85rem; line-height: 2.2;">
-                        Aimed perfectly forward: dot product = <strong>1.0</strong> → maximum push<br>
-                        Aimed sideways: dot product = <strong>0</strong> → wasted fuel<br>
-                        Aimed backward: dot product = <strong>−1.0</strong> → full brake
-                    </p>
-                    <p style="text-align: left; margin: 1rem 0 0.5rem;">The formula names what you were already calculating:</p>
-                    <div class="formula">a · b = |a| |b| cos(θ)</div>
-                    <p style="text-align: left; font-size: 0.9rem; color: var(--color-gray-400); margin-bottom: 1rem;">θ was the angle between your thrust and the velocity arrow. You were solving for θ every time you aimed a click.</p>
-                    <div class="formula" style="font-size: 1.2rem;">a · b = a<sub>x</sub>b<sub>x</sub> + a<sub>y</sub>b<sub>y</sub></div>
-                `;
-                document.querySelector('.next-btn').textContent = "Play Again";
-                document.querySelector('.next-btn').onclick = () => {
+            const revealSteps = [
+                {
+                    title: "You just learned the dot product",
+                    content: `
+                        <p style="text-align:left; margin-bottom:0.75rem;">Every time you clicked, the game computed one number:</p>
+                        <div class="formula">thrust · velocity</div>
+                        <p style="text-align:left; margin-top:0.75rem;">That number is the <strong>dot product</strong>.</p>
+                    `,
+                    btn: "What did the numbers mean?"
+                },
+                {
+                    title: "What you were feeling",
+                    content: `
+                        <div style="display:grid; grid-template-columns:1fr auto; gap:0.6rem 2rem; text-align:left; font-family:var(--font-mono); font-size:0.82rem; margin:0.5rem 0;">
+                            <span style="color:var(--color-gray-400)">Aimed perfectly forward</span><span style="color:#10b981">1.0 → max push</span>
+                            <span style="color:var(--color-gray-400)">Aimed sideways</span><span style="color:var(--color-gray-400)">0 → wasted fuel</span>
+                            <span style="color:var(--color-gray-400)">Aimed backward</span><span style="color:#ef4444">−1.0 → full brake</span>
+                        </div>
+                    `,
+                    btn: "Show me the formula"
+                },
+                {
+                    title: "The formula",
+                    content: `
+                        <div class="formula">a · b = |a| |b| cos(θ)</div>
+                        <p style="text-align:left; margin:1rem 0;">cos(θ) measures how much two directions overlap — it equals 1 when they point the same way, 0 when perpendicular, −1 when opposite. That's exactly what you felt.</p>
+                        <div class="formula" style="font-size:1.1rem; margin-top:1.25rem;">a · b = a<sub>x</sub>b<sub>x</sub> + a<sub>y</sub>b<sub>y</sub></div>
+                    `,
+                    btn: "Play Again",
+                    isLast: true
+                }
+            ];
+
+            const btn = document.querySelector('#successModal .next-btn');
+
+            function showStep(i) {
+                const s = revealSteps[i];
+                document.getElementById('successTitle').textContent = s.title;
+                document.getElementById('successMessage').innerHTML = s.content;
+                btn.textContent = s.btn;
+                btn.onclick = s.isLast ? () => {
                     currentLevel = 1;
                     document.getElementById('successModal').classList.remove('show');
                     document.querySelector('.instruction').style.display = 'block';
@@ -540,8 +562,12 @@
                     document.getElementById('dotDisplay').style.display = 'block';
                     document.getElementById('dotValue').textContent = '—';
                     loadLevel(1);
-                };
-                modal.classList.add('show');
+                } : () => showStep(i + 1);
+            }
+
+            setTimeout(() => {
+                showStep(0);
+                document.getElementById('successModal').classList.add('show');
             }, 500);
 
             showProjection = true;
