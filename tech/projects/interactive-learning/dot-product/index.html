@@ -269,6 +269,15 @@
         .dot-value.negative { color: #ef4444; }
         .dot-value.neutral { color: var(--color-gray-400); }
 
+        .dot-threshold {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--color-primary);
+            margin-top: 0.25rem;
+            letter-spacing: 0.05em;
+        }
+
         @media (max-width: 768px) {
             .level-title { font-size: 0.65rem; }
             .objective { font-size: 0.9rem; top: 3rem; }
@@ -322,6 +331,17 @@
         <div class="dot-display" id="dotDisplay">
             <span class="dot-label">alignment</span>
             <span class="dot-value" id="dotValue">—</span>
+            <span class="dot-threshold" id="dotThreshold" style="display:none;">target: ≥ 0.80</span>
+        </div>
+
+        <div class="success-modal" id="predictionModal">
+            <h2>Before you play</h2>
+            <p id="predictionQuestion">You've been thrusting <strong>WITH</strong> your velocity to speed up.<br>Now you need to slow down.<br><br>Which direction should you thrust?</p>
+            <div style="display:flex; gap:1rem; justify-content:center; margin-top:1.5rem; flex-wrap:wrap;">
+                <button class="next-btn" id="predBtnA">Opposite to my movement</button>
+                <button class="next-btn" id="predBtnB">In the direction I'm moving</button>
+            </div>
+            <p id="predictionFeedback" style="margin-top:1.2rem; font-size:0.9rem; color:var(--color-gray-400); min-height:1.2rem; opacity:0; transition:opacity 0.4s;"></p>
         </div>
 
         <div class="success-modal" id="successModal">
@@ -372,12 +392,12 @@
                 instruction: "Click ahead of the satellite to thrust forward"
             },
             2: {
-                title: "Level 2: Reach the Target",
-                objective: "Accelerate your satellite to reach the outer green ring. Keep thrusting in the direction you're moving!",
+                title: "Level 2: Precision Burn",
+                objective: "Only precise thrusts count. Achieve alignment ≥ 0.80 to accelerate — anything below wastes fuel.",
                 fuel: 250,
                 targetDistanceFactor: 1.52,
-                successMessage: "You learned that <strong>consistent alignment</strong> with velocity builds momentum.",
-                instruction: "Click to thrust - stay aligned with velocity"
+                successMessage: "You learned that <strong>precise alignment</strong> is the difference between progress and wasted fuel.",
+                instruction: "Click to thrust — alignment ≥ 0.80 required"
             },
             3: {
                 title: "Level 3: The Landing",
@@ -438,6 +458,7 @@
             document.getElementById('levelTitle').textContent = config.title;
             document.getElementById('objective').textContent = config.objective;
             document.getElementById('instruction').textContent = config.instruction;
+            document.getElementById('dotThreshold').style.display = (level === 2) ? 'block' : 'none';
 
             satellite.angle = 0;
             satellite.velocity = level === 3 ? 0.02 : 0.002; // Level 3 starts fast, others start with slight movement
@@ -496,15 +517,18 @@
                 const modal = document.getElementById('successModal');
                 document.getElementById('successTitle').textContent = "You Just Learned The Dot Product";
                 document.getElementById('successMessage').innerHTML = `
-                    <div class="formula">a · b = |a| |b| cos(θ)</div>
-                    <p style="margin: 1rem 0; text-align: left;">Every time you aligned your thrust with velocity, you were <strong>maximizing the dot product</strong>.</p>
-                    <p style="text-align: left; margin-bottom: 1rem;">The dot product measures <strong>alignment</strong> between two vectors:</p>
-                    <p style="text-align: left; font-family: var(--font-mono); font-size: 0.85rem; line-height: 2;">
-                        Aligned (0°) → cos(0°) = 1 → Maximum effect<br>
-                        Perpendicular (90°) → cos(90°) = 0 → No effect<br>
-                        Opposite (180°) → cos(180°) = -1 → Reverse effect
+                    <p style="text-align: left; margin-bottom: 0.75rem;">Every time you clicked, the game computed one number:</p>
+                    <div class="formula">thrust · velocity</div>
+                    <p style="text-align: left; margin: 0.75rem 0 1rem;">That number is the dot product.</p>
+                    <p style="text-align: left; font-family: var(--font-mono); font-size: 0.85rem; line-height: 2.2;">
+                        Aimed perfectly forward: dot product = <strong>1.0</strong> → maximum push<br>
+                        Aimed sideways: dot product = <strong>0</strong> → wasted fuel<br>
+                        Aimed backward: dot product = <strong>−1.0</strong> → full brake
                     </p>
-                    <div class="formula" style="font-size: 1.2rem; margin-top: 1.5rem;">= a<sub>x</sub>b<sub>x</sub> + a<sub>y</sub>b<sub>y</sub></div>
+                    <p style="text-align: left; margin: 1rem 0 0.5rem;">The formula names what you were already calculating:</p>
+                    <div class="formula">a · b = |a| |b| cos(θ)</div>
+                    <p style="text-align: left; font-size: 0.9rem; color: var(--color-gray-400); margin-bottom: 1rem;">θ was the angle between your thrust and the velocity arrow. You were solving for θ every time you aimed a click.</p>
+                    <div class="formula" style="font-size: 1.2rem;">a · b = a<sub>x</sub>b<sub>x</sub> + a<sub>y</sub>b<sub>y</sub></div>
                 `;
                 document.querySelector('.next-btn').textContent = "Play Again";
                 document.querySelector('.next-btn').onclick = () => {
@@ -524,10 +548,48 @@
             projectionAlpha = 1;
         }
 
+        function showPredictionModal() {
+            const modal = document.getElementById('predictionModal');
+            const feedback = document.getElementById('predictionFeedback');
+            const btnA = document.getElementById('predBtnA');
+            const btnB = document.getElementById('predBtnB');
+
+            feedback.textContent = '';
+            feedback.style.opacity = '0';
+            btnA.disabled = false;
+            btnB.disabled = false;
+
+            btnA.onclick = () => {
+                feedback.textContent = 'Exactly. Opposite alignment gives a negative dot product — it subtracts from your speed.';
+                feedback.style.opacity = '1';
+                btnA.disabled = true;
+                btnB.disabled = true;
+                setTimeout(() => {
+                    modal.classList.remove('show');
+                    loadLevel(3);
+                }, 2000);
+            };
+
+            btnB.onclick = () => {
+                feedback.textContent = 'Think about what happened when you thrust with velocity — it added speed. What would the opposite do?';
+                feedback.style.opacity = '1';
+                btnB.disabled = true;
+                setTimeout(() => {
+                    btnA.disabled = false;
+                }, 1200);
+            };
+
+            modal.classList.add('show');
+        }
+
         function nextLevel() {
             document.getElementById('successModal').classList.remove('show');
             currentLevel++;
-            loadLevel(currentLevel);
+            if (currentLevel === 3) {
+                showPredictionModal();
+            } else {
+                loadLevel(currentLevel);
+            }
         }
 
         function resetLevel() {
@@ -552,6 +614,14 @@
 
             const alignment = velX * thrustX + velY * thrustY;
 
+            if (currentLevel === 2 && alignment < 0.80) {
+                fuel -= 8;
+                if (fuel < 0) fuel = 0;
+                showAlignmentFeedback(alignment, clientX, clientY, true);
+                updateUI();
+                return;
+            }
+
             satellite.velocity += alignment * 0.004;
             fuel -= 8;
             if (fuel < 0) fuel = 0;
@@ -571,9 +641,15 @@
         // Visual feedback for alignment
         let feedbackParticles = [];
 
-        function showAlignmentFeedback(alignment, x, y) {
-            const color = alignment > 0.5 ? '#10b981' : alignment > 0 ? '#fbbf24' : '#ef4444';
-            const text = alignment > 0.7 ? 'Great!' : alignment > 0.3 ? 'Good' : alignment > 0 ? 'Weak' : 'Wrong way!';
+        function showAlignmentFeedback(alignment, x, y, wasted = false) {
+            let color, text;
+            if (wasted) {
+                color = '#ef4444';
+                text = `Wasted! (${alignment.toFixed(2)})`;
+            } else {
+                color = alignment > 0.5 ? '#10b981' : alignment > 0 ? '#fbbf24' : '#ef4444';
+                text = alignment > 0.7 ? 'Great!' : alignment > 0.3 ? 'Good' : alignment > 0 ? 'Weak' : 'Wrong way!';
+            }
             feedbackParticles.push({
                 x, y,
                 text,
@@ -739,19 +815,15 @@
                 return true;
             });
 
-            // Hint: show ideal click zone (faint arc in direction of velocity)
-            if (!targetReached && fuel > 0) {
+            // Hint: show ideal click zone for level 3 only (braking direction is counter-intuitive)
+            if (!targetReached && fuel > 0 && currentLevel === 3) {
                 const hintAngle = velAngle;
                 const hintDist = 80 * scaleFactor;
                 ctx.strokeStyle = 'rgba(16, 185, 129, 0.15)';
                 ctx.lineWidth = Math.max(10, 20 * scaleFactor);
                 ctx.lineCap = 'round';
                 ctx.beginPath();
-                if (currentLevel === 3) {
-                    ctx.arc(satellite.x, satellite.y, hintDist, hintAngle + Math.PI - 0.5, hintAngle + Math.PI + 0.5);
-                } else {
-                    ctx.arc(satellite.x, satellite.y, hintDist, hintAngle - 0.5, hintAngle + 0.5);
-                }
+                ctx.arc(satellite.x, satellite.y, hintDist, hintAngle + Math.PI - 0.5, hintAngle + Math.PI + 0.5);
                 ctx.stroke();
             }
 
