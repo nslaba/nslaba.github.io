@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Artist Statement — Natalie Slaba">
+
+  <title>Artist Statement | Natalie Slaba</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/art.css">
+
+  <style>
+    .statement-page {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 10rem 2rem 8rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .statement-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 3rem;
+      display: block;
+    }
+
+    .statement-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.15rem, 2.2vw, 1.35rem);
+      font-weight: 300;
+      line-height: 1.95;
+      color: var(--text-primary);
+    }
+
+    .statement-text p {
+      margin-bottom: 2rem;
+    }
+
+    .statement-text p:last-child {
+      margin-bottom: 0;
+      font-style: italic;
+    }
+
+    .statement-divider {
+      width: 2rem;
+      height: 1px;
+      background: var(--text-muted);
+      margin: 4rem 0;
+      opacity: 0.4;
+    }
+
+    .statement-name {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    @media (max-width: 600px) {
+      .statement-page {
+        padding: 8rem 1.5rem 6rem;
+      }
+    }
+  </style>
+</head>
+<body class="art-page">
+
+  <!-- Tree ring background -->
+  <canvas id="tree-rings"></canvas>
+
+  <!-- Navigation -->
+  <nav class="art-nav">
+    <a href="../index.html" class="logo">Home</a>
+    <button class="art-nav-toggle" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <ul class="art-nav-links">
+      <li><a href="index.html#gallery">Gallery</a></li>
+      <li><a href="exhibitions/">Exhibitions</a></li>
+      <li><a href="statement.html" class="active">Statement</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="../tech/index.html">Tech</a></li>
+      <li><a href="../languages/index.html">Languages</a></li>
+    </ul>
+  </nav>
+
+  <main class="statement-page">
+
+    <span class="statement-label">Artist Statement</span>
+
+    <div class="statement-text">
+
+      <p>My family is Czech. Which means, among other things, that they have survived things politely and made jokes about it afterward. There were Russian tanks when my father was young. There is still a tablecloth at my grandmother's that has outlasted several regimes. This is the kind of context I grew up inside — a history that doesn't announce itself but is present in the way people hold their coffee cups and don't say certain things.</p>
+
+      <p>I grew up between countries, between languages, in the space that doesn't have a name because it doesn't belong to any single place. For a long time that felt like grief. You are the foreign kid everywhere you go, the blank one, the one who arrived mid-sentence into someone else's story. What I had, before I had words for any of it, was art. I could pick up a pencil in any country and the language was the same. I spent a Halloween party carving a detailed elephant into a pumpkin while the other kids played. I didn't notice the party. I wasn't being antisocial — I just had somewhere to be.</p>
+
+      <p>I think art, at its most honest, lives before language. Not instead of it — but underneath it, in the place where an idea still has weight and shape before we agree on what to call it. We named the cat. We named the colour. We named grief. These are useful, necessary things. But underneath the name, the cat is still doing whatever it was doing, and I find that more interesting. I grew up moving between enough worlds to understand that most of what feels fixed is just local agreement. That underneath the agreements, life keeps going — mysterious, stubborn, not particularly interested in our categories.</p>
+
+      <p>So I make art from that space. With presence rather than plan, the way you approach something you don't want to startle. The figure appears often in the work — because people genuinely puzzle me, the decisions we make, the brief specific lives we lead inside these bodies. The figure is just a moment in time. We could all be that body. I am drawn to artists who hold wit and weight in the same hand — who can be critical without losing beauty, who find the metaphor that arrives somewhere true without announcing it was coming. Lawrence Paul Yuxweluptun paints like he's both laughing and keeping score. That's the register I aspire to. Not to say the thing directly, but to leave enough room for it to find you.</p>
+
+      <p>I make art because it brings me pure joy, and because it is the closest thing I have to meaning.</p>
+
+    </div>
+
+    <div class="statement-divider"></div>
+    <span class="statement-name">Natalie Slaba</span>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="art-footer">
+    <nav class="art-footer-nav">
+      <a href="index.html">Gallery</a>
+      <a href="exhibitions/">Exhibitions</a>
+      <a href="statement.html">Statement</a>
+      <a href="shop.html">Shop</a>
+    </nav>
+    <p class="art-footer-copy">© 2025 Natalie Slaba</p>
+  </footer>
+
+  <script src="../css/tree-rings.js" onerror="void(0)"></script>
+  <script>
+    // Mobile nav toggle
+    const toggle = document.querySelector('.art-nav-toggle');
+    const links = document.querySelector('.art-nav-links');
+    if (toggle) {
+      toggle.addEventListener('click', () => {
+        toggle.classList.toggle('open');
+        links.classList.toggle('open');
+      });
+    }
+
+    // Tree rings (same as art page)
+    const canvas = document.getElementById('tree-rings');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      function drawRings() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const cx = canvas.width * 0.85;
+        const cy = canvas.height * 0.5;
+        const maxR = Math.max(canvas.width, canvas.height) * 1.2;
+        for (let r = 40; r < maxR; r += 28) {
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(0,0,0,${0.018 + Math.random() * 0.008})`;
+          ctx.lineWidth = 0.7 + Math.random() * 0.6;
+          ctx.stroke();
+        }
+      }
+      drawRings();
+      window.addEventListener('resize', drawRings);
+    }
+  </script>
+
+</body>
+</html>
