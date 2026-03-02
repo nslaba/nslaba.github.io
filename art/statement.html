@@ -96,7 +96,7 @@
     <ul class="art-nav-links">
       <li><a href="index.html#gallery">Gallery</a></li>
       <li><a href="exhibitions/">Exhibitions</a></li>
-      <li><a href="statement.html" class="active">Statement</a></li>
+      <li><a href="statement.html" class="active">Artist Statement</a></li>
       <li><a href="shop.html">Shop</a></li>
       <li><a href="../tech/index.html">Tech</a></li>
       <li><a href="../languages/index.html">Languages</a></li>
@@ -131,13 +131,12 @@
     <nav class="art-footer-nav">
       <a href="index.html">Gallery</a>
       <a href="exhibitions/">Exhibitions</a>
-      <a href="statement.html">Statement</a>
+      <a href="statement.html">Artist Statement</a>
       <a href="shop.html">Shop</a>
     </nav>
     <p class="art-footer-copy">© 2025 Natalie Slaba</p>
   </footer>
 
-  <script src="../css/tree-rings.js" onerror="void(0)"></script>
   <script>
     // Mobile nav toggle
     const toggle = document.querySelector('.art-nav-toggle');
@@ -149,27 +148,52 @@
       });
     }
 
-    // Tree rings (same as art page)
-    const canvas = document.getElementById('tree-rings');
-    if (canvas) {
-      const ctx = canvas.getContext('2d');
-      function drawRings() {
-        canvas.width = window.innerWidth;
+    // Tree ring background — same as exhibitions page
+    (function () {
+      var canvas = document.getElementById('tree-rings');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      function rand(a, b) { return a + Math.random() * (b - a); }
+      var img = new Image();
+      img.src = '../assets/images/art/tree-cross-section.png';
+      function draw() {
+        canvas.width  = window.innerWidth;
         canvas.height = window.innerHeight;
-        const cx = canvas.width * 0.85;
-        const cy = canvas.height * 0.5;
-        const maxR = Math.max(canvas.width, canvas.height) * 1.2;
-        for (let r = 40; r < maxR; r += 28) {
-          ctx.beginPath();
-          ctx.arc(cx, cy, r, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(0,0,0,${0.018 + Math.random() * 0.008})`;
-          ctx.lineWidth = 0.7 + Math.random() * 0.6;
-          ctx.stroke();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (!img.complete || img.naturalWidth === 0) return;
+        var w = canvas.width, h = canvas.height;
+        var placed = [];
+        var target = Math.round(rand(16, 22));
+        for (var i = 0; i < target; i++) {
+          var size = rand(100, 380), r = size / 2;
+          var cx, cy, ok, tries = 0;
+          do {
+            cx = rand(-r * 0.3, w + r * 0.3);
+            cy = rand(-r * 0.3, h + r * 0.3);
+            ok = true;
+            for (var j = 0; j < placed.length; j++) {
+              var dx = cx - placed[j].cx, dy = cy - placed[j].cy;
+              if (dx * dx + dy * dy < Math.pow(r + placed[j].r, 2)) { ok = false; break; }
+            }
+            tries++;
+          } while (!ok && tries < 60);
+          if (!ok) continue;
+          placed.push({ cx: cx, cy: cy, r: r });
+          ctx.save();
+          ctx.globalAlpha = rand(0.07, 0.15);
+          ctx.translate(cx, cy);
+          ctx.rotate(rand(0, Math.PI * 2));
+          ctx.drawImage(img, -r, -r, size, size);
+          ctx.restore();
         }
       }
-      drawRings();
-      window.addEventListener('resize', drawRings);
-    }
+      img.onload = draw;
+      var timer;
+      window.addEventListener('resize', function () {
+        clearTimeout(timer);
+        timer = setTimeout(draw, 250);
+      });
+    }());
   </script>
 
 </body>
