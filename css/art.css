@@ -228,23 +228,55 @@
   opacity: 0;
 }
 
-/* Shop hint in hero */
-.shop-hint {
-  font-size: 0.8rem;
-  color: var(--text-muted);
+/* Hero CTAs */
+.hero-links {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
   margin-top: auto;
-  padding-top: 2rem;
+  padding-top: 2.5rem;
   position: relative;
   z-index: 2;
 }
 
-.shop-hint a {
+.hero-link {
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  padding: 0.6rem 1.4rem;
+  border: 1px solid var(--text-primary);
   color: var(--text-primary);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  transition: all 0.2s;
 }
 
-.shop-hint a:hover {
+.hero-link:hover {
+  background: var(--text-primary);
+  color: #fff;
+}
+
+.hero-link--secondary {
+  border-color: var(--border);
+  color: var(--text-muted);
+}
+
+.hero-link--secondary:hover {
+  background: transparent;
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+}
+
+/* For-sale indicator on gallery items */
+.gallery-item[data-forsale="true"]::after {
+  content: '';
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-primary);
+  z-index: 3;
   opacity: 0.7;
 }
 
