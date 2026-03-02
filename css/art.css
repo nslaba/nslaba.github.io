@@ -132,12 +132,11 @@
 
 /* Hero Section */
 .art-hero {
-  min-height: 80vh;
+  min-height: 50vh;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 8rem 2rem 4rem;
+  padding: 8rem 2rem;
   text-align: center;
   position: relative;
   z-index: 1;
@@ -145,67 +144,6 @@
 
 .art-hero-content {
   max-width: 600px;
-}
-
-/* Hero swap effect */
-.hero-swap {
-  position: relative;
-  cursor: pointer;
-}
-
-.hero-text,
-.hero-image {
-  transition: opacity 0.4s ease;
-}
-
-.hero-image {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  max-width: 500px;
-  width: 100%;
-}
-
-.hero-image img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.hero-swap:hover .hero-text {
-  opacity: 0;
-}
-
-.hero-swap:hover .hero-image {
-  opacity: 1;
-}
-
-.art-hero .label {
-  font-size: 0.8rem;
-  letter-spacing: 0.3em;
-  color: var(--text-muted);
-  margin-bottom: 2rem;
-}
-
-.art-hero h1 {
-  font-size: 1.5rem;
-  font-weight: 400;
-  margin-bottom: 1.5rem;
-  color: var(--text-primary);
-}
-
-.art-hero .poetic-intro {
-  font-size: 1.1rem;
-  line-height: 2;
-  color: var(--text-secondary);
-  margin-bottom: 2rem;
-}
-
-.hero-hover {
-  position: relative;
-  cursor: default;
 }
 
 .art-hero .statement {
@@ -216,38 +154,6 @@
   max-width: 500px;
   margin: 0 auto;
   transition: opacity 0.4s ease;
-}
-
-/* Hero CTAs */
-.hero-links {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: auto;
-  padding-top: 2.5rem;
-  position: relative;
-  z-index: 2;
-}
-
-.hero-link {
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  text-decoration: none;
-  padding: 0.6rem 1.4rem;
-  border: 1px solid var(--text-primary);
-  color: var(--text-primary);
-  transition: all 0.2s;
-}
-
-.hero-link:hover {
-  background: var(--text-primary);
-  color: #fff;
-}
-
-.hero-link--secondary:hover {
-  background: var(--text-primary);
-  color: #fff;
 }
 
 /* For-sale indicator on gallery items */
