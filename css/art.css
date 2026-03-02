@@ -273,15 +273,9 @@
   color: #fff;
 }
 
-.hero-link--secondary {
-  border-color: var(--border);
-  color: var(--text-muted);
-}
-
 .hero-link--secondary:hover {
-  background: transparent;
-  border-color: var(--text-primary);
-  color: var(--text-primary);
+  background: var(--text-primary);
+  color: #fff;
 }
 
 /* For-sale indicator on gallery items */
