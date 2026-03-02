@@ -55,6 +55,24 @@
   letter-spacing: 0.02em;
 }
 
+/* Home / Gallery left group */
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-sep {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  opacity: 0.5;
+  user-select: none;
+}
+
+.art-nav-links a.active {
+  color: var(--text-primary);
+}
+
 .art-nav-links {
   display: flex;
   gap: 2rem;
