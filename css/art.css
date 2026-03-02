@@ -636,6 +636,47 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
+.lightbox-more {
+  display: none;
+  position: absolute;
+  inset: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  background: rgba(0, 0, 0, 0.78);
+}
+
+.lightbox-more.visible {
+  display: flex;
+}
+
+.lightbox-more-text {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.12em;
+  text-transform: lowercase;
+}
+
+.lightbox-more-btn {
+  padding: 0.6rem 1.75rem;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.lightbox-more-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
 .lightbox-close {
   position: absolute;
   top: -2.5rem;

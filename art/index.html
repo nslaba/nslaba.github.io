@@ -893,6 +893,10 @@
         <div class="lightbox-title"></div>
         <div class="lightbox-medium"></div>
       </div>
+      <div class="lightbox-more" id="lightboxMore">
+        <p class="lightbox-more-text">more works</p>
+        <button class="lightbox-more-btn" id="lightboxMoreBtn">Show more</button>
+      </div>
     </div>
   </div>
 
@@ -1012,9 +1016,13 @@
         document.body.style.overflow = 'hidden';
       }
 
+      const lightboxMore = document.getElementById('lightboxMore');
+      const lightboxMoreBtn = document.getElementById('lightboxMoreBtn');
+
       function closeLightbox() {
         lightbox.classList.remove('active');
         document.body.style.overflow = '';
+        lightboxMore.classList.remove('visible');
       }
 
       function updateLightbox() {
@@ -1030,14 +1038,31 @@
       }
 
       function showPrev() {
+        lightboxMore.classList.remove('visible');
         currentIndex = (currentIndex - 1 + visibleItems.length) % visibleItems.length;
         updateLightbox();
       }
 
       function showNext() {
+        const atEnd = currentIndex === visibleItems.length - 1;
+        const moreExist = showMoreBtn.style.display !== 'none';
+        if (atEnd && moreExist) {
+          lightboxMore.classList.add('visible');
+          return;
+        }
+        lightboxMore.classList.remove('visible');
         currentIndex = (currentIndex + 1) % visibleItems.length;
         updateLightbox();
       }
+
+      lightboxMoreBtn.addEventListener('click', () => {
+        visibleCount += ITEMS_PER_PAGE;
+        applyGalleryLimit();
+        visibleItems = getVisibleItems();
+        lightboxMore.classList.remove('visible');
+        currentIndex++;
+        updateLightbox();
+      });
 
       // Click on gallery items
       items.forEach((item, index) => {
