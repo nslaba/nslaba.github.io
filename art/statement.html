@@ -24,7 +24,7 @@
 
   <style>
     .statement-page {
-      max-width: 620px;
+      max-width: 740px;
       margin: 0 auto;
       padding: 11rem 2rem 9rem;
       position: relative;
@@ -47,6 +47,28 @@
       font-weight: 300;
       line-height: 2.05;
       color: var(--text-primary);
+      display: flow-root;
+    }
+
+    .statement-photo {
+      float: right;
+      width: 260px;
+      margin: 0.25rem 0 1.75rem 2.75rem;
+    }
+
+    .statement-photo img {
+      width: 100%;
+      display: block;
+      border-radius: 2px;
+    }
+
+    .statement-photo figcaption {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      letter-spacing: 0.05em;
+      text-transform: lowercase;
     }
 
     .statement-text p {
@@ -83,6 +105,12 @@
         font-size: 1.2rem;
         line-height: 2;
       }
+
+      .statement-photo {
+        float: none;
+        width: 100%;
+        margin: 0 0 2rem 0;
+      }
     }
   </style>
 </head>
@@ -118,6 +146,11 @@
     <div class="statement-text">
 
       <p>My family is Czech. My parents met organizing university students during the Velvet Revolution. My grandfather is an architect with a great admiration for art and an eye for detail — he helped design a building neighboring the one where, at seventeen, he was detained and tortured by the StB secret police. There is still a tablecloth at my grandmother's that has outlasted several regimes. This is the kind of context I grew up inside — a history that doesn't announce itself, that lives in objects and stories and a particular dark humor about the absurdity of being alive.</p>
+
+      <figure class="statement-photo">
+        <img src="../assets/images/art/stalin_is_dead.jpg" alt="Pink Stalin statue lying on its back, Prague" loading="lazy">
+        <figcaption>Prague</figcaption>
+      </figure>
 
       <p>I grew up between countries, between languages, in the space that doesn't have a name because it doesn't belong to any single place. For a long time that felt like grief. You are the foreign kid everywhere you go, the blank one, the one who arrived mid-sentence into someone else's story. What I had, before I had words for any of it, was art. I could pick up a pencil in any country and the language was the same. I spent a Halloween party carving a detailed elephant into a pumpkin while the other kids played. I didn't notice the party. I wasn't being antisocial — I just had somewhere to be.</p>
 
