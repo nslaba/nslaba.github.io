@@ -558,6 +558,34 @@ a.exhibit-row:hover .exhibit-row-arrow {
   opacity: 0.85;
 }
 
+/* Prev / Next exhibit navigation */
+.exhibit-nav {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border);
+  gap: 1rem;
+}
+
+.exhibit-nav a {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+  letter-spacing: 0.02em;
+}
+
+.exhibit-nav a:hover {
+  color: var(--text-primary);
+}
+
+.exhibit-nav-next {
+  margin-left: auto;
+}
+
 /* Photo credit */
 .exhibit-credit {
   padding: 1rem 2rem 3rem;

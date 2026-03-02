@@ -69,11 +69,18 @@
       <button class="category-btn" data-filter="finished">Paintings</button>
       <button class="category-btn" data-filter="murals">Murals</button>
       <button class="category-btn" data-filter="sketches">Sketches</button>
+      <button class="category-btn" data-filter="prints">Prints</button>
     </div>
 
     <!-- Sketches intro -->
     <div class="sketches-intro" id="sketches-intro">
       <p class="sketches-statement">I think the rawest forms of creativity exist in unpolished works. Simple momentary expressions.</p>
+    </div>
+
+    <!-- Prints intro -->
+    <div class="prints-intro" id="prints-intro">
+      <p class="prints-statement">Art on everyday objects — phone cases, tote bags, embroidery. Made to be used, not just admired.</p>
+      <a href="shop.html" class="prints-shop-link">Shop all prints &amp; merch &rarr;</a>
     </div>
 
     <!-- Gallery Grid -->
@@ -785,9 +792,103 @@
         </div>
       </div>
 
+      <!-- Prints & Merch -->
+      <div class="gallery-item" data-category="prints">
+        <img src="../assets/images/art/merch/case-1.jpg" alt="Art print on phone case" loading="lazy">
+        <div class="gallery-item-overlay">
+          <span class="gallery-item-title">Phone Case I</span>
+          <span class="gallery-item-medium">Prints &amp; Merch</span>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="prints">
+        <img src="../assets/images/art/merch/case-2.jpg" alt="Art print on phone case" loading="lazy">
+        <div class="gallery-item-overlay">
+          <span class="gallery-item-title">Phone Case II</span>
+          <span class="gallery-item-medium">Prints &amp; Merch</span>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="prints">
+        <img src="../assets/images/art/merch/case-iphone16.jpg" alt="iPhone 16 case with art print" loading="lazy">
+        <div class="gallery-item-overlay">
+          <span class="gallery-item-title">iPhone 16 Case</span>
+          <span class="gallery-item-medium">Prints &amp; Merch</span>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="prints">
+        <img src="../assets/images/art/merch/case-closeup-1.jpg" alt="Art detail on phone case" loading="lazy">
+        <div class="gallery-item-overlay">
+          <span class="gallery-item-title">Case Detail I</span>
+          <span class="gallery-item-medium">Prints &amp; Merch</span>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="prints">
+        <img src="../assets/images/art/merch/case-closeup-3.jpg" alt="Art detail on phone case" loading="lazy">
+        <div class="gallery-item-overlay">
+          <span class="gallery-item-title">Case Detail II</span>
+          <span class="gallery-item-medium">Prints &amp; Merch</span>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="prints">
+        <img src="../assets/images/art/merch/case-closeup-6.jpg" alt="Art detail on phone case" loading="lazy">
+        <div class="gallery-item-overlay">
+          <span class="gallery-item-title">Case Detail III</span>
+          <span class="gallery-item-medium">Prints &amp; Merch</span>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="prints">
+        <img src="../assets/images/art/merch/stitching-front.jpg" alt="Embroidered item" loading="lazy">
+        <div class="gallery-item-overlay">
+          <span class="gallery-item-title">Embroidery I</span>
+          <span class="gallery-item-medium">Prints &amp; Merch</span>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="prints">
+        <img src="../assets/images/art/merch/stitching-on-person.jpg" alt="Embroidered item worn" loading="lazy">
+        <div class="gallery-item-overlay">
+          <span class="gallery-item-title">Embroidery II</span>
+          <span class="gallery-item-medium">Prints &amp; Merch</span>
+        </div>
+      </div>
+
     </div>
 
     <button class="gallery-show-more" id="showMoreBtn">Show more</button>
+  </section>
+
+  <!-- Exhibitions Teaser -->
+  <section class="art-exhibitions-teaser">
+    <h2>exhibitions</h2>
+    <div class="exhibitions-teaser-list">
+      <a href="exhibitions/montreal.html" class="exhibition-teaser-row">
+        <img src="../assets/images/art/expo-montreal/poster.webp" alt="Montreal exhibition">
+        <span class="exhibition-teaser-year">2019</span>
+        <span class="exhibition-teaser-title">L'expo a Montreal avec Karim</span>
+        <span class="exhibition-teaser-location">Montreal</span>
+        <span class="exhibition-teaser-arrow">&rarr;</span>
+      </a>
+      <a href="exhibitions/uptown-7th.html" class="exhibition-teaser-row">
+        <img src="../assets/images/art/uptown-7th/exhibit/4190.webp" alt="Uptown 7th exhibition">
+        <span class="exhibition-teaser-year">2015</span>
+        <span class="exhibition-teaser-title">Uptown 7th Gallery</span>
+        <span class="exhibition-teaser-location">Calgary</span>
+        <span class="exhibition-teaser-arrow">&rarr;</span>
+      </a>
+      <a href="exhibitions/lux.html" class="exhibition-teaser-row">
+        <img src="../assets/images/art/first-exhibit/addition.webp" alt="Lux exhibition">
+        <span class="exhibition-teaser-year">2014</span>
+        <span class="exhibition-teaser-title">First ART Exhibit @ Lux</span>
+        <span class="exhibition-teaser-location">Calgary</span>
+        <span class="exhibition-teaser-arrow">&rarr;</span>
+      </a>
+    </div>
+    <a href="exhibitions/" class="exhibitions-teaser-more">All exhibitions &rarr;</a>
   </section>
 
   <!-- Exhibit notification -->
@@ -868,6 +969,7 @@
       const buttons = document.querySelectorAll('.category-btn');
       const items = document.querySelectorAll('.gallery-item');
       const sketchesIntro = document.getElementById('sketches-intro');
+      const printsIntro = document.getElementById('prints-intro');
       const showMoreBtn = document.getElementById('showMoreBtn');
       const ITEMS_PER_PAGE = 12;
       let visibleCount = ITEMS_PER_PAGE;
@@ -878,7 +980,10 @@
         let totalMatching = 0;
 
         items.forEach(item => {
-          const matches = activeFilter === 'all' || item.dataset.category === activeFilter;
+          // Prints don't appear in "All" — only when explicitly selected
+          const matches = activeFilter === 'all'
+            ? item.dataset.category !== 'prints'
+            : item.dataset.category === activeFilter;
           if (matches) {
             totalMatching++;
             matchCount++;
@@ -890,12 +995,9 @@
 
         showMoreBtn.style.display = visibleCount >= totalMatching ? 'none' : 'block';
 
-        // Show/hide sketches intro
-        if (activeFilter === 'sketches') {
-          sketchesIntro.classList.add('visible');
-        } else {
-          sketchesIntro.classList.remove('visible');
-        }
+        // Show/hide category intros
+        sketchesIntro.classList.toggle('visible', activeFilter === 'sketches');
+        printsIntro.classList.toggle('visible', activeFilter === 'prints');
       }
 
       buttons.forEach(btn => {
