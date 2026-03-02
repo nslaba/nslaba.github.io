@@ -208,30 +208,6 @@
   cursor: default;
 }
 
-.hero-peek {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 480px;
-  max-width: 90vw;
-  opacity: 0.10;
-  transition: opacity 0.5s ease;
-  z-index: 10;
-}
-
-.hero-peek.visible {
-  opacity: 1;
-}
-
-.hero-peek img {
-  width: 100%;
-  height: auto;
-  max-height: 55vh;
-  object-fit: contain;
-  display: block;
-}
-
 .art-hero .statement {
   font-family: 'Island Moments', cursive;
   font-size: 1.8rem;
@@ -240,10 +216,6 @@
   max-width: 500px;
   margin: 0 auto;
   transition: opacity 0.4s ease;
-}
-
-.art-hero.peeking .statement {
-  opacity: 0;
 }
 
 /* Hero CTAs */

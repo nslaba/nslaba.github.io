@@ -45,9 +45,6 @@
 
   <!-- Hero -->
   <section class="art-hero">
-    <div class="hero-peek">
-      <img src="../assets/images/art/NatalieSlaba_1.jpg" alt="">
-    </div>
     <div class="art-hero-content">
       <div class="hero-hover">
         <p class="statement">Art can invite us to play beyond the limits of language and into something more instinctive and honest.</p>
@@ -106,14 +103,6 @@
         <img src="../assets/images/art/chaos.webp" alt="Chaos">
         <div class="gallery-item-overlay">
           <span class="gallery-item-title">Chaos</span>
-        </div>
-      </div>
-
-      <div class="gallery-item" data-category="finished">
-        <img src="../assets/images/art/giraffe.webp" alt="Giraffe">
-        <div class="gallery-item-overlay">
-          <span class="gallery-item-title">Cool & Calm as a Giraffe</span>
-          <span class="gallery-item-medium">Acrylic on Canvas, 2024</span>
         </div>
       </div>
 
@@ -366,6 +355,14 @@
         <img src="../assets/images/art/jungle.webp" alt="Jungle">
         <div class="gallery-item-overlay">
           <span class="gallery-item-title">Jungle</span>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-category="finished">
+        <img src="../assets/images/art/giraffe.webp" alt="Giraffe">
+        <div class="gallery-item-overlay">
+          <span class="gallery-item-title">Cool & Calm as a Giraffe</span>
+          <span class="gallery-item-medium">Acrylic on Canvas</span>
         </div>
       </div>
 
@@ -903,26 +900,6 @@
   <!-- Category filter and lightbox script -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Hero image cycle on hover
-      const hero = document.querySelector('.art-hero');
-      const peek = document.querySelector('.hero-peek');
-      const peekImg = peek.querySelector('img');
-      const images = [
-        '../assets/images/art/NatalieSlaba_1.jpg',
-        '../assets/images/art/mural_mcgill3.webp'
-      ];
-      let index = 0;
-      peek.addEventListener('mouseenter', () => {
-        peekImg.src = images[index];
-        index = (index + 1) % images.length;
-        peek.classList.add('visible');
-        hero.classList.add('peeking');
-      });
-      peek.addEventListener('mouseleave', () => {
-        peek.classList.remove('visible');
-        hero.classList.remove('peeking');
-      });
-
       // Mobile nav toggle
       const navToggle = document.querySelector('.art-nav-toggle');
       const navLinks = document.querySelector('.art-nav-links');

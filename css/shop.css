@@ -511,6 +511,16 @@
   display: none;
 }
 
+/* Form sent confirmation */
+.shop-form-success {
+  display: none;
+  max-width: 500px;
+  padding: 2rem 0;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
 /* ==========================================================================
    Responsive
    ========================================================================== */

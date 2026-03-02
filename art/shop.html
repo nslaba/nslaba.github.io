@@ -172,10 +172,10 @@
   <section class="shop-section shop-inquiry">
     <h2>get in touch</h2>
     <p class="shop-section-desc">Interested in a piece, a commission, or just want to say hi? Drop a message below.</p>
-    <form class="shop-form" action="https://formsubmit.co/slaba.natalie@gmail.com" method="POST">
+    <form class="shop-form" id="shop-form" action="https://formsubmit.co/slaba.natalie@gmail.com" method="POST">
       <!-- Formsubmit config -->
       <input type="hidden" name="_subject" value="Shop Inquiry — nslaba.github.io">
-      <input type="hidden" name="_next" value="https://nslaba.github.io/art/shop.html">
+      <input type="hidden" name="_next" value="https://nslaba.github.io/art/shop.html?sent=true">
       <input type="hidden" name="_captcha" value="true">
       <input type="text" name="_honey" style="display:none">
 
@@ -193,6 +193,9 @@
       </label>
       <button type="submit">Send</button>
     </form>
+    <div class="shop-form-success" id="shop-form-success">
+      <p>Message sent. I'll get back to you soon.</p>
+    </div>
   </section>
 
   <!-- Footer -->
@@ -255,6 +258,15 @@
         if (e.key === 'ArrowRight') next();
       });
     });
+  </script>
+
+  <!-- Form sent confirmation -->
+  <script>
+    if (new URLSearchParams(window.location.search).get('sent') === 'true') {
+      document.getElementById('shop-form').style.display = 'none';
+      document.getElementById('shop-form-success').style.display = 'block';
+      document.querySelector('.shop-section.shop-inquiry h2').textContent = 'thank you';
+    }
   </script>
 
   <!-- Mobile nav toggle -->
