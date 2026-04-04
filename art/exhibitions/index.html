@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Art exhibitions by Nat. From Montreal to Calgary.">
+  <meta name="description" content="Exhibitions by Natalie Slaba — upcoming solo show at Squamish Arts, July–September 2026. Past shows in Montreal and Calgary.">
 
-  <title>Exhibitions - Nat's Art</title>
+  <title>Exhibitions — Natalie Slaba</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Roboto+Slab:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
   <!-- Favicon -->
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -21,6 +21,89 @@
   <!-- Styles -->
   <link rel="stylesheet" href="../../css/main.css">
   <link rel="stylesheet" href="../../css/exhibitions.css">
+
+  <style>
+  .exhibitions-title h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+  }
+
+  .upcoming-feature {
+    padding: 4rem 2rem 3rem;
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .upcoming-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .upcoming-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 300;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem;
+    line-height: 1.1;
+  }
+
+  .upcoming-dates {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin: 0 0 0.25rem;
+  }
+
+  .upcoming-location {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin: 0 0 1.5rem;
+  }
+
+  .upcoming-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin: 0 0 2rem;
+    max-width: 520px;
+  }
+
+  .upcoming-cta {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--text-primary);
+    padding-bottom: 2px;
+    transition: opacity 0.2s;
+  }
+
+  .upcoming-cta:hover {
+    opacity: 0.55;
+  }
+
+  .story-grid__text p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    font-weight: 300;
+    line-height: 1.85;
+    color: var(--text-secondary);
+  }
+  </style>
 </head>
 <body class="art-page">
 
@@ -52,15 +135,21 @@
     <h1>exhibitions</h1>
   </section>
 
+  <!-- Upcoming show feature -->
+  <section class="upcoming-feature">
+    <div class="upcoming-feature-inner">
+      <span class="upcoming-label">upcoming</span>
+      <h2 class="upcoming-title">Squamish Arts</h2>
+      <p class="upcoming-dates">July 1 – September 30, 2026</p>
+      <p class="upcoming-location">Squamish, BC — unceded Sḵwx̱wú7mesh territory</p>
+      <p class="upcoming-desc">Solo exhibition of new paintings. ~20 works exploring silence, power, and what lives underneath language.</p>
+      <a href="../shop.html" class="upcoming-cta">Inquire about works →</a>
+    </div>
+  </section>
+
   <!-- Exhibit list -->
   <section class="exhibitions-list-section">
     <div class="exhibitions-list">
-      <div class="exhibit-row exhibit-row--upcoming">
-        <span class="exhibit-row-date">2026</span>
-        <span class="exhibit-row-title">Squamish Arts <span class="exhibit-row-soon">Coming Soon</span></span>
-        <span class="exhibit-row-location">Squamish, BC</span>
-        <span class="exhibit-row-dates">July 1 – September 30</span>
-      </div>
       <a href="montreal.html" class="exhibit-row">
         <img src="../../assets/images/art/expo-montreal/poster.webp" alt="Montreal exhibition" class="exhibit-row-thumb">
         <span class="exhibit-row-date">2019</span>
@@ -130,9 +219,10 @@
       <a href="../../tech/index.html">Tech</a>
       <a href="../../about.html">About</a>
       <a href="mailto:slaba.natalie@gmail.com">Contact</a>
+      <a href="https://www.instagram.com/naty_kappa" target="_blank" rel="noopener">Instagram</a>
     </nav>
     <span style="font-size: 0.75rem; color: #999;">
-      &copy; 2025 Natalie Slaba
+      &copy; 2026 Natalie Slaba
     </span>
   </footer>
 
