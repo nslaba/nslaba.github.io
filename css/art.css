@@ -818,6 +818,103 @@
 }
 
 /* ==========================================================================
+   Process / Studio Videos
+   ========================================================================== */
+
+.art-process {
+  padding: 4rem 2rem;
+  border-top: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+
+.art-process h2 {
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 2.5rem;
+  text-transform: lowercase;
+}
+
+.process-videos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.process-video-item {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  background: #111;
+  cursor: pointer;
+}
+
+.process-video-item video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.3s;
+}
+
+.process-video-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.25);
+  transition: background 0.3s;
+}
+
+.process-video-item.playing .process-video-overlay {
+  background: transparent;
+}
+
+.process-play-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.25s, transform 0.25s;
+  padding-left: 3px; /* optical center for play triangle */
+}
+
+.process-video-item.playing .process-play-btn {
+  opacity: 0;
+  transform: scale(0.85);
+}
+
+.process-video-item.playing:hover .process-play-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@media (max-width: 640px) {
+  .process-videos {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    max-width: 360px;
+  }
+
+  .process-video-item {
+    aspect-ratio: 9 / 16;
+  }
+}
+
+/* ==========================================================================
    Exhibitions Teaser
    ========================================================================== */
 

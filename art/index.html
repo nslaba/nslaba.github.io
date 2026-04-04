@@ -862,9 +862,44 @@
 
   <!-- Exhibit notification -->
   <div class="exhibit-notify" id="exhibitNotify">
-    <a href="exhibitions/" class="exhibit-notify-text">Upcoming exhibit — Squamish Art Gallery, July–Sept 2025</a>
+    <a href="exhibitions/" class="exhibit-notify-text">Upcoming exhibit — Squamish Art Gallery, July–Sept 2026</a>
     <button class="exhibit-notify-close" aria-label="Dismiss">&times;</button>
   </div>
+
+  <!-- Studio / Process Videos -->
+  <section class="art-process" id="process">
+    <h2>in the studio</h2>
+    <div class="process-videos">
+
+      <div class="process-video-item">
+        <video src="../assets/videos/studio_1.mp4"
+               poster="../assets/videos/studio_1_poster.jpg"
+               muted playsinline preload="none" loop></video>
+        <div class="process-video-overlay">
+          <button class="process-play-btn" aria-label="Play">&#9654;</button>
+        </div>
+      </div>
+
+      <div class="process-video-item">
+        <video src="../assets/videos/studio_2.mp4"
+               poster="../assets/videos/studio_2_poster.jpg"
+               muted playsinline preload="none" loop></video>
+        <div class="process-video-overlay">
+          <button class="process-play-btn" aria-label="Play">&#9654;</button>
+        </div>
+      </div>
+
+      <div class="process-video-item">
+        <video src="../assets/videos/studio_3.mp4"
+               poster="../assets/videos/studio_3_poster.jpg"
+               muted playsinline preload="none" loop></video>
+        <div class="process-video-overlay">
+          <button class="process-play-btn" aria-label="Play">&#9654;</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
 
   <!-- Footer -->
   <footer class="art-footer">
@@ -1079,6 +1114,33 @@
       const notifyClose = notify.querySelector('.exhibit-notify-close');
       notifyClose.addEventListener('click', () => {
         notify.classList.add('hidden');
+      });
+
+      // Process video click-to-play/pause
+      document.querySelectorAll('.process-video-item').forEach(item => {
+        const video = item.querySelector('video');
+        const overlay = item.querySelector('.process-video-overlay');
+
+        item.addEventListener('click', () => {
+          if (video.paused) {
+            // Pause all other videos first
+            document.querySelectorAll('.process-video-item video').forEach(v => {
+              if (v !== video) {
+                v.pause();
+                v.closest('.process-video-item').classList.remove('playing');
+              }
+            });
+            video.play();
+            item.classList.add('playing');
+          } else {
+            video.pause();
+            item.classList.remove('playing');
+          }
+        });
+
+        video.addEventListener('ended', () => {
+          item.classList.remove('playing');
+        });
       });
 
     });
