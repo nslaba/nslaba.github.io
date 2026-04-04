@@ -957,24 +957,35 @@
         const activeFilter = document.querySelector('.category-btn.active').dataset.filter;
         let matchCount = 0;
         let totalMatching = 0;
+        const toAnimate = [];
 
         items.forEach(item => {
-          // Prints don't appear in "All" — only when explicitly selected
           const matches = activeFilter === 'all'
             ? item.dataset.category !== 'prints'
             : item.dataset.category === activeFilter;
           if (matches) {
             totalMatching++;
             matchCount++;
-            item.style.display = matchCount <= visibleCount ? 'block' : 'none';
+            if (matchCount <= visibleCount) {
+              item.style.display = 'block';
+              if (!item.dataset.revealed) toAnimate.push(item);
+            } else {
+              item.style.display = 'none';
+            }
           } else {
             item.style.display = 'none';
           }
         });
 
-        showMoreBtn.style.display = visibleCount >= totalMatching ? 'none' : 'block';
+        // Staggered entrance for newly revealed items
+        toAnimate.forEach((item, i) => {
+          setTimeout(() => {
+            item.classList.add('animate-in');
+            item.dataset.revealed = '1';
+          }, i * 30);
+        });
 
-        // Show/hide category intros
+        showMoreBtn.style.display = visibleCount >= totalMatching ? 'none' : 'block';
         sketchesIntro.classList.toggle('visible', activeFilter === 'sketches');
         printsIntro.classList.toggle('visible', activeFilter === 'prints');
       }
@@ -984,6 +995,12 @@
           buttons.forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           visibleCount = ITEMS_PER_PAGE;
+          // Hide all and reset so they re-animate under the new filter
+          items.forEach(item => {
+            item.style.display = 'none';
+            item.classList.remove('animate-in');
+            delete item.dataset.revealed;
+          });
           applyGalleryLimit();
         });
       });
@@ -993,7 +1010,7 @@
         applyGalleryLimit();
       });
 
-      // Apply limit on page load
+      // Apply on page load
       applyGalleryLimit();
 
       // Lightbox
