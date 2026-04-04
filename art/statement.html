@@ -24,7 +24,7 @@
 
   <style>
     .statement-page {
-      max-width: 740px;
+      max-width: 820px;
       margin: 0 auto;
       padding: 11rem 2rem 9rem;
       position: relative;
@@ -43,17 +43,29 @@
 
     .statement-text {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.25rem, 2.4vw, 1.5rem);
+      font-size: clamp(0.95rem, 1.5vw, 1.1rem);
       font-weight: 300;
-      line-height: 2.05;
+      line-height: 1.9;
       color: var(--text-primary);
       display: flow-root;
     }
 
+    /* Drop cap on the opening paragraph */
+    .statement-text p:first-child::first-letter {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 4.4rem;
+      font-weight: 400;
+      line-height: 0.75;
+      float: left;
+      margin-right: 0.06em;
+      margin-top: 0.18em;
+      color: var(--text-primary);
+    }
+
     .statement-photo {
       float: right;
-      width: 260px;
-      margin: 0.25rem 0 1.75rem 2.75rem;
+      width: 220px;
+      margin: 0.25rem 0 1.5rem 2.5rem;
     }
 
     .statement-photo img {
@@ -72,7 +84,7 @@
     }
 
     .statement-text p {
-      margin-bottom: 2.5rem;
+      margin-bottom: 1.9rem;
     }
 
     .statement-text p:last-child {
@@ -102,8 +114,8 @@
       }
 
       .statement-text {
-        font-size: 1.2rem;
-        line-height: 2;
+        font-size: 0.95rem;
+        line-height: 1.85;
       }
 
       .statement-photo {
