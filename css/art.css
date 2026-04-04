@@ -171,6 +171,8 @@
   line-height: 1.4;
   color: var(--text-secondary);
   display: block;
+  width: 100%;
+  text-align: center;
   margin-bottom: 2rem;
 }
 
