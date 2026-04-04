@@ -159,19 +159,20 @@
 }
 
 .hero-text {
-  padding: 1.5rem 0.35rem 4rem;
+  padding: 1.5rem 2rem 4rem;
   text-align: center;
 }
 
 .hero-text .statement {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(1.05rem, 1.7vw, 1.35rem);
+  font-size: clamp(0.9rem, 1.85vw, 2.2rem);
   font-weight: 300;
   font-style: italic;
   line-height: 1.4;
   color: var(--text-secondary);
   display: block;
   margin-bottom: 2rem;
+  white-space: nowrap;
 }
 
 .hero-links {
@@ -760,12 +761,13 @@
   }
 
   .hero-text {
-    padding: 1.25rem 1rem 3rem;
+    padding: 1.25rem 1.25rem 3rem;
     text-align: center;
   }
 
   .hero-text .statement {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+    white-space: normal;
   }
 
   .art-gallery,
