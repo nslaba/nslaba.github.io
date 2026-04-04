@@ -165,14 +165,13 @@
 
 .hero-text .statement {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(0.9rem, 1.85vw, 2.2rem);
+  font-size: clamp(0.88rem, 1.4vw, 1.75rem);
   font-weight: 300;
   font-style: italic;
   line-height: 1.4;
   color: var(--text-secondary);
   display: block;
   margin-bottom: 2rem;
-  white-space: nowrap;
 }
 
 .hero-links {
@@ -767,7 +766,6 @@
 
   .hero-text .statement {
     font-size: 0.9rem;
-    white-space: normal;
   }
 
   .art-gallery,
