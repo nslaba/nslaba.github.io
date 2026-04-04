@@ -57,18 +57,18 @@
         <img src="../assets/images/art/uptown-7th/love/img6493.jpg" alt="Natalie Slaba artwork">
       </div>
       <div class="hero-strip-item">
-        <video autoplay muted playsinline loop preload="metadata"
-               poster="../assets/videos/studio_2_poster.jpg">
-          <source src="../assets/videos/studio_2.mp4" type="video/mp4">
+        <video muted playsinline loop preload="none"
+               poster="../assets/videos/studio_2_poster.jpg"
+               data-src="../assets/videos/studio_2.mp4">
         </video>
       </div>
       <div class="hero-strip-item">
         <img src="../assets/images/art/uptown-7th/love/dscf0368.jpg" alt="Natalie Slaba artwork">
       </div>
       <div class="hero-strip-item">
-        <video autoplay muted playsinline loop preload="metadata"
-               poster="../assets/videos/studio_3_poster.jpg">
-          <source src="../assets/videos/studio_3.mp4" type="video/mp4">
+        <video muted playsinline loop preload="none"
+               poster="../assets/videos/studio_3_poster.jpg"
+               data-src="../assets/videos/studio_3.mp4">
         </video>
       </div>
     </div>
@@ -1116,6 +1116,24 @@
         if (e.key === 'ArrowLeft') showPrev();
         if (e.key === 'ArrowRight') showNext();
       });
+
+      // Lazy-load remaining hero videos after first one starts playing
+      const firstHeroVideo = document.querySelector('.hero-strip video[autoplay]');
+      let lazyLoaded = false;
+      function loadLazyHeroVideos() {
+        if (lazyLoaded) return;
+        lazyLoaded = true;
+        document.querySelectorAll('.hero-strip video[data-src]').forEach(video => {
+          video.src = video.dataset.src;
+          delete video.dataset.src;
+          video.load();
+          video.play().catch(() => {});
+        });
+      }
+      if (firstHeroVideo) {
+        firstHeroVideo.addEventListener('playing', loadLazyHeroVideos, { once: true });
+        setTimeout(loadLazyHeroVideos, 2500); // fallback if playing event is missed
+      }
 
       // Exhibit notification dismiss
       const notify = document.getElementById('exhibitNotify');
