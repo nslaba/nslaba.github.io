@@ -175,6 +175,28 @@
   transform: scale(1.04);
 }
 
+/* Collage variant for prints panel */
+.shop-split-collage {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 2px;
+  transition: transform 0.7s ease;
+}
+
+.shop-split-collage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.shop-split-panel:hover .shop-split-collage {
+  transform: scale(1.04);
+}
+
 .shop-split-overlay {
   position: absolute;
   inset: 0;
