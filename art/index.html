@@ -74,7 +74,6 @@
     </div>
 
     <div class="hero-text">
-      <p class="statement">Art can invite us to play beyond the limits of language and into something more instinctive and honest.</p>
       <div class="hero-links">
         <a href="shop.html" class="hero-link">Shop originals &amp; prints →</a>
         <a href="statement.html" class="hero-link">Artist Statement →</a>
@@ -576,13 +575,6 @@
       </div>
 
       <div class="gallery-item" data-category="sketches">
-        <img src="../assets/images/art/thumbs/sketches/IMG_0646.jpeg" data-full="../assets/images/art/sketches/IMG_0646.jpeg" alt="Sketch" loading="lazy">
-        <div class="gallery-item-overlay">
-          <span class="gallery-item-title">Sketch</span>
-        </div>
-      </div>
-
-      <div class="gallery-item" data-category="sketches">
         <img src="../assets/images/art/thumbs/sketches/IMG_1724.jpeg" data-full="../assets/images/art/sketches/IMG_1724.jpeg" alt="Sketch" loading="lazy">
         <div class="gallery-item-overlay">
           <span class="gallery-item-title">Sketch</span>
@@ -891,6 +883,22 @@
     <button class="gallery-show-more" id="showMoreBtn">Show more</button>
   </section>
 
+  <!-- In the studio -->
+  <section class="studio-section">
+    <span class="studio-label">in the studio</span>
+    <div class="studio-strip">
+      <div class="studio-img">
+        <img src="../assets/images/art/thumbs/IMG_0646.jpeg" data-full="../assets/images/art/sketches/IMG_0646.jpeg" alt="Studio — work in progress" loading="lazy">
+      </div>
+      <div class="studio-img">
+        <img src="../assets/images/art/thumbs/studio_wip_1.jpg" data-full="../assets/images/art/studio/studio_wip_1.jpg" alt="Studio — work in progress" loading="lazy">
+      </div>
+      <div class="studio-img">
+        <img src="../assets/images/art/thumbs/studio_wip_2.jpg" data-full="../assets/images/art/studio/studio_wip_2.jpg" alt="Studio — work in progress" loading="lazy">
+      </div>
+    </div>
+  </section>
+
   <!-- Exhibit notification -->
   <div class="exhibit-notify" id="exhibitNotify">
     <a href="exhibitions/" class="exhibit-notify-text">Silence in a Noisy World — Solo exhibition, July–Sept 2026 at Squamish Arts</a>
@@ -1097,6 +1105,20 @@
           visibleItems = getVisibleItems();
           const visibleIndex = visibleItems.indexOf(item);
           openLightbox(visibleIndex);
+        });
+      });
+
+      // Studio section — simple lightbox (no nav, just open/close)
+      document.querySelectorAll('.studio-img').forEach(el => {
+        el.addEventListener('click', () => {
+          const img = el.querySelector('img');
+          lightboxImg.src = img.dataset.full || img.src;
+          lightboxImg.alt = img.alt;
+          lightboxTitle.textContent = 'in the studio';
+          lightboxMedium.textContent = '';
+          lightboxMore.classList.remove('visible');
+          lightbox.classList.add('active');
+          document.body.style.overflow = 'hidden';
         });
       });
 
