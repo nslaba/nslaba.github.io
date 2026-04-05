@@ -214,6 +214,39 @@
   opacity: 0.7;
 }
 
+/* Artist intro */
+.artist-intro {
+  padding: 2.5rem 2rem 0;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.artist-intro p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.artist-intro a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-style: normal;
+  font-size: 0.78rem;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.artist-intro a:hover {
+  color: var(--text-primary);
+}
+
 /* Gallery Section */
 .art-gallery {
   padding: 4rem 2rem;

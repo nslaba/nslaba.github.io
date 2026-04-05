@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Exhibitions by Natalie Slaba — upcoming solo show at Squamish Arts, July–September 2026. Past shows in Montreal and Calgary.">
+  <meta name="description" content="Exhibitions by Natalie Slaba — upcoming solo show at Squamish Arts community gallery at the Artisan, July–September 2026. Past shows in Montreal and Calgary.">
 
   <title>Exhibitions — Natalie Slaba</title>
 
@@ -81,6 +81,21 @@
     max-width: 520px;
   }
 
+  .upcoming-venue {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin: 0 0 0.25rem;
+  }
+
+  .upcoming-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
   .upcoming-cta {
     font-family: 'Inter', sans-serif;
     font-size: 0.78rem;
@@ -93,6 +108,21 @@
   }
 
   .upcoming-cta:hover {
+    opacity: 0.55;
+  }
+
+  .upcoming-cta-secondary {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--text-muted);
+    padding-bottom: 2px;
+    transition: opacity 0.2s;
+  }
+
+  .upcoming-cta-secondary:hover {
     opacity: 0.55;
   }
 
@@ -138,12 +168,16 @@
   <!-- Upcoming show feature -->
   <section class="upcoming-feature">
     <div class="upcoming-feature-inner">
-      <span class="upcoming-label">upcoming</span>
-      <h2 class="upcoming-title">Squamish Arts</h2>
+      <span class="upcoming-label">upcoming · solo exhibition</span>
+      <h2 class="upcoming-title">Silence in a Noisy World</h2>
+      <p class="upcoming-venue">Squamish Arts community gallery at the Artisan</p>
       <p class="upcoming-dates">July 1 – September 30, 2026</p>
-      <p class="upcoming-location">Squamish, BC — unceded Sḵwx̱wú7mesh territory</p>
-      <p class="upcoming-desc">Solo exhibition of new paintings. ~20 works exploring silence, power, and what lives underneath language.</p>
-      <a href="../shop.html" class="upcoming-cta">Inquire about works →</a>
+      <p class="upcoming-location">1336 Main Street, Squamish BC — unceded Sḵwx̱wú7mesh territory</p>
+      <p class="upcoming-desc">We live in a media environment designed to generate urgency — a constant stream of noise that mistakes reaction for engagement. This series asks what becomes visible when we step away from that stream. Twenty or more new paintings in layered acrylic and acrylic ink — figurative, surreal, unhurried. Free and open to the public, with an opening event and artist talk.</p>
+      <div class="upcoming-actions">
+        <a href="mailto:slaba.natalie@gmail.com?subject=Opening notification — Silence in a Noisy World" class="upcoming-cta">Get notified of the opening →</a>
+        <a href="../shop.html" class="upcoming-cta-secondary">Inquire about works →</a>
+      </div>
     </div>
   </section>
 
