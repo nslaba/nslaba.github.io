@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Shop original paintings and art prints by Natalie Slaba. Paintings available by inquiry. Prints &amp; merch available online.">
+  <meta name="description" content="Shop original paintings and art prints by Natalie Slaba. Original paintings available by inquiry. Prints on everyday objects available now online.">
 
   <title>Shop — Natalie Slaba</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
   <!-- Favicon -->
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -21,26 +21,6 @@
   <!-- Styles -->
   <link rel="stylesheet" href="../css/main.css">
   <link rel="stylesheet" href="../css/shop.css">
-
-  <style>
-  .shop-prints-cta {
-    display: inline-block;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: #fff;
-    background: #000;
-    padding: 0.75rem 2rem;
-    margin-bottom: 1.5rem;
-    transition: opacity 0.2s;
-  }
-  .shop-prints-cta:hover {
-    opacity: 0.75;
-  }
-  </style>
 </head>
 <body class="art-page">
 
@@ -66,19 +46,26 @@
 
   <!-- Hero -->
   <section class="shop-hero">
-    <img src="../assets/images/art/gentleman_in_disguise.webp" alt="Gentleman in disguise — abstract painting" class="shop-hero-bg">
+    <img src="../assets/images/art/gentleman_in_disguise.webp" alt="Gentleman in disguise — painting by Natalie Slaba" class="shop-hero-bg">
     <div class="shop-hero-overlay"></div>
     <div class="shop-hero-content">
       <h1 class="shop-hero-title">shop</h1>
-      <p class="shop-hero-subtitle">Originals &amp; prints — Natalie Slaba</p>
+      <p class="shop-hero-subtitle">Original paintings &amp; art on everyday objects</p>
     </div>
   </section>
 
+  <!-- Jump nav -->
+  <div class="shop-jump">
+    <a href="#prints" class="shop-jump-link">Art on objects <span class="shop-jump-note">— buy online now</span></a>
+    <span class="shop-jump-sep">·</span>
+    <a href="#originals" class="shop-jump-link">Original paintings <span class="shop-jump-note">— available by inquiry</span></a>
+  </div>
+
   <!-- Prints & Merch -->
-  <section class="shop-section shop-prints">
-    <h2>prints &amp; merch</h2>
-    <a href="https://artnatyco.printify.me" target="_blank" rel="noopener" class="shop-prints-cta">Browse &amp; buy online &rarr;</a>
-    <p class="shop-section-desc">I've been exploring ways to get my art out into the world without it having to live on a wall. Printing it on everyday objects feels like a natural extension — your phone case, your tote, your morning coffee ritual.</p>
+  <section class="shop-section shop-prints" id="prints">
+    <span class="shop-section-label">art on objects</span>
+    <h2>My paintings on phone cases, totes, and more — printed on demand and shipped worldwide.</h2>
+    <p class="shop-section-desc">An experiment in accessibility — art that lives in your pocket, your morning routine, wherever. Most phone cases are made from biodegradable materials.</p>
 
     <div class="merch-gallery">
       <div class="merch-item"><img src="../assets/images/art/merch/case-1.jpg" alt="iPhone case with art print" loading="lazy"></div>
@@ -90,90 +77,94 @@
       <div class="merch-item"><img src="../assets/images/art/merch/stitching-on-person.jpg" alt="Embroidered item — worn" loading="lazy"></div>
     </div>
 
-    <div class="merch-bio-note">
-      <img src="../assets/images/art/merch/biodegradable-cases.jpg" alt="Biodegradable phone cases" loading="lazy">
-      <span>Most phone cases are made from biodegradable materials.</span>
+    <div class="shop-prints-buy">
+      <a href="https://artnatyco.printify.me" target="_blank" rel="noopener" class="shop-cta">Shop online &rarr;</a>
+      <span class="shop-prints-domain">artnatyco.printify.me</span>
     </div>
   </section>
 
-  <!-- Texture divider -->
+  <!-- Divider -->
   <div class="texture-divider"></div>
 
   <!-- Originals -->
-  <section class="shop-section">
-    <h2>originals</h2>
-    <p class="shop-section-desc">Original paintings available for purchase. Reach out to inquire about a piece — dimensions, pricing, and shipping on request.</p>
-    <div class="shop-grid">
-      <div class="shop-item">
-        <div class="shop-item-img">
-          <img src="../assets/images/art/biological_mark_making.webp" alt="Biological Mark Making" loading="lazy">
+  <section class="shop-originals-wrap" id="originals">
+    <div class="shop-section">
+      <span class="shop-section-label">original paintings</span>
+      <h2>One of a kind — each painting is unique, made in layered acrylic and acrylic ink on canvas.</h2>
+      <p class="shop-section-desc">To inquire about a piece — pricing, dimensions, shipping — send a message below or click Inquire on any work.</p>
+
+      <div class="shop-grid">
+        <div class="shop-item">
+          <div class="shop-item-img">
+            <img src="../assets/images/art/biological_mark_making.webp" alt="Biological Mark Making" loading="lazy">
+          </div>
+          <div class="shop-item-info">
+            <span class="shop-item-title">Biological Mark Making</span>
+            <span class="shop-item-detail">Acrylic Ink on Canvas, 2024</span>
+            <span class="shop-item-detail">24 × 20 in</span>
+            <a href="mailto:slaba.natalie@gmail.com?subject=Inquiry: Biological Mark Making" class="shop-item-btn">Inquire</a>
+          </div>
         </div>
-        <div class="shop-item-info">
-          <span class="shop-item-title">Biological Mark Making</span>
-          <span class="shop-item-detail">Acrylic Ink on Canvas, 2024</span>
-          <span class="shop-item-detail">24 × 20 in</span>
-          <a href="mailto:slaba.natalie@gmail.com?subject=Inquiry: Biological Mark Making" class="shop-item-btn">Inquire</a>
+        <div class="shop-item">
+          <div class="shop-item-img">
+            <img src="../assets/images/art/gentleman_in_disguise.webp" alt="Gentleman in Disguise" loading="lazy">
+          </div>
+          <div class="shop-item-info">
+            <span class="shop-item-title">Gentleman in Disguise</span>
+            <span class="shop-item-detail">Acrylic on Canvas</span>
+            <span class="shop-item-detail">36 × 48 in</span>
+            <a href="mailto:slaba.natalie@gmail.com?subject=Inquiry: Gentleman in Disguise" class="shop-item-btn">Inquire</a>
+          </div>
         </div>
-      </div>
-      <div class="shop-item">
-        <div class="shop-item-img">
-          <img src="../assets/images/art/gentleman_in_disguise.webp" alt="Gentleman in Disguise" loading="lazy">
+        <div class="shop-item">
+          <div class="shop-item-img">
+            <img src="../assets/images/art/grandma.webp" alt="Grandma" loading="lazy">
+          </div>
+          <div class="shop-item-info">
+            <span class="shop-item-title">Grandma</span>
+            <span class="shop-item-detail">Acrylic on Canvas</span>
+            <span class="shop-item-detail">31 × 48 in</span>
+            <a href="mailto:slaba.natalie@gmail.com?subject=Inquiry: Grandma" class="shop-item-btn">Inquire</a>
+          </div>
         </div>
-        <div class="shop-item-info">
-          <span class="shop-item-title">Gentleman in Disguise</span>
-          <span class="shop-item-detail">Acrylic on Canvas</span>
-          <span class="shop-item-detail">36 × 48 in</span>
-          <a href="mailto:slaba.natalie@gmail.com?subject=Inquiry: Gentleman in Disguise" class="shop-item-btn">Inquire</a>
+        <div class="shop-item">
+          <div class="shop-item-img">
+            <img src="../assets/images/art/no_name_36x48.jpg" alt="No Name II" loading="lazy">
+          </div>
+          <div class="shop-item-info">
+            <span class="shop-item-title">No Name II</span>
+            <span class="shop-item-detail">Acrylic on Canvas</span>
+            <span class="shop-item-detail">36 × 48 in</span>
+            <a href="mailto:slaba.natalie@gmail.com?subject=Inquiry: No Name II" class="shop-item-btn">Inquire</a>
+          </div>
         </div>
-      </div>
-      <div class="shop-item">
-        <div class="shop-item-img">
-          <img src="../assets/images/art/grandma.webp" alt="Grandma" loading="lazy">
+        <div class="shop-item">
+          <div class="shop-item-img">
+            <img src="../assets/images/art/cultural.webp" alt="Cultural" loading="lazy">
+          </div>
+          <div class="shop-item-info">
+            <span class="shop-item-title">Cultural</span>
+            <span class="shop-item-detail">Acrylic on Canvas</span>
+            <span class="shop-item-detail">24 × 36 in</span>
+            <a href="mailto:slaba.natalie@gmail.com?subject=Inquiry: Cultural" class="shop-item-btn">Inquire</a>
+          </div>
         </div>
-        <div class="shop-item-info">
-          <span class="shop-item-title">Grandma</span>
-          <span class="shop-item-detail">Acrylic on Canvas</span>
-          <span class="shop-item-detail">31 × 48 in</span>
-          <a href="mailto:slaba.natalie@gmail.com?subject=Inquiry: Grandma" class="shop-item-btn">Inquire</a>
-        </div>
-      </div>
-      <div class="shop-item">
-        <div class="shop-item-img">
-          <img src="../assets/images/art/no_name_36x48.jpg" alt="No Name II" loading="lazy">
-        </div>
-        <div class="shop-item-info">
-          <span class="shop-item-title">No Name II</span>
-          <span class="shop-item-detail">Acrylic on Canvas</span>
-          <span class="shop-item-detail">36 × 48 in</span>
-          <a href="mailto:slaba.natalie@gmail.com?subject=Inquiry: No Name II" class="shop-item-btn">Inquire</a>
-        </div>
-      </div>
-      <div class="shop-item">
-        <div class="shop-item-img">
-          <img src="../assets/images/art/cultural.webp" alt="Cultural" loading="lazy">
-        </div>
-        <div class="shop-item-info">
-          <span class="shop-item-title">Cultural</span>
-          <span class="shop-item-detail">Acrylic on Canvas</span>
-          <span class="shop-item-detail">24 × 36 in</span>
-          <a href="mailto:slaba.natalie@gmail.com?subject=Inquiry: Cultural" class="shop-item-btn">Inquire</a>
-        </div>
-      </div>
-      <div class="shop-item">
-        <div class="shop-item-img">
-          <img src="../assets/images/art/christmas.webp" alt="Christmas" loading="lazy">
-        </div>
-        <div class="shop-item-info">
-          <span class="shop-item-title">Christmas</span>
-          <span class="shop-item-detail">Acrylic on Canvas</span>
-          <span class="shop-item-detail">24 × 36 in</span>
-          <a href="mailto:slaba.natalie@gmail.com?subject=Inquiry: Christmas" class="shop-item-btn">Inquire</a>
+        <div class="shop-item">
+          <div class="shop-item-img">
+            <img src="../assets/images/art/christmas.webp" alt="Christmas" loading="lazy">
+          </div>
+          <div class="shop-item-info">
+            <span class="shop-item-title">Christmas</span>
+            <span class="shop-item-detail">Acrylic on Canvas</span>
+            <span class="shop-item-detail">24 × 36 in</span>
+            <a href="mailto:slaba.natalie@gmail.com?subject=Inquiry: Christmas" class="shop-item-btn">Inquire</a>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Texture divider -->
+  <!-- Divider -->
   <div class="texture-divider"></div>
 
   <!-- Inquiry Form -->
@@ -181,12 +172,10 @@
     <h2>get in touch</h2>
     <p class="shop-section-desc">Interested in a piece, a commission, or just want to say hi? Drop a message below.</p>
     <form class="shop-form" id="shop-form" action="https://formsubmit.co/slaba.natalie@gmail.com" method="POST">
-      <!-- Formsubmit config -->
       <input type="hidden" name="_subject" value="Shop Inquiry — nslaba.github.io">
       <input type="hidden" name="_next" value="https://nslaba.github.io/art/shop.html?sent=true">
       <input type="hidden" name="_captcha" value="true">
       <input type="text" name="_honey" style="display:none">
-
       <label>
         Name
         <input type="text" name="name" required>
@@ -220,64 +209,6 @@
     </span>
   </footer>
 
-  <!-- Lightbox -->
-  <div class="shop-lightbox" id="shop-lightbox">
-    <button class="shop-lightbox-close" aria-label="Close">&times;</button>
-    <button class="shop-lightbox-nav shop-lightbox-prev" aria-label="Previous">&lsaquo;</button>
-    <img src="" alt="" class="shop-lightbox-img">
-    <button class="shop-lightbox-nav shop-lightbox-next" aria-label="Next">&rsaquo;</button>
-  </div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const lightbox = document.getElementById('shop-lightbox');
-      const lightboxImg = lightbox.querySelector('.shop-lightbox-img');
-      const closeBtn = lightbox.querySelector('.shop-lightbox-close');
-      const prevBtn = lightbox.querySelector('.shop-lightbox-prev');
-      const nextBtn = lightbox.querySelector('.shop-lightbox-next');
-
-      const images = Array.from(document.querySelectorAll('.merch-item img'));
-      let currentIndex = 0;
-
-      function open(index) {
-        currentIndex = index;
-        lightboxImg.src = images[currentIndex].src;
-        lightboxImg.alt = images[currentIndex].alt;
-        lightbox.classList.add('active');
-        document.body.style.overflow = 'hidden';
-      }
-
-      function close() {
-        lightbox.classList.remove('active');
-        document.body.style.overflow = '';
-      }
-
-      function prev() { currentIndex = (currentIndex - 1 + images.length) % images.length; lightboxImg.src = images[currentIndex].src; lightboxImg.alt = images[currentIndex].alt; }
-      function next() { currentIndex = (currentIndex + 1) % images.length; lightboxImg.src = images[currentIndex].src; lightboxImg.alt = images[currentIndex].alt; }
-
-      images.forEach((img, i) => img.addEventListener('click', () => open(i)));
-      closeBtn.addEventListener('click', close);
-      prevBtn.addEventListener('click', prev);
-      nextBtn.addEventListener('click', next);
-      lightbox.addEventListener('click', (e) => { if (e.target === lightbox) close(); });
-      document.addEventListener('keydown', (e) => {
-        if (!lightbox.classList.contains('active')) return;
-        if (e.key === 'Escape') close();
-        if (e.key === 'ArrowLeft') prev();
-        if (e.key === 'ArrowRight') next();
-      });
-    });
-  </script>
-
-  <!-- Form sent confirmation -->
-  <script>
-    if (new URLSearchParams(window.location.search).get('sent') === 'true') {
-      document.getElementById('shop-form').style.display = 'none';
-      document.getElementById('shop-form-success').style.display = 'block';
-      document.querySelector('.shop-section.shop-inquiry h2').textContent = 'thank you';
-    }
-  </script>
-
   <!-- Mobile nav toggle -->
   <script>
     const navToggle = document.querySelector('.art-nav-toggle');
@@ -292,6 +223,15 @@
         navLinks.classList.remove('open');
       });
     });
+  </script>
+
+  <!-- Form sent confirmation -->
+  <script>
+    if (new URLSearchParams(window.location.search).get('sent') === 'true') {
+      document.getElementById('shop-form').style.display = 'none';
+      document.getElementById('shop-form-success').style.display = 'block';
+      document.querySelector('.shop-section.shop-inquiry h2').textContent = 'thank you';
+    }
   </script>
 
 </body>

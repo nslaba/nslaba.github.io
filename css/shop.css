@@ -221,6 +221,46 @@
 }
 
 /* ==========================================================================
+   Jump nav
+   ========================================================================== */
+
+.shop-jump {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.25rem 2rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-primary);
+  position: sticky;
+  top: 57px;
+  z-index: 50;
+}
+
+.shop-jump-link {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  color: var(--text-secondary);
+  transition: color 0.2s;
+}
+
+.shop-jump-link:hover {
+  color: var(--text-primary);
+}
+
+.shop-jump-note {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.shop-jump-sep {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+/* ==========================================================================
    Sections — shared
    ========================================================================== */
 
@@ -230,21 +270,37 @@
   padding: 4rem 2rem;
 }
 
-.shop-section h2 {
-  font-size: 0.8rem;
-  font-weight: 400;
-  letter-spacing: 0.2em;
+.shop-section-label {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
   color: var(--text-muted);
-  text-transform: lowercase;
+  margin-bottom: 1rem;
+}
+
+.shop-section h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+  font-weight: 300;
+  color: var(--text-primary);
+  line-height: 1.4;
   margin-bottom: 0.75rem;
+  max-width: 580px;
 }
 
 .shop-section-desc {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
+  font-size: 0.88rem;
+  color: var(--text-muted);
   line-height: 1.8;
-  max-width: 550px;
+  max-width: 520px;
   margin-bottom: 2.5rem;
+}
+
+/* Originals section wrapper — distinct background */
+.shop-originals-wrap {
+  background: #f5f2ee;
 }
 
 /* ==========================================================================
@@ -375,12 +431,23 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.35s ease;
   display: block;
 }
 
-.merch-item:hover img {
-  transform: scale(1.04);
+/* Prints buy block */
+.shop-prints-buy {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.shop-prints-domain {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
 }
 
 /* Biodegradable note */
@@ -429,6 +496,16 @@
 /* ==========================================================================
    Inquiry Form
    ========================================================================== */
+
+.shop-inquiry h2 {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  text-transform: lowercase;
+  margin-bottom: 0.75rem;
+}
 
 .shop-inquiry {
   position: relative;
