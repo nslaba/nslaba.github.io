@@ -465,6 +465,7 @@
   display: flex;
   gap: 0.3rem;
   padding: 0;
+  justify-content: center;
 }
 
 .studio-img {
