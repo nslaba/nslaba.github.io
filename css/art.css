@@ -247,6 +247,22 @@
   color: var(--text-primary);
 }
 
+.artist-intro-show {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  text-decoration: none;
+  text-align: center;
+  margin-top: 1.25rem;
+  transition: color 0.2s;
+}
+
+.artist-intro-show:hover {
+  color: var(--text-primary);
+}
+
 /* Gallery Section */
 .art-gallery {
   padding: 4rem 2rem;
@@ -761,7 +777,7 @@
   border-radius: 6px;
   opacity: 0;
   transform: translateY(-10px);
-  animation: notifyIn 0.6s ease 1.5s forwards, notifyPulse 2s ease 2.1s 3;
+  animation: notifyIn 0.6s ease 0.4s forwards, notifyPulse 2s ease 1s 3;
 }
 
 .exhibit-notify:hover {
