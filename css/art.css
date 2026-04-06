@@ -449,18 +449,26 @@
   display: flex;
   gap: 0.3rem;
   padding: 0;
-  align-items: flex-start;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.studio-strip::-webkit-scrollbar {
+  display: none;
 }
 
 .studio-img {
-  flex: 1;
+  flex-shrink: 0;
   overflow: hidden;
   cursor: pointer;
+  scroll-snap-align: start;
 }
 
 .studio-img img {
-  width: 100%;
-  height: auto;
+  height: 260px;
+  width: auto;
   display: block;
   transition: transform 0.5s ease, filter 0.4s ease;
   filter: grayscale(15%);
@@ -472,12 +480,8 @@
 }
 
 @media (max-width: 600px) {
-  .studio-strip {
-    flex-wrap: wrap;
-  }
-  .studio-img {
-    flex: none;
-    width: calc(50% - 0.15rem);
+  .studio-img img {
+    height: 180px;
   }
 }
 
