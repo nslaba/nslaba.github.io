@@ -247,25 +247,6 @@
   color: var(--text-primary);
 }
 
-/* Curatorial intro */
-.gallery-intro {
-  text-align: center;
-  padding: 2rem 2rem 0;
-  position: relative;
-  z-index: 1;
-}
-
-.gallery-intro p {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.8rem;
-  font-weight: 300;
-  letter-spacing: 0.04em;
-  color: var(--text-muted);
-  max-width: 440px;
-  margin: 0 auto;
-  line-height: 1.75;
-}
-
 /* Gallery Section */
 .art-gallery {
   padding: 4rem 2rem;
