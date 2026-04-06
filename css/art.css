@@ -681,8 +681,8 @@
   font-weight: 300;
   color: rgba(255, 255, 255, 0.55);
   margin-top: 0.6rem;
-  max-width: 380px;
   line-height: 1.5;
+  width: 100%;
 }
 
 .lightbox-more {
