@@ -128,7 +128,7 @@
         </div>
       </div>
 
-      <div class="gallery-item" data-category="finished" data-forsale="true">
+      <div class="gallery-item" data-category="finished" data-forsale="true" data-note="Everyone is performing something. This one just admitted it.">
         <img src="../assets/images/art/thumbs/gentleman_in_disguise.webp" data-full="../assets/images/art/gentleman_in_disguise.webp" alt="Gentleman in Disguise" loading="lazy">
         <div class="gallery-item-overlay">
           <span class="gallery-item-title">Gentleman in Disguise</span>
@@ -143,7 +143,7 @@
         </div>
       </div>
 
-      <div class="gallery-item" data-category="finished">
+      <div class="gallery-item" data-category="finished" data-note="About the things we use up as if it were a game but having real consequences.">
         <img src="../assets/images/art/thumbs/long_term_non_renewables.jpg" data-full="../assets/images/art/long_term_non_renewables.jpg" alt="Long Term Non-Renewables" loading="lazy">
         <div class="gallery-item-overlay">
           <span class="gallery-item-title">Long Term Non-Renewables</span>
@@ -151,11 +151,11 @@
         </div>
       </div>
 
-      <div class="gallery-item" data-category="finished">
+      <div class="gallery-item" data-category="finished" data-note="Comfort as its own kind of trap.">
         <img src="../assets/images/art/thumbs/bourgeois_living.webp" data-full="../assets/images/art/bourgeois_living.webp" alt="Bourgeois Living" loading="lazy">
         <div class="gallery-item-overlay">
           <span class="gallery-item-title">Bourgeois Living</span>
-          <span class="gallery-item-medium">Acrylic on Canvas</span>
+          <span class="gallery-item-medium">Acrylic on Canvas · 36 × 48 in</span>
         </div>
       </div>
 
@@ -167,7 +167,7 @@
         </div>
       </div>
 
-      <div class="gallery-item" data-category="finished" data-forsale="true">
+      <div class="gallery-item" data-category="finished" data-forsale="true" data-note="We wear our ancestry on our faces. The question I keep coming back to: where does it end and I begin?">
         <img src="../assets/images/art/thumbs/cultural.webp" data-full="../assets/images/art/cultural.webp" alt="Cultural" loading="lazy">
         <div class="gallery-item-overlay">
           <span class="gallery-item-title">Cultural</span>
@@ -272,6 +272,7 @@
         <img src="../assets/images/art/thumbs/clown.webp" data-full="../assets/images/art/clown.webp" alt="Clown" loading="lazy">
         <div class="gallery-item-overlay">
           <span class="gallery-item-title">Clown</span>
+          <span class="gallery-item-medium">Acrylic on Canvas, 2024 · 24 × 20 in</span>
         </div>
       </div>
 
@@ -289,7 +290,7 @@
         </div>
       </div>
 
-      <div class="gallery-item" data-category="finished">
+      <div class="gallery-item" data-category="finished" data-note="Pencil, middle school. I worked on this every day for two months. I couldn't stop and I didn't want to — it was the first time I had somewhere to be.">
         <img src="../assets/images/art/thumbs/feet.webp" data-full="../assets/images/art/feet.webp" alt="Feet" loading="lazy">
         <div class="gallery-item-overlay">
           <span class="gallery-item-title">Feet</span>
@@ -946,6 +947,7 @@
       <div class="lightbox-caption">
         <div class="lightbox-title"></div>
         <div class="lightbox-medium"></div>
+        <div class="lightbox-note"></div>
       </div>
       <div class="lightbox-more" id="lightboxMore">
         <p class="lightbox-more-text">more works</p>
@@ -1050,6 +1052,7 @@
       const lightboxImg = lightbox.querySelector('img');
       const lightboxTitle = lightbox.querySelector('.lightbox-title');
       const lightboxMedium = lightbox.querySelector('.lightbox-medium');
+      const lightboxNote = lightbox.querySelector('.lightbox-note');
       const closeBtn = lightbox.querySelector('.lightbox-close');
       const prevBtn = lightbox.querySelector('.lightbox-prev');
       const nextBtn = lightbox.querySelector('.lightbox-next');
@@ -1088,6 +1091,7 @@
         lightboxImg.alt = img.alt;
         lightboxTitle.textContent = title ? title.textContent : '';
         lightboxMedium.textContent = medium ? medium.textContent : '';
+        lightboxNote.textContent = item.dataset.note || '';
       }
 
       function showPrev() {

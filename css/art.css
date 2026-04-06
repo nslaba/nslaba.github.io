@@ -674,6 +674,17 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
+.lightbox-note {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.95rem;
+  font-style: italic;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.55);
+  margin-top: 0.6rem;
+  max-width: 380px;
+  line-height: 1.5;
+}
+
 .lightbox-more {
   display: none;
   position: absolute;
