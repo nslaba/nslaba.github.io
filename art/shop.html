@@ -98,7 +98,7 @@
   <!-- Original paintings -->
   <section class="shop-section shop-originals-wrap" id="originals">
     <span class="shop-section-label">original paintings</span>
-    <p class="shop-section-desc">Each piece is one of a kind. Reach out to inquire about pricing, dimensions, and shipping.</p>
+    <p class="shop-section-desc">Each piece is one of a kind. Reach out to inquire about pricing and shipping.</p>
 
     <div class="originals-list">
 
@@ -179,6 +179,18 @@
 
   <div class="texture-divider"></div>
 
+  <!-- Originals lightbox -->
+  <div class="shop-lightbox" id="originals-lightbox">
+    <button class="shop-lightbox-close" aria-label="Close">&times;</button>
+    <button class="shop-lightbox-nav shop-lightbox-prev" aria-label="Previous">&lsaquo;</button>
+    <img src="" alt="" class="shop-lightbox-img">
+    <div class="shop-lightbox-caption">
+      <span class="shop-lightbox-title"></span>
+      <span class="shop-lightbox-dims"></span>
+    </div>
+    <button class="shop-lightbox-nav shop-lightbox-next" aria-label="Next">&rsaquo;</button>
+  </div>
+
   <!-- Inquiry Form -->
   <section class="shop-section shop-inquiry">
     <h2>get in touch</h2>
@@ -220,6 +232,61 @@
       &copy; 2026 Natalie Slaba
     </span>
   </footer>
+
+  <!-- Originals lightbox -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const lightbox = document.getElementById('originals-lightbox');
+      const lbImg = lightbox.querySelector('.shop-lightbox-img');
+      const lbTitle = lightbox.querySelector('.shop-lightbox-title');
+      const lbDims = lightbox.querySelector('.shop-lightbox-dims');
+      const closeBtn = lightbox.querySelector('.shop-lightbox-close');
+      const prevBtn = lightbox.querySelector('.shop-lightbox-prev');
+      const nextBtn = lightbox.querySelector('.shop-lightbox-next');
+
+      const cards = Array.from(document.querySelectorAll('.original-card'));
+      let current = 0;
+
+      function open(index) {
+        current = index;
+        update();
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function close() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      function update() {
+        const card = cards[current];
+        const img = card.querySelector('.original-card-img img');
+        const title = card.querySelector('.original-card-title');
+        const dims = card.querySelector('.original-card-dims');
+        lbImg.src = img.src;
+        lbImg.alt = img.alt;
+        lbTitle.textContent = title ? title.textContent : '';
+        lbDims.textContent = dims ? dims.textContent : '';
+      }
+
+      cards.forEach((card, i) => {
+        card.querySelector('.original-card-img').style.cursor = 'zoom-in';
+        card.querySelector('.original-card-img').addEventListener('click', () => open(i));
+      });
+
+      closeBtn.addEventListener('click', close);
+      prevBtn.addEventListener('click', () => { current = (current - 1 + cards.length) % cards.length; update(); });
+      nextBtn.addEventListener('click', () => { current = (current + 1) % cards.length; update(); });
+      lightbox.addEventListener('click', (e) => { if (e.target === lightbox) close(); });
+      document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        if (e.key === 'Escape') close();
+        if (e.key === 'ArrowLeft') { current = (current - 1 + cards.length) % cards.length; update(); }
+        if (e.key === 'ArrowRight') { current = (current + 1) % cards.length; update(); }
+      });
+    });
+  </script>
 
   <!-- Mobile nav -->
   <script>
