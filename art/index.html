@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Art created by Nat. Everything from doodles to murals.">
+  <meta name="description" content="Paintings by Natalie Slaba — layered acrylic and acrylic ink, figurative and conceptual. Based in Squamish, BC.">
 
-  <title>Nat's Art</title>
+  <title>Gallery — Natalie Slaba</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -84,7 +84,12 @@
 
   <!-- Artist intro -->
   <section class="artist-intro">
-    <p>I make conceptual paintings in layered acrylic and acrylic ink — work drawn to human figures, human decisions, and what lives beneath the surface of things. Based in Squamish, BC. <a href="statement.html">Read more →</a></p>
+    <p>I make conceptual paintings in layered acrylic and acrylic ink. Human figures show up a lot — because people genuinely puzzle me, the decisions we make, the brief specific lives we lead inside these bodies. Based in Squamish, BC. <a href="statement.html">Read more →</a></p>
+  </section>
+
+  <!-- Curatorial note -->
+  <section class="gallery-intro">
+    <p>Most of this work starts with a figure. Something is being decided — or just was, or is about to be. I build in layers: adding and taking away until something true turns up.</p>
   </section>
 
   <!-- Gallery Section -->
@@ -98,6 +103,11 @@
       <button class="category-btn" data-filter="murals">Murals</button>
       <button class="category-btn" data-filter="sketches">Sketches</button>
       <button class="category-btn" data-filter="prints">Prints</button>
+    </div>
+
+    <!-- Murals intro -->
+    <div class="sketches-intro" id="murals-intro">
+      <p class="sketches-statement">Painting at scale changes something — you stop seeing the whole thing and just live inside it for a while. Most of these murals are in someone's house now.</p>
     </div>
 
     <!-- Sketches intro -->
@@ -885,35 +895,19 @@
 
   <!-- Places that inspire -->
   <section class="studio-section">
-    <span class="studio-label">places where I find inspiration</span>
-    <p class="studio-desc">There is so much beauty in the world that art can only try to capture it.</p>
+    <span class="studio-label">places i go to for inspiration</span>
     <div class="studio-strip">
-      <div class="studio-img">
-        <img src="../assets/images/art/thumbs/places/place_1.jpg" data-full="../assets/images/art/places/place_1.jpg" alt="Place that inspires" loading="lazy">
-      </div>
       <div class="studio-img">
         <img src="../assets/images/art/thumbs/places/place_2.jpg" data-full="../assets/images/art/places/place_2.jpg" alt="Place that inspires" loading="lazy">
       </div>
       <div class="studio-img">
-        <img src="../assets/images/art/thumbs/places/place_3.jpg" data-full="../assets/images/art/places/place_3.jpg" alt="Place that inspires" loading="lazy">
-      </div>
-      <div class="studio-img">
-        <img src="../assets/images/art/thumbs/places/place_4.jpg" data-full="../assets/images/art/places/place_4.jpg" alt="Place that inspires" loading="lazy">
-      </div>
-      <div class="studio-img">
         <img src="../assets/images/art/thumbs/places/place_5.jpg" data-full="../assets/images/art/places/place_5.jpg" alt="Place that inspires" loading="lazy">
-      </div>
-      <div class="studio-img">
-        <img src="../assets/images/art/thumbs/places/place_6.jpg" data-full="../assets/images/art/places/place_6.jpg" alt="Place that inspires" loading="lazy">
       </div>
       <div class="studio-img">
         <img src="../assets/images/art/thumbs/places/place_7.jpg" data-full="../assets/images/art/places/place_7.jpg" alt="Place that inspires" loading="lazy">
       </div>
       <div class="studio-img">
         <img src="../assets/images/art/thumbs/places/place_8.jpg" data-full="../assets/images/art/places/place_8.jpg" alt="Place that inspires" loading="lazy">
-      </div>
-      <div class="studio-img">
-        <img src="../assets/images/art/thumbs/places/place_9.jpg" data-full="../assets/images/art/places/place_9.jpg" alt="Place that inspires" loading="lazy">
       </div>
     </div>
   </section>
@@ -980,6 +974,7 @@
       // Category filter + show more
       const buttons = document.querySelectorAll('.category-btn');
       const items = document.querySelectorAll('.gallery-item');
+      const muralsIntro = document.getElementById('murals-intro');
       const sketchesIntro = document.getElementById('sketches-intro');
       const printsIntro = document.getElementById('prints-intro');
       const showMoreBtn = document.getElementById('showMoreBtn');
@@ -1019,6 +1014,7 @@
         });
 
         showMoreBtn.style.display = visibleCount >= totalMatching ? 'none' : 'block';
+        muralsIntro.classList.toggle('visible', activeFilter === 'murals');
         sketchesIntro.classList.toggle('visible', activeFilter === 'sketches');
         printsIntro.classList.toggle('visible', activeFilter === 'prints');
       }
@@ -1133,7 +1129,7 @@
           const img = el.querySelector('img');
           lightboxImg.src = img.dataset.full || img.src;
           lightboxImg.alt = img.alt;
-          lightboxTitle.textContent = 'in the studio';
+          lightboxTitle.textContent = '';
           lightboxMedium.textContent = '';
           lightboxMore.classList.remove('visible');
           lightbox.classList.add('active');
