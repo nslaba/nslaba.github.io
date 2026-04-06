@@ -18,7 +18,7 @@
   min-height: 100vh;
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: 'Roboto Slab', 'Inter', -apple-system, BlinkMacSystemFont, serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* Tree ring background canvas — fixed behind all content */
@@ -412,9 +412,11 @@ a.exhibit-row:hover .exhibit-row-arrow {
 }
 
 .exhibit-header h1 {
-  font-size: 1.5rem;
-  font-weight: 400;
-  margin-bottom: 0.5rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  font-weight: 300;
+  line-height: 1.1;
+  margin-bottom: 0.75rem;
   color: var(--text-primary);
 }
 
@@ -436,9 +438,11 @@ a.exhibit-row:hover .exhibit-row-arrow {
 }
 
 .exhibit-story p {
-  font-size: 0.95rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(1rem, 1.5vw, 1.1rem);
+  font-weight: 300;
   color: var(--text-secondary);
-  line-height: 1.9;
+  line-height: 1.85;
 }
 
 .exhibit-story p + p {
@@ -502,7 +506,9 @@ a.exhibit-row:hover .exhibit-row-arrow {
 }
 
 .exhibit-section-desc {
-  font-size: 0.9rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(0.95rem, 1.4vw, 1.05rem);
+  font-weight: 300;
   color: var(--text-secondary);
   line-height: 1.8;
 }
