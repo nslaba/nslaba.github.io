@@ -876,6 +876,11 @@
     gap: 0.15rem;
   }
 
+  .hero-strip-item:nth-child(4),
+  .hero-strip-item:nth-child(5) {
+    display: none;
+  }
+
   .hero-text {
     padding: 1.25rem 1.25rem 3rem;
   }
@@ -895,6 +900,28 @@
     column-gap: 0.15rem;
   }
 
+  /* Always show title strip on mobile — no hover on touchscreens */
+  .gallery-item-overlay {
+    opacity: 1;
+    background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0) 55%);
+  }
+
+  .gallery-item-medium,
+  .gallery-item-note {
+    display: none;
+  }
+
+  .gallery-item-title {
+    font-size: 0.68rem;
+    letter-spacing: 0.02em;
+    margin-bottom: 0;
+  }
+
+  /* Disable hover zoom on touch — it fires on tap and looks glitchy */
+  .gallery-item:hover img {
+    transform: none;
+  }
+
   .art-footer {
     flex-direction: column;
     gap: 1rem;
@@ -912,6 +939,14 @@
 
   .lightbox-next {
     right: 0;
+  }
+}
+
+/* Very small screens: 2-column gallery */
+@media (max-width: 480px) {
+  .gallery-grid {
+    columns: 2;
+    column-gap: 0.15rem;
   }
 }
 
