@@ -873,12 +873,7 @@
 
   .hero-strip {
     height: 40vh;
-  }
-
-  /* Show only 3 items on mobile */
-  .hero-strip-item:nth-child(4),
-  .hero-strip-item:nth-child(5) {
-    display: none;
+    gap: 0.15rem;
   }
 
   .hero-text {
