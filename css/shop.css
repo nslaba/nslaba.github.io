@@ -426,48 +426,99 @@
   color: var(--text-primary);
 }
 
-/* Artfello section */
-.shop-artfello {
-  text-align: center;
+/* Artfello feature — top of shop page */
+.artfello-feature {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 60vh;
+  margin-top: 4rem; /* clear fixed nav */
 }
 
-.artfello-block {
-  max-width: 520px;
-  margin: 0 auto;
+.artfello-feature-img {
+  overflow: hidden;
+}
+
+.artfello-feature-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.artfello-feature-content {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
+  justify-content: center;
+  padding: 3.5rem;
+  background: #f5f3ef;
 }
 
-.artfello-name {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(1.5rem, 3vw, 2.2rem);
-  font-weight: 300;
-  letter-spacing: 0.08em;
-  margin: 0;
-}
-
-.artfello-tagline {
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
+.artfello-feature-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--text-muted);
-  margin: 0;
+  margin-bottom: 0.6rem;
 }
 
-.artfello-desc {
+.artfello-feature-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 300;
+  letter-spacing: 0.06em;
+  margin: 0 0 0.4rem;
+}
+
+.artfello-feature-tagline {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin: 0 0 1.5rem;
+}
+
+.artfello-feature-desc {
   font-size: 0.88rem;
-  color: var(--text-muted);
-  line-height: 1.8;
-  margin: 0.5rem 0 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.85;
+  margin: 0 0 2rem;
+  max-width: 380px;
 }
 
-.artfello-domain {
-  font-size: 0.68rem;
-  color: var(--text-muted);
-  letter-spacing: 0.04em;
-  margin-top: 0.5rem;
+.artfello-feature-btn {
+  align-self: flex-start;
+  display: inline-block;
+  padding: 0.75rem 1.75rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  color: #fff;
+  background: var(--text-primary);
+  border: 1px solid var(--text-primary);
+  transition: all 0.2s;
+}
+
+.artfello-feature-btn:hover {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+  .artfello-feature {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .artfello-feature-img {
+    height: 55vw;
+  }
+
+  .artfello-feature-content {
+    padding: 2.5rem 1.5rem;
+  }
+
+  .artfello-feature-desc {
+    max-width: 100%;
+  }
 }
 
 @media (max-width: 640px) {
