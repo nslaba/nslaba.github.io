@@ -28,18 +28,21 @@
       color: #000;
     }
 
-    /* Mural hero strip */
-    .commission-mural-hero {
-      padding-top: 4.5rem; /* clear fixed nav */
+    .commission-page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 9rem 2rem 7rem;
       position: relative;
       z-index: 1;
     }
 
+    /* Mural hero strip */
     .commission-mural-images {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      height: 62vh;
+      height: 60vh;
       gap: 0.3rem;
+      margin-bottom: 0.5rem;
     }
 
     .commission-mural-images img {
@@ -53,21 +56,13 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 0.3rem;
-      padding: 0.6rem 2rem 0;
+      margin-bottom: 4rem;
     }
 
     .commission-mural-captions span {
       font-size: 0.68rem;
       letter-spacing: 0.05em;
-      color: var(--text-muted);
-    }
-
-    .commission-page {
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 5rem 2rem 7rem;
-      position: relative;
-      z-index: 1;
+      color: #666;
     }
 
     /* Hero */
@@ -331,11 +326,9 @@
         grid-template-columns: 1fr;
         height: auto;
       }
-
       .commission-mural-images img {
-        height: 50vw;
+        height: 55vw;
       }
-
       .commission-mural-captions {
         grid-template-columns: 1fr;
       }
@@ -388,8 +381,9 @@
     </ul>
   </nav>
 
-  <!-- Mural hero — full width, first thing on page -->
-  <section class="commission-mural-hero" aria-label="Previous commissions">
+  <main class="commission-page">
+
+    <!-- Mural hero -->
     <div class="commission-mural-images">
       <img src="../assets/images/art/NatalieSlaba_1.jpg" alt="Victoria Square mural — downtown Calgary">
       <img src="../assets/images/art/mural_calgary.webp" alt="Interior mural — Calgary">
@@ -398,9 +392,6 @@
       <span>Previous commission — Victoria Square, downtown Calgary</span>
       <span>Previous commission — interior mural, Calgary</span>
     </div>
-  </section>
-
-  <main class="commission-page">
 
     <!-- Hero -->
     <div class="commission-hero">
