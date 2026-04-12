@@ -28,10 +28,42 @@
       color: #000;
     }
 
+    /* Mural hero strip */
+    .commission-mural-hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      height: 65vh;
+      margin-top: 57px; /* clear fixed nav */
+      gap: 0.3rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .commission-mural-item {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .commission-mural-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .commission-mural-caption {
+      position: absolute;
+      bottom: 1rem;
+      left: 1rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.06em;
+      color: rgba(255, 255, 255, 0.75);
+    }
+
     .commission-page {
       max-width: 860px;
       margin: 0 auto;
-      padding: 9rem 2rem 7rem;
+      padding: 5rem 2rem 7rem;
       position: relative;
       z-index: 1;
     }
@@ -292,28 +324,14 @@
       margin: 0 0 4.5rem;
     }
 
-    /* Previous work examples */
-    .commission-examples {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.75rem;
-    }
-
-    .commission-example img {
-      width: 100%;
-      display: block;
-    }
-
-    .commission-example-caption {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      margin-top: 0.5rem;
-      letter-spacing: 0.04em;
-    }
-
-    @media (max-width: 480px) {
-      .commission-examples {
+    @media (max-width: 600px) {
+      .commission-mural-hero {
         grid-template-columns: 1fr;
+        height: auto;
+      }
+
+      .commission-mural-item {
+        height: 50vw;
       }
     }
 
@@ -364,6 +382,18 @@
     </ul>
   </nav>
 
+  <!-- Mural hero — full width, first thing on page -->
+  <section class="commission-mural-hero">
+    <div class="commission-mural-item">
+      <img src="../assets/images/art/NatalieSlaba_1.jpg" alt="Victoria Square mural — downtown Calgary">
+      <span class="commission-mural-caption">Victoria Square — downtown Calgary</span>
+    </div>
+    <div class="commission-mural-item">
+      <img src="../assets/images/art/mural_calgary.webp" alt="Interior mural — Calgary">
+      <span class="commission-mural-caption">Interior mural — Calgary</span>
+    </div>
+  </section>
+
   <main class="commission-page">
 
     <!-- Hero -->
@@ -388,21 +418,6 @@
         <div class="commission-type">
           <div class="commission-type-name">Murals</div>
           <p class="commission-type-desc">Large-scale work for interior or exterior spaces. Tell me about the wall, the context, and what you want to say with it. Quoted by project.</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Previous work -->
-    <div class="commission-section">
-      <span class="commission-section-title">Previous work</span>
-      <div class="commission-examples">
-        <div class="commission-example">
-          <img src="../assets/images/art/mural_calgary.webp" alt="Calgary mural commission" loading="lazy">
-          <p class="commission-example-caption">Calgary — exterior mural commission</p>
-        </div>
-        <div class="commission-example">
-          <img src="../assets/images/art/NatalieSlaba_1.jpg" alt="Commission" loading="lazy">
-          <p class="commission-example-caption">Commission</p>
         </div>
       </div>
     </div>
