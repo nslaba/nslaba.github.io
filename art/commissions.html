@@ -41,23 +41,24 @@
 
     .commission-mural-item {
       position: relative;
-      overflow: hidden;
+      overflow: visible;
+      display: flex;
+      flex-direction: column;
     }
 
     .commission-mural-item img {
       width: 100%;
-      height: 100%;
+      flex: 1;
+      min-height: 0;
       object-fit: cover;
       display: block;
     }
 
     .commission-mural-caption {
-      position: absolute;
-      bottom: 1rem;
-      left: 1rem;
-      font-size: 0.65rem;
-      letter-spacing: 0.06em;
-      color: rgba(255, 255, 255, 0.75);
+      font-size: 0.68rem;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      padding: 0.6rem 0 0;
     }
 
     .commission-page {
@@ -475,12 +476,12 @@
         <div class="commission-price-item">
           <div class="commission-price-size">Small</div>
           <div class="commission-price-dims">16 × 16 in</div>
-          <div class="commission-price-amount">from $350</div>
+          <div class="commission-price-amount">from $250</div>
         </div>
         <div class="commission-price-item">
           <div class="commission-price-size">Medium</div>
           <div class="commission-price-dims">24 × 24 in</div>
-          <div class="commission-price-amount">from $700</div>
+          <div class="commission-price-amount">from $550</div>
         </div>
         <div class="commission-price-item">
           <div class="commission-price-size">Large</div>
