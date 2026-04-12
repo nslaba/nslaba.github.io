@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Commission a painting by Natalie Slaba — portraits, abstract work, and murals. Based in Squamish, BC.">
+
+  <title>Commissions — Natalie Slaba</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Island+Moments&family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/art.css">
+
+  <style>
+    .commission-page {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 9rem 2rem 7rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Hero */
+    .commission-hero {
+      margin-bottom: 5rem;
+    }
+
+    .commission-label {
+      display: block;
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .commission-hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 300;
+      line-height: 1.2;
+      color: var(--text-primary);
+      margin-bottom: 1.75rem;
+    }
+
+    .commission-hero p {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.85;
+      max-width: 580px;
+    }
+
+    /* Section titles */
+    .commission-section {
+      margin-bottom: 4.5rem;
+    }
+
+    .commission-section-title {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      display: block;
+    }
+
+    /* What I take on — three cards */
+    .commission-types {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .commission-type {
+      background: var(--bg-primary);
+      padding: 1.75rem 1.5rem;
+    }
+
+    .commission-type-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 300;
+      color: var(--text-primary);
+      margin-bottom: 0.6rem;
+    }
+
+    .commission-type-desc {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+
+    /* Process steps */
+    .commission-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .commission-step {
+      display: grid;
+      grid-template-columns: 2.5rem 1fr;
+      gap: 1.25rem;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+
+    .commission-step:first-child {
+      border-top: 1px solid var(--border);
+    }
+
+    .commission-step-num {
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      padding-top: 0.2rem;
+    }
+
+    .commission-step-text {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    .commission-step-text strong {
+      display: block;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 0.2rem;
+      font-size: 0.88rem;
+    }
+
+    /* Pricing */
+    .commission-pricing {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+
+    .commission-price-item {
+      background: var(--bg-primary);
+      padding: 1.5rem 1.25rem;
+    }
+
+    .commission-price-size {
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+      text-transform: uppercase;
+    }
+
+    .commission-price-dims {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .commission-price-amount {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .commission-price-note {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .commission-pricing-footnote {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    /* Form */
+    .commission-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .commission-form label {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .commission-form input,
+    .commission-form select,
+    .commission-form textarea {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      padding: 0.6rem 0;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+
+    .commission-form select {
+      appearance: none;
+      cursor: pointer;
+    }
+
+    .commission-form input:focus,
+    .commission-form select:focus,
+    .commission-form textarea:focus {
+      border-bottom-color: var(--text-primary);
+    }
+
+    .commission-form textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .commission-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .commission-form button {
+      align-self: flex-start;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      color: #fff;
+      background: var(--text-primary);
+      border: 1px solid var(--text-primary);
+      padding: 0.8rem 2.25rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 0.5rem;
+    }
+
+    .commission-form button:hover {
+      background: transparent;
+      color: var(--text-primary);
+    }
+
+    .commission-form-success {
+      display: none;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 1rem 0;
+    }
+
+    .commission-form-success.visible {
+      display: block;
+    }
+
+    /* Divider */
+    .commission-divider {
+      width: 2rem;
+      height: 1px;
+      background: var(--border);
+      margin: 0 0 4.5rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .commission-types {
+        grid-template-columns: 1fr;
+      }
+
+      .commission-pricing {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .commission-form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .commission-pricing {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body class="art-page">
+
+  <canvas id="tree-rings"></canvas>
+
+  <!-- Navigation -->
+  <nav class="art-nav">
+    <div class="nav-left">
+      <a href="../index.html" class="logo">Home</a>
+      <span class="nav-sep">/</span>
+      <a href="index.html" class="logo">Gallery</a>
+    </div>
+    <button class="art-nav-toggle" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <ul class="art-nav-links">
+      <li><a href="exhibitions/">Exhibitions</a></li>
+      <li><a href="statement.html">Artist Statement</a></li>
+      <li><a href="commissions.html" class="active">Commissions</a></li>
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="../tech/index.html">Tech</a></li>
+    </ul>
+  </nav>
+
+  <main class="commission-page">
+
+    <!-- Hero -->
+    <div class="commission-hero">
+      <span class="commission-label">Commissions</span>
+      <h1>Something made<br>specifically for you</h1>
+      <p>I take on portraits, abstract work, and murals. The best commissions start with a conversation — tell me what you have in mind, and we'll figure out if it's a good fit. No obligation.</p>
+    </div>
+
+    <!-- What I take on -->
+    <div class="commission-section">
+      <span class="commission-section-title">What I take on</span>
+      <div class="commission-types">
+        <div class="commission-type">
+          <div class="commission-type-name">Portraits</div>
+          <p class="commission-type-desc">Figurative work — people, moments, faces. I'm drawn to capturing something true rather than flattering. Works well for individuals, couples, families, or someone you want to remember.</p>
+        </div>
+        <div class="commission-type">
+          <div class="commission-type-name">Abstract</div>
+          <p class="commission-type-desc">Conceptual and layered work in acrylic and acrylic ink. Works best when you come with a feeling, a theme, or an idea rather than a specific image in mind. Room for genuine exploration.</p>
+        </div>
+        <div class="commission-type">
+          <div class="commission-type-name">Murals</div>
+          <p class="commission-type-desc">Large-scale work for interior or exterior spaces. Tell me about the wall, the space, and what you're trying to say with it. Quoted by project.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="commission-divider"></div>
+
+    <!-- Process -->
+    <div class="commission-section">
+      <span class="commission-section-title">How it works</span>
+      <div class="commission-steps">
+        <div class="commission-step">
+          <span class="commission-step-num">01</span>
+          <div class="commission-step-text">
+            <strong>Tell me what you have in mind</strong>
+            Fill out the form below — subject, rough size, where it'll live. No need to have it all figured out.
+          </div>
+        </div>
+        <div class="commission-step">
+          <span class="commission-step-num">02</span>
+          <div class="commission-step-text">
+            <strong>We have a conversation</strong>
+            A short call or email exchange to talk through the idea and make sure it's a good fit for both of us.
+          </div>
+        </div>
+        <div class="commission-step">
+          <span class="commission-step-num">03</span>
+          <div class="commission-step-text">
+            <strong>Quote + deposit</strong>
+            I send a quote and estimated timeline. A 40% deposit books your spot and covers initial materials.
+          </div>
+        </div>
+        <div class="commission-step">
+          <span class="commission-step-num">04</span>
+          <div class="commission-step-text">
+            <strong>Sketch approval</strong>
+            I share a preliminary sketch or composition. You have one round of feedback before I start painting.
+          </div>
+        </div>
+        <div class="commission-step">
+          <span class="commission-step-num">05</span>
+          <div class="commission-step-text">
+            <strong>Painting + delivery</strong>
+            I paint the piece. On completion, you pay the remaining 60% and we arrange pickup or shipping.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="commission-divider"></div>
+
+    <!-- Pricing -->
+    <div class="commission-section">
+      <span class="commission-section-title">Pricing guide</span>
+      <div class="commission-pricing">
+        <div class="commission-price-item">
+          <div class="commission-price-size">Small</div>
+          <div class="commission-price-dims">16 × 16 in</div>
+          <div class="commission-price-amount">from $350</div>
+        </div>
+        <div class="commission-price-item">
+          <div class="commission-price-size">Medium</div>
+          <div class="commission-price-dims">24 × 24 in</div>
+          <div class="commission-price-amount">from $700</div>
+        </div>
+        <div class="commission-price-item">
+          <div class="commission-price-size">Large</div>
+          <div class="commission-price-dims">24 × 36 in</div>
+          <div class="commission-price-amount">from $950</div>
+        </div>
+        <div class="commission-price-item">
+          <div class="commission-price-size">Extra large</div>
+          <div class="commission-price-dims">36 × 48 in</div>
+          <div class="commission-price-amount">from $1,800</div>
+        </div>
+      </div>
+      <p class="commission-pricing-footnote">Final price depends on complexity and subject matter. Murals are quoted by project. Shipping not included.</p>
+    </div>
+
+    <div class="commission-divider"></div>
+
+    <!-- Form -->
+    <div class="commission-section">
+      <span class="commission-section-title">Start a conversation</span>
+      <form class="commission-form" id="commission-form" action="https://formsubmit.co/slaba.natalie@gmail.com" method="POST">
+        <input type="hidden" name="_subject" value="Commission Inquiry — nslaba.github.io">
+        <input type="hidden" name="_next" value="https://nslaba.github.io/art/commissions.html?sent=true">
+        <input type="hidden" name="_captcha" value="true">
+        <input type="text" name="_honey" style="display:none">
+
+        <div class="commission-form-row">
+          <label>
+            Name
+            <input type="text" name="name" required>
+          </label>
+          <label>
+            Email
+            <input type="email" name="email" required>
+          </label>
+        </div>
+
+        <div class="commission-form-row">
+          <label>
+            Type of work
+            <select name="type" required>
+              <option value="" disabled selected>Select</option>
+              <option value="portrait">Portrait</option>
+              <option value="abstract">Abstract</option>
+              <option value="mural">Mural</option>
+              <option value="unsure">Not sure yet</option>
+            </select>
+          </label>
+          <label>
+            Rough size
+            <select name="size">
+              <option value="" disabled selected>Select</option>
+              <option value="small">Small (16 × 16)</option>
+              <option value="medium">Medium (24 × 24)</option>
+              <option value="large">Large (24 × 36)</option>
+              <option value="xlarge">Extra large (36 × 48)</option>
+              <option value="mural">Mural — I'll describe</option>
+              <option value="unsure">Not sure</option>
+            </select>
+          </label>
+        </div>
+
+        <label>
+          Tell me about it
+          <textarea name="message" placeholder="What do you have in mind? Where will it live? Any references or feelings you want to capture?" required></textarea>
+        </label>
+
+        <button type="submit">Send</button>
+      </form>
+      <div class="commission-form-success" id="commission-form-success">
+        <p>Sent. I'll be in touch soon.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="art-footer">
+    <nav class="art-footer-nav">
+      <a href="../index.html">Home</a>
+      <a href="../tech/index.html">Tech</a>
+      <a href="statement.html">Artist Statement</a>
+      <a href="shop.html">Shop</a>
+      <a href="../about.html">About</a>
+      <a href="mailto:slaba.natalie@gmail.com">Contact</a>
+      <a href="https://www.instagram.com/naty_kappa" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://artfello.com/en/store/natalie-slaba/" target="_blank" rel="noopener">Artfello</a>
+    </nav>
+    <span style="font-size: 0.75rem; color: #999;">&copy; 2026 Natalie Slaba</span>
+  </footer>
+
+  <!-- Nav toggle script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const navToggle = document.querySelector('.art-nav-toggle');
+      const navLinks = document.querySelector('.art-nav-links');
+
+      navToggle.addEventListener('click', () => {
+        navToggle.classList.toggle('open');
+        navLinks.classList.toggle('open');
+      });
+
+      navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          navToggle.classList.remove('open');
+          navLinks.classList.remove('open');
+        });
+      });
+
+      // Show success message if redirected back after submit
+      if (window.location.search.includes('sent=true')) {
+        document.getElementById('commission-form').style.display = 'none';
+        document.getElementById('commission-form-success').classList.add('visible');
+      }
+    });
+  </script>
+
+  <!-- Tree ring background -->
+  <script>
+    (function () {
+      var canvas = document.getElementById('tree-rings');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var W, H, cx, cy;
+
+      function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+        cx = W / 2 + W * 0.15;
+        cy = H * 0.55;
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        var maxR = Math.max(W, H) * 0.85;
+        var rings = 28;
+        for (var i = 0; i < rings; i++) {
+          var t = i / rings;
+          var r = maxR * (0.04 + t * 0.96);
+          var wobble = r * 0.018;
+          ctx.beginPath();
+          var pts = 180;
+          for (var j = 0; j <= pts; j++) {
+            var angle = (j / pts) * Math.PI * 2;
+            var noise = (Math.sin(angle * 3 + i * 1.7) * 0.5 + Math.sin(angle * 7 + i * 0.9) * 0.3 + Math.sin(angle * 13 + i * 2.3) * 0.2) * wobble;
+            var rx = (cx + (r + noise) * Math.cos(angle));
+            var ry = (cy + (r + noise) * 0.82 * Math.sin(angle));
+            j === 0 ? ctx.moveTo(rx, ry) : ctx.lineTo(rx, ry);
+          }
+          ctx.closePath();
+          ctx.strokeStyle = 'rgba(0,0,0,' + (0.022 + t * 0.018) + ')';
+          ctx.lineWidth = 0.8;
+          ctx.stroke();
+        }
+      }
+
+      window.addEventListener('resize', function () { resize(); draw(); });
+      resize();
+      draw();
+    })();
+  </script>
+
+</body>
+</html>
