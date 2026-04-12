@@ -30,35 +30,36 @@
 
     /* Mural hero strip */
     .commission-mural-hero {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      height: 65vh;
-      margin-top: 57px; /* clear fixed nav */
-      gap: 0.3rem;
+      padding-top: 4.5rem; /* clear fixed nav */
       position: relative;
       z-index: 1;
     }
 
-    .commission-mural-item {
-      position: relative;
-      overflow: visible;
-      display: flex;
-      flex-direction: column;
+    .commission-mural-images {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      height: 62vh;
+      gap: 0.3rem;
     }
 
-    .commission-mural-item img {
+    .commission-mural-images img {
       width: 100%;
-      flex: 1;
-      min-height: 0;
+      height: 100%;
       object-fit: cover;
       display: block;
     }
 
-    .commission-mural-caption {
+    .commission-mural-captions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.3rem;
+      padding: 0.6rem 2rem 0;
+    }
+
+    .commission-mural-captions span {
       font-size: 0.68rem;
       letter-spacing: 0.05em;
       color: var(--text-muted);
-      padding: 0.6rem 0 0;
     }
 
     .commission-page {
@@ -326,13 +327,17 @@
     }
 
     @media (max-width: 600px) {
-      .commission-mural-hero {
+      .commission-mural-images {
         grid-template-columns: 1fr;
         height: auto;
       }
 
-      .commission-mural-item {
+      .commission-mural-images img {
         height: 50vw;
+      }
+
+      .commission-mural-captions {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -385,13 +390,13 @@
 
   <!-- Mural hero — full width, first thing on page -->
   <section class="commission-mural-hero" aria-label="Previous commissions">
-    <div class="commission-mural-item">
+    <div class="commission-mural-images">
       <img src="../assets/images/art/NatalieSlaba_1.jpg" alt="Victoria Square mural — downtown Calgary">
-      <span class="commission-mural-caption">Previous commission — Victoria Square, downtown Calgary</span>
-    </div>
-    <div class="commission-mural-item">
       <img src="../assets/images/art/mural_calgary.webp" alt="Interior mural — Calgary">
-      <span class="commission-mural-caption">Previous commission — interior mural, Calgary</span>
+    </div>
+    <div class="commission-mural-captions">
+      <span>Previous commission — Victoria Square, downtown Calgary</span>
+      <span>Previous commission — interior mural, Calgary</span>
     </div>
   </section>
 
