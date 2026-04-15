@@ -876,6 +876,11 @@
     gap: 0.15rem;
   }
 
+  .hero-strip-item:nth-child(4),
+  .hero-strip-item:nth-child(5) {
+    display: none;
+  }
+
   .hero-text {
     padding: 1.25rem 1.25rem 3rem;
   }
