@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Natalie Slaba — Polyglot. Six languages, one-on-one lessons, and a passion for how language shapes the way we think.">
+  <meta name="description" content="Natalie Slaba — Polyglot. Six languages and a passion for how language shapes the way we think.">
 
   <title>Languages | Natalie Slaba</title>
 
@@ -16,7 +16,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -139,7 +139,7 @@
       margin-top: 1.2rem;
     }
 
-    /* ---- Section header ---- */
+    /* ---- Section label ---- */
     .section-label {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.65rem;
@@ -147,29 +147,6 @@
       text-transform: uppercase;
       color: var(--text-faint);
       margin-bottom: 2.5rem;
-    }
-
-    /* ---- Fun fact callout ---- */
-    .fun-fact {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1.25rem;
-      padding: 1rem 1.25rem;
-      background: var(--accent-dim);
-      border-left: 2px solid var(--accent);
-      border-radius: 0 6px 6px 0;
-    }
-
-    .fun-fact-icon {
-      font-size: 0.9rem;
-      flex-shrink: 0;
-      margin-top: 0.05rem;
-    }
-
-    .fun-fact p {
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      line-height: 1.7;
     }
 
     /* ---- Languages grid ---- */
@@ -198,122 +175,45 @@
       background: rgba(255,255,255,0.03);
     }
 
-    .lang-card-video {
-      position: relative;
+    /* ---- Typographic visual area ---- */
+    .lang-card-visual {
       width: 100%;
-      aspect-ratio: 9 / 16;
+      aspect-ratio: 4 / 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.015);
       overflow: hidden;
-      background: var(--bg);
-      cursor: pointer;
+      transition: background 0.2s;
     }
 
-    .lang-card-video video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: opacity 0.3s;
+    .lang-card:hover .lang-card-visual {
+      background: rgba(255,255,255,0.03);
     }
 
-    /* Play-on-hover hint icon */
-    .lang-card-video::after {
-      content: '▶';
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      color: rgba(255,255,255,0.5);
-      opacity: 1;
-      transition: opacity 0.3s;
-      pointer-events: none;
+    .lang-script {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(2.2rem, 9vw, 4.5rem);
+      color: rgba(255,255,255,0.82);
+      letter-spacing: 0.04em;
+      line-height: 1;
+      user-select: none;
+      transition: color 0.2s;
     }
 
-    .lang-card-video.playing::after {
-      opacity: 0;
+    .lang-card:hover .lang-script {
+      color: rgba(255,255,255,0.95);
     }
 
-    /* Sound toggle button */
-    .sound-btn {
-      position: absolute;
-      top: 0.6rem;
-      right: 0.6rem;
-      z-index: 5;
-      background: rgba(5,5,8,0.65);
-      border: none;
-      border-radius: 50%;
-      width: 28px; height: 28px;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: rgba(255,255,255,0.7);
-      font-size: 0.75rem;
-      transition: background 0.2s, color 0.2s;
-      backdrop-filter: blur(4px);
+    .lang-script.arabic {
+      font-family: 'Cairo', sans-serif;
+      font-size: clamp(2rem, 8vw, 4rem);
+      letter-spacing: 0;
+      direction: rtl;
     }
 
-    .lang-card-video.playing .sound-btn {
-      display: flex;
-    }
-
-    .sound-btn:hover {
-      background: rgba(5,5,8,0.9);
-      color: #fff;
-    }
-
-    /* Fun fact overlay — inside video area, slides up on play */
-    .lang-card-video .fun-fact {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      margin: 0;
-      padding: 1.25rem 1rem 1rem;
-      background: linear-gradient(to top, rgba(5,5,8,0.96) 60%, transparent);
-      border: none;
-      border-radius: 0;
-      border-left: none;
-      opacity: 0;
-      transform: translateY(6px);
-      transition: opacity 0.4s ease, transform 0.4s ease;
-      pointer-events: none;
-    }
-
-    .lang-card-video .fun-fact.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .lang-card-video .fun-fact p {
-      font-size: 0.72rem;
-      color: rgba(255,255,255,0.9);
-      line-height: 1.6;
-    }
-
-    .lang-card-video .fun-fact-icon {
-      color: var(--accent);
-      margin-right: 0.4rem;
-    }
-
-    .lang-card-video-placeholder {
-      width: 100%;
-      aspect-ratio: 9 / 16;
-      background: rgba(255,255,255,0.02);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .lang-card-video-placeholder span {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.55rem;
-      letter-spacing: 0.1em;
-      color: var(--text-faint);
-      text-transform: uppercase;
-    }
-
+    /* ---- Card body ---- */
     .lang-card-body {
       padding: 1.25rem;
       display: flex;
@@ -324,7 +224,7 @@
 
     .lang-name {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       font-weight: 300;
       line-height: 1;
     }
@@ -341,56 +241,31 @@
       font-size: 0.75rem;
       color: var(--text-faint);
       margin-top: 0.25rem;
+      line-height: 1.6;
     }
 
-    /* ---- Booking section ---- */
-    .booking-section {
-      margin-bottom: 6rem;
-    }
-
-    .booking-header {
-      margin-bottom: 2rem;
-    }
-
-    .booking-header h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.6rem, 4vw, 2.4rem);
-      font-weight: 300;
-      margin-bottom: 0.75rem;
-    }
-
-    .booking-header p {
-      font-size: 0.9rem;
-      color: var(--text-dim);
-      max-width: 520px;
-      line-height: 1.8;
-    }
-
-    .calendly-wrap {
-      border-radius: 8px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-    }
-
-    .booking-placeholder {
+    /* ---- Fun fact (inline) ---- */
+    .fun-fact {
       display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 1.25rem;
-      padding: 2.5rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      gap: 0.6rem;
+      margin-top: 0.75rem;
     }
 
-    .booking-placeholder-note {
-      font-family: 'JetBrains Mono', monospace;
+    .fun-fact-icon {
       font-size: 0.75rem;
-      color: var(--text-faint);
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: 0.1rem;
     }
 
-    /* ---- General fun fact ---- */
-    .general-fact-section {
+    .fun-fact p {
+      font-size: 0.72rem;
+      color: var(--text-faint);
+      line-height: 1.6;
+    }
+
+    /* ---- On mixing languages ---- */
+    .reflection-section {
       margin-bottom: 6rem;
       padding: 2.5rem;
       background: var(--surface);
@@ -398,231 +273,15 @@
       border-radius: 8px;
     }
 
-    .general-fact-section .section-label {
+    .reflection-section .section-label {
       margin-bottom: 1.25rem;
     }
 
-    .general-fact-text {
+    .reflection-text {
       font-size: 1rem;
       color: var(--text-dim);
       line-height: 1.9;
       max-width: 620px;
-    }
-
-    /* ---- Lessons section ---- */
-    .lessons-section {
-      margin-bottom: 6rem;
-    }
-
-    .lessons-header {
-      margin-bottom: 2.5rem;
-    }
-
-    .lessons-header h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.6rem, 4vw, 2.4rem);
-      font-weight: 300;
-      margin-bottom: 1rem;
-    }
-
-    .lessons-header p {
-      font-size: 0.95rem;
-      color: var(--text-dim);
-      max-width: 560px;
-      line-height: 1.8;
-    }
-
-    .lessons-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-      margin-bottom: 2rem;
-    }
-
-    .lesson-card {
-      background: var(--surface);
-      padding: 2rem;
-      transition: background 0.2s;
-    }
-
-    .lesson-card:hover {
-      background: rgba(255,255,255,0.03);
-    }
-
-    .lesson-lang {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 1.6rem;
-      font-weight: 300;
-      margin-bottom: 0.5rem;
-    }
-
-    .lesson-desc {
-      font-size: 0.82rem;
-      color: var(--text-faint);
-      line-height: 1.7;
-    }
-
-    .lessons-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      letter-spacing: 0.05em;
-      color: var(--accent);
-      text-decoration: none;
-      border: 1px solid rgba(167,139,250,0.3);
-      padding: 0.75rem 1.5rem;
-      border-radius: 4px;
-      transition: all 0.2s;
-    }
-
-    .lessons-cta:hover {
-      background: var(--accent-dim);
-      border-color: var(--accent);
-    }
-
-    /* ---- Poll section ---- */
-    .poll-section {
-      margin-bottom: 6rem;
-      padding: 2.5rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-    }
-
-    .poll-section .section-label {
-      margin-bottom: 1.25rem;
-    }
-
-    .poll-section h2 {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.4rem, 3vw, 2rem);
-      font-weight: 300;
-      margin-bottom: 1rem;
-    }
-
-    .poll-section .poll-desc {
-      font-size: 0.9rem;
-      color: var(--text-dim);
-      max-width: 580px;
-      line-height: 1.8;
-      margin-bottom: 2rem;
-    }
-
-    .poll-form {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .poll-question {
-      font-size: 0.95rem;
-      color: var(--text);
-      font-weight: 500;
-      margin-bottom: 0.75rem;
-    }
-
-    .poll-options {
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-    }
-
-    .poll-option {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      cursor: pointer;
-    }
-
-    .poll-option input[type="radio"] {
-      appearance: none;
-      -webkit-appearance: none;
-      width: 16px; height: 16px;
-      border: 1px solid rgba(255,255,255,0.25);
-      border-radius: 50%;
-      flex-shrink: 0;
-      cursor: pointer;
-      position: relative;
-      transition: border-color 0.2s;
-    }
-
-    .poll-option input[type="radio"]:checked {
-      border-color: var(--accent);
-      background: var(--accent);
-    }
-
-    .poll-option input[type="radio"]:checked::after {
-      content: '';
-      position: absolute;
-      inset: 3px;
-      border-radius: 50%;
-      background: var(--bg);
-    }
-
-    .poll-option label {
-      font-size: 0.88rem;
-      color: var(--text-dim);
-      cursor: pointer;
-    }
-
-    .poll-field {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .poll-field label {
-      font-size: 0.82rem;
-      color: var(--text-faint);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.62rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    .poll-field input,
-    .poll-field textarea {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 0.65rem 0.9rem;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.88rem;
-      color: var(--text);
-      outline: none;
-      transition: border-color 0.2s;
-      resize: vertical;
-    }
-
-    .poll-field input:focus,
-    .poll-field textarea:focus {
-      border-color: rgba(167,139,250,0.4);
-    }
-
-    .poll-submit {
-      align-self: flex-start;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      background: transparent;
-      color: var(--accent);
-      border: 1px solid rgba(167,139,250,0.3);
-      padding: 0.75rem 2rem;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .poll-submit:hover {
-      background: var(--accent-dim);
-      border-color: var(--accent);
     }
 
     /* ---- Footer ---- */
@@ -673,12 +332,15 @@
         grid-template-columns: repeat(2, 1fr);
       }
 
-      .lessons-grid {
-        grid-template-columns: 1fr;
+      .lang-script {
+        font-size: clamp(1.8rem, 10vw, 3rem);
       }
 
-      .general-fact-section,
-      .poll-section {
+      .lang-script.arabic {
+        font-size: clamp(1.6rem, 9vw, 2.8rem);
+      }
+
+      .reflection-section {
         padding: 1.75rem;
       }
     }
@@ -726,74 +388,59 @@
 
         <!-- Czech -->
         <div class="lang-card">
-          <div class="lang-card-video">
-            <video muted playsinline preload="metadata">
-              <source src="../assets/videos/languages/czech.mov" type="video/mp4">
-            </video>
-            <button class="sound-btn" aria-label="Toggle sound">🔇</button>
+          <div class="lang-card-visual">
+            <span class="lang-script">česky</span>
           </div>
           <div class="lang-card-body">
             <h2 class="lang-name">Czech</h2>
             <p class="lang-level">Native</p>
-            <p class="lang-desc">draft video for now</p>
+            <p class="lang-desc">My first language. The one I dream in.</p>
           </div>
         </div>
 
         <!-- English -->
         <div class="lang-card">
-          <div class="lang-card-video">
-            <video muted playsinline preload="metadata">
-              <source src="../assets/videos/languages/english.mp4" type="video/mp4">
-            </video>
-            <button class="sound-btn" aria-label="Toggle sound">🔇</button>
+          <div class="lang-card-visual">
+            <span class="lang-script">English</span>
           </div>
           <div class="lang-card-body">
             <h2 class="lang-name">English</h2>
             <p class="lang-level">Native</p>
+            <p class="lang-desc">My second native. Raised between countries, both became home.</p>
           </div>
         </div>
 
         <!-- French -->
         <div class="lang-card">
-          <div class="lang-card-video">
-            <video muted playsinline preload="metadata">
-              <source src="../assets/videos/languages/french.mov" type="video/mp4">
-            </video>
-            <button class="sound-btn" aria-label="Toggle sound">🔇</button>
+          <div class="lang-card-visual">
+            <span class="lang-script">français</span>
           </div>
           <div class="lang-card-body">
             <h2 class="lang-name">French</h2>
             <p class="lang-level">Fluent</p>
-            <p class="lang-desc">draft video for now</p>
+            <p class="lang-desc">Where the pattern began.</p>
           </div>
         </div>
 
         <!-- Spanish -->
         <div class="lang-card">
-          <div class="lang-card-video">
-            <video muted playsinline preload="metadata">
-              <source src="../assets/videos/languages/spanish.mov" type="video/mp4">
-            </video>
-            <button class="sound-btn" aria-label="Toggle sound">🔇</button>
+          <div class="lang-card-visual">
+            <span class="lang-script">español</span>
+          </div>
+          <div class="lang-card-body">
+            <h2 class="lang-name">Spanish</h2>
+            <p class="lang-level">Fluent</p>
             <div class="fun-fact">
               <span class="fun-fact-icon">✦</span>
               <p>Learned most of it in one month — French had already done half the work.</p>
             </div>
           </div>
-          <div class="lang-card-body">
-            <h2 class="lang-name">Spanish</h2>
-            <p class="lang-level">Fluent</p>
-            <p class="lang-desc">draft video for now</p>
-          </div>
         </div>
 
         <!-- German -->
         <div class="lang-card">
-          <div class="lang-card-video">
-            <video muted playsinline preload="metadata">
-              <source src="../assets/videos/languages/german.mp4" type="video/mp4">
-            </video>
-            <button class="sound-btn" aria-label="Toggle sound">🔇</button>
+          <div class="lang-card-visual">
+            <span class="lang-script">Deutsch</span>
           </div>
           <div class="lang-card-body">
             <h2 class="lang-name">German</h2>
@@ -807,15 +454,13 @@
 
         <!-- Arabic -->
         <div class="lang-card">
-          <div class="lang-card-video">
-            <video muted playsinline preload="metadata">
-              <source src="../assets/videos/languages/arabic.mp4" type="video/mp4">
-            </video>
-            <button class="sound-btn" aria-label="Toggle sound">🔇</button>
+          <div class="lang-card-visual">
+            <span class="lang-script arabic">عربي</span>
           </div>
           <div class="lang-card-body">
             <h2 class="lang-name">Arabic</h2>
             <p class="lang-level">Fluent</p>
+            <p class="lang-desc">The language I least expected to find myself speaking.</p>
           </div>
         </div>
 
@@ -823,138 +468,12 @@
     </section>
 
     <!-- On mixing languages -->
-    <section class="general-fact-section">
+    <section class="reflection-section">
       <p class="section-label">// On mixing languages</p>
-      <p class="general-fact-text">People often ask whether I mix languages up. In my experience, languages blur most
+      <p class="reflection-text">People often ask whether I mix languages up. In my experience, languages blur most
         when they haven't yet fully matured in your mind — when a language doesn't yet have
         its own lived experience tied to it. But the more a language matures, the more
         independent it becomes. Each one starts to have its own interior world.</p>
-    </section>
-
-    <!-- Booking -->
-    <section class="booking-section">
-      <div class="booking-header">
-        <p class="section-label">// Book a lesson</p>
-        <h2>Book a time</h2>
-        <p>One-on-one lessons in French, Spanish, Czech, or English. Pick a slot and we'll go from there.</p>
-      </div>
-      <!-- TODO: replace this placeholder with a Calendly inline embed once you have an account set up -->
-      <div class="booking-placeholder">
-        <p class="booking-placeholder-note">Calendar booking coming soon.</p>
-        <a href="mailto:slaba.natalie@gmail.com?subject=Language%20Lesson%20Booking" class="lessons-cta">
-          Email to book a time
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-          </svg>
-        </a>
-      </div>
-    </section>
-
-    <!-- One-on-one lessons -->
-    <section class="lessons-section">
-      <div class="lessons-header">
-        <p class="section-label">// One-on-one lessons</p>
-        <h2>Learn with me</h2>
-        <p>
-          I offer private lessons in French, Spanish, Czech, and English. My approach is
-          conversation-first — grammar when it's useful, immersion when it works better.
-          Lessons are tailored to where you are and where you want to go.
-        </p>
-      </div>
-      <div class="lessons-grid">
-        <div class="lesson-card">
-          <p class="lesson-lang">French</p>
-          <p class="lesson-desc">From basics to fluency. Conversational, professional, or just for travel — whatever you need.</p>
-        </div>
-        <div class="lesson-card">
-          <p class="lesson-lang">Spanish</p>
-          <p class="lesson-desc">Fast-track if you already know French or Italian. Start from scratch if not — the vocabulary rewards you quickly.</p>
-        </div>
-        <div class="lesson-card">
-          <p class="lesson-lang">Czech</p>
-          <p class="lesson-desc">One of the harder Slavic languages, but incredibly rewarding. Great if you have family roots or just love a challenge.</p>
-        </div>
-        <div class="lesson-card">
-          <p class="lesson-lang">English</p>
-          <p class="lesson-desc">Accent reduction, business English, conversational confidence — or all three. Taught with patience and honesty.</p>
-        </div>
-      </div>
-      <a href="mailto:slaba.natalie@gmail.com?subject=Language%20Lesson%20Inquiry" class="lessons-cta">
-        Get in touch
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-        </svg>
-      </a>
-    </section>
-
-    <!-- Poll -->
-    <section class="poll-section">
-      <p class="section-label">// An idea I'm testing</p>
-      <h2>Bite-sized language lessons</h2>
-      <p class="poll-desc">
-        I've been thinking about creating short, daily language lessons — ten minutes a day,
-        but designed in a way that actually sticks. Not flashcards. Not grammar drills.
-        Something that fits into a real life and builds real fluency over time.
-        <br><br>
-        Before I build it: two quick anonymous questions.
-      </p>
-
-      <form class="poll-form" action="https://formsubmit.co/slaba.natalie@gmail.com" method="POST">
-        <input type="hidden" name="_subject" value="Language Lessons Poll Response">
-        <input type="hidden" name="_captcha" value="false">
-        <input type="hidden" name="_template" value="table">
-        <input type="hidden" name="_next" value="">
-
-        <div>
-          <p class="poll-question">Would you be interested in 10-minute daily language lessons?</p>
-          <div class="poll-options">
-            <label class="poll-option">
-              <input type="radio" name="interest" value="Yes, definitely" required>
-              <label>Yes, definitely — I'd use this.</label>
-            </label>
-            <label class="poll-option">
-              <input type="radio" name="interest" value="Maybe, depends on the language">
-              <label>Maybe — depends on which language.</label>
-            </label>
-            <label class="poll-option">
-              <input type="radio" name="interest" value="Curious but not sure">
-              <label>I'm curious but not sure yet.</label>
-            </label>
-            <label class="poll-option">
-              <input type="radio" name="interest" value="Not for me">
-              <label>Probably not for me.</label>
-            </label>
-          </div>
-        </div>
-
-        <div>
-          <p class="poll-question">Which language would you most want to learn?</p>
-          <div class="poll-options">
-            <label class="poll-option">
-              <input type="radio" name="language" value="French">
-              <label>French</label>
-            </label>
-            <label class="poll-option">
-              <input type="radio" name="language" value="Spanish">
-              <label>Spanish</label>
-            </label>
-            <label class="poll-option">
-              <input type="radio" name="language" value="Czech">
-              <label>Czech</label>
-            </label>
-            <label class="poll-option">
-              <input type="radio" name="language" value="English">
-              <label>English</label>
-            </label>
-            <label class="poll-option">
-              <input type="radio" name="language" value="Other">
-              <label>Something else</label>
-            </label>
-          </div>
-        </div>
-
-        <button type="submit" class="poll-submit">Submit</button>
-      </form>
     </section>
 
   </main>
@@ -963,12 +482,10 @@
     <a href="../index.html">Home</a>
     <a href="../tech/index.html">Tech</a>
     <a href="../art/index.html">Art</a>
-    <a href="index.html">Languages</a>
     <a href="../about.html">About</a>
   </footer>
 
   <script>
-    // Nav toggle
     const navToggle = document.querySelector('.nav-toggle');
     const navLinks  = document.querySelector('.nav-links');
     navToggle.addEventListener('click', () => {
@@ -980,51 +497,6 @@
         navToggle.classList.remove('open');
         navLinks.classList.remove('open');
       });
-    });
-
-    // Hover-to-play videos + sound toggle + fun fact overlay
-    document.querySelectorAll('.lang-card-video').forEach(wrap => {
-      const video     = wrap.querySelector('video');
-      const funFact   = wrap.querySelector('.fun-fact');
-      const soundBtn  = wrap.querySelector('.sound-btn');
-      if (!video) return;
-
-      // Hover: try unmuted, fall back to muted if browser blocks it (requires prior user gesture)
-      wrap.addEventListener('mouseenter', () => {
-        video.muted = false;
-        video.play().catch(() => {
-          // Browser blocked unmuted autoplay — play muted instead
-          video.muted = true;
-          video.play().catch(() => {});
-          if (soundBtn) soundBtn.textContent = '🔇';
-        });
-        wrap.classList.add('playing');
-        if (soundBtn) soundBtn.textContent = '🔊';
-      });
-
-      wrap.addEventListener('mouseleave', () => {
-        video.pause();
-        video.currentTime = 0;
-        video.muted = true;
-        wrap.classList.remove('playing');
-        if (soundBtn) soundBtn.textContent = '🔇';
-        if (funFact)  funFact.classList.remove('visible');
-      });
-
-      // Sound button still works as a manual toggle
-      if (soundBtn) {
-        soundBtn.addEventListener('click', e => {
-          e.stopPropagation();
-          video.muted = !video.muted;
-          soundBtn.textContent = video.muted ? '🔇' : '🔊';
-        });
-      }
-
-      if (funFact) {
-        video.addEventListener('play',  () => funFact.classList.add('visible'));
-        video.addEventListener('pause', () => funFact.classList.remove('visible'));
-        video.addEventListener('ended', () => funFact.classList.remove('visible'));
-      }
     });
   </script>
 
