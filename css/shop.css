@@ -151,6 +151,7 @@
 
 .shop-split {
   display: flex;
+  height: calc(100vh - 4.5rem);
   height: calc(100svh - 4.5rem);
   margin-top: 4.5rem;
 }
@@ -272,6 +273,7 @@
     margin-top: 4.5rem;
   }
   .shop-split-panel {
+    height: 38vh;
     height: 38svh;
   }
   .shop-split-divider {
