@@ -151,8 +151,8 @@
 
 .shop-split {
   display: flex;
+  min-height: 400px;
   height: calc(100vh - 4.5rem);
-  height: calc(100svh - 4.5rem);
   margin-top: 4.5rem;
 }
 
@@ -161,6 +161,7 @@
   position: relative;
   overflow: hidden;
   text-decoration: none;
+  min-height: 300px;
 }
 
 .shop-split-img {
@@ -270,19 +271,24 @@
   .shop-split {
     flex-direction: column;
     height: auto;
-    margin-top: 4.5rem;
+    min-height: 0;
+    margin-top: 3.5rem;
   }
   .shop-split-panel {
-    height: 38vh;
-    height: 38svh;
+    min-height: 260px;
+    height: 42vh;
+    flex: none;
   }
   .shop-split-divider {
     width: 100%;
     height: 1px;
+    min-height: 0;
+    flex: none;
   }
   .shop-split-content {
-    bottom: 2rem;
+    bottom: 1.5rem;
     left: 1.5rem;
+    right: 1.5rem;
   }
 }
 
